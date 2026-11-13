@@ -1,29 +1,23 @@
-# Elevenlabs PHP Library
+# ElevenLabs PHP Library
 
-[![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=Elevenlabs%2FPHP)
-[![php shield](https://img.shields.io/badge/php-packagist-pink)](https://packagist.org/packages/elevenlabs/elevenlabs-php)
+![LOGO](https://github.com/elevenlabs/elevenlabs-python/assets/12028621/21267d89-5e82-4e7e-9c81-caf30b237683)
 
-The Elevenlabs PHP library provides convenient access to the Elevenlabs APIs from PHP.
+[![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-SDK%20generated%20by%20Fern-brightgreen)](https://buildwithfern.com/?utm_source=fern-elevenlabs/elevenlabs-php/readme)
+[![Discord](https://badgen.net/badge/black/ElevenLabs/icon?icon=discord&label)](https://discord.gg/elevenlabs)
+[![Twitter](https://badgen.net/badge/black/elevenlabsio/icon?icon=twitter&label)](https://twitter.com/elevenlabsio)
+[![packagist shield](https://img.shields.io/packagist/v/elevenlabs/elevenlabs-php)](https://packagist.org/packages/elevenlabs/elevenlabs-php)
 
-## Table of Contents
+The official PHP SDK for [ElevenLabs](https://elevenlabs.io/). ElevenLabs brings the most compelling, rich and lifelike voices to creators and developers in just a few lines of code.
 
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Environments](#environments)
-- [Exception Handling](#exception-handling)
-- [Advanced](#advanced)
-  - [Custom Client](#custom-client)
-  - [Retries](#retries)
-  - [Timeouts](#timeouts)
-  - [WebSockets](#websockets)
-- [Contributing](#contributing)
+## 📖 API & Docs
+
+Check out the [HTTP API documentation](https://elevenlabs.io/docs/api-reference).
 
 ## Requirements
 
 This SDK requires PHP ^8.1.
 
-## Installation
+## Install
 
 ```sh
 composer require elevenlabs/elevenlabs-php
@@ -33,29 +27,125 @@ The SDK sends its requests through a [PSR-18](https://www.php-fig.org/psr/psr-18
 
 ## Usage
 
+### Main Models
+
+1. **Eleven v4** (`eleven_v4`)
+    - Highest quality and most expressive speech, with reliable voice cloning across long generations
+    - 90+ languages with consistent voice quality across language switches
+    - Up to 10,000 characters (~10 minutes of audio) per request
+    - Used via the [Text to Dialogue API](https://elevenlabs.io/docs/api-reference/text-to-dialogue/convert)
+
+2. **Eleven v4 Turbo** (`eleven_v4_turbo`)
+    - State-of-the-art real-time speech, with a median latency of ~100ms
+    - 90+ languages
+    - Ideal for voice agents and other latency-sensitive use cases
+
+3. **Eleven Multilingual v2** (`eleven_multilingual_v2`)
+    - Excels in stability, language diversity, and accent accuracy
+    - The most stable choice for long-form Text to Speech
+    - Supports 29 languages
+
+4. **Eleven Flash v2.5** (`eleven_flash_v2_5`)
+    - Ultra-low latency and lowest cost
+    - Supports 32 languages
+
+For more detailed information about these models and others, visit the [ElevenLabs Models documentation](https://elevenlabs.io/docs/models).
+
 Instantiate and use the client with the following:
 
 ```php
 <?php
 
-namespace Example;
-
 use ElevenLabs\ElevenLabs;
-use ElevenLabs\History\Requests\DownloadHistoryRequest;
+use ElevenLabs\TextToSpeech\Requests\BodyTextToSpeechFull;
 
+// Reads the API key from the ELEVENLABS_API_KEY environment variable.
+// Pass it explicitly with new ElevenLabs('YOUR_API_KEY') if you prefer.
 $client = new ElevenLabs();
-$response = $client->history->download(
-    new DownloadHistoryRequest([
-        'historyItemIds' => [
-            'history_item_ids',
+
+$audio = $client->textToSpeech->convert(
+    'JBFqnCBsd6RMkjVDRZzb',
+    new BodyTextToSpeechFull([
+        'text' => 'The first move is what sets everything in motion.',
+        'modelId' => 'eleven_multilingual_v2',
+        'outputFormat' => 'mp3_44100_128',
+    ]),
+);
+
+// The response is a stream; write it out in chunks.
+$out = fopen('output.mp3', 'wb');
+while (!$audio->eof()) {
+    fwrite($out, $audio->read(8192));
+}
+fclose($out);
+// $audio->getContents() returns the whole body in one call instead.
+```
+
+### Text to Dialogue (Eleven v4)
+
+Eleven v4 and Eleven v4 Turbo are served through the Text to Dialogue API, which turns a list of speaker turns into a single expressive audio stream.
+
+```php
+use ElevenLabs\TextToDialogue\Requests\BodyTextToDialogueMultiVoiceV1TextToDialoguePost;
+use ElevenLabs\Types\DialogueInput;
+
+$audio = $client->textToDialogue->convert(
+    new BodyTextToDialogueMultiVoiceV1TextToDialoguePost([
+        'modelId' => 'eleven_v4',
+        'outputFormat' => 'mp3_44100_128',
+        'inputs' => [
+            new DialogueInput([
+                'text' => '[giggling] Knock knock',
+                'voiceId' => 'JBFqnCBsd6RMkjVDRZzb',
+            ]),
+            new DialogueInput([
+                'text' => '[curious] Who is there?',
+                'voiceId' => 'Aw4FAjKCGjjNkVhN1Xmq',
+            ]),
         ],
     ]),
 );
-while (!$response->eof()) {
-    echo $response->read(8192);
-}
-// $response->getContents() returns the whole body in one call.
 
+while (!$audio->eof()) {
+    echo $audio->read(8192);
+}
+```
+
+## Voices
+
+List all your available voices with `search()`.
+
+```php
+use ElevenLabs\Voices\Requests\SearchVoicesRequest;
+
+$response = $client->voices->search(new SearchVoicesRequest());
+foreach ($response->voices as $voice) {
+    echo $voice->name . "\n";
+}
+```
+
+For information about the structure of the voices output, please refer to the [official ElevenLabs API documentation for Get Voices](https://elevenlabs.io/docs/api-reference/get-voices).
+
+## Streaming
+
+Stream audio in real-time, as it's being generated.
+
+```php
+use ElevenLabs\TextToSpeech\Requests\StreamTextToSpeechRequest;
+
+$audio = $client->textToSpeech->stream(
+    'JBFqnCBsd6RMkjVDRZzb',
+    new StreamTextToSpeechRequest([
+        'text' => 'This is a... streaming voice.',
+        'modelId' => 'eleven_multilingual_v2',
+        'outputFormat' => 'mp3_44100_128',
+    ]),
+);
+
+while (!$audio->eof()) {
+    // Process each chunk as it arrives.
+    echo $audio->read(8192);
+}
 ```
 
 ## Environments
@@ -90,7 +180,7 @@ use ElevenLabs\Exceptions\ElevenlabsApiException;
 use ElevenLabs\Exceptions\ElevenlabsException;
 
 try {
-    $response = $client->history->download(...);
+    $response = $client->textToSpeech->convert(...);
 } catch (ElevenlabsApiException $e) {
     echo 'API Exception occurred: ' . $e->getMessage() . "\n";
     echo 'Status Code: ' . $e->getCode() . "\n";
@@ -136,7 +226,7 @@ A request is deemed retryable when any of the following HTTP status codes is ret
 Use the `maxRetries` request option to configure this behavior.
 
 ```php
-$response = $client->history->download(
+$response = $client->textToSpeech->convert(
     ...,
     options: [
         'maxRetries' => 0 // Override maxRetries at the request level
@@ -160,7 +250,7 @@ $client = new ElevenLabs(options: [
 or for a single call:
 
 ```php
-$response = $client->history->download(
+$response = $client->textToSpeech->convert(
     ...,
     options: [
         'timeout' => 3.0 // Override timeout at the request level
@@ -219,6 +309,10 @@ try {
     // Nothing arrived within 5 seconds.
 }
 ```
+
+## Languages Supported
+
+Explore [all models & languages](https://elevenlabs.io/docs/models).
 
 ## Contributing
 
