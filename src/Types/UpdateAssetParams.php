@@ -1,0 +1,75 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ElevenLabs\Types;
+
+use ElevenLabs\Core\Json\JsonSerializableType;
+use ElevenLabs\Core\Json\ReflectiveSerialization;
+use ElevenLabs\Core\Json\JsonProperty;
+
+/**
+ * The reflective deserializer reconstructs this model with `new static($values)`, so a subclass has
+ * to keep a constructor it can call with one associative array.
+ *
+ * @phpstan-consistent-constructor
+ */
+class UpdateAssetParams extends JsonSerializableType
+{
+  use ReflectiveSerialization;
+
+  /**
+   * @var ?value-of<\ElevenLabs\Types\UpdateAssetParamsSmbToolType>
+   */
+  #[JsonProperty('smb_tool_type')]
+  public ?string $smbToolType;
+
+  /**
+   * Whether to offer an available_hours timezone, set from the workspace's enable_per_resource_timezones.
+   */
+  #[JsonProperty('per_resource_timezones')]
+  public ?bool $perResourceTimezones;
+
+  /**
+   * @param array{
+   *   smbToolType?: ?value-of<\ElevenLabs\Types\UpdateAssetParamsSmbToolType>,
+   *   perResourceTimezones?: ?bool,
+   * } $values
+   */
+  public function __construct(array $values = [])
+  {
+    $this->smbToolType = $values['smbToolType'] ?? 'update_asset';
+    $this->perResourceTimezones = $values['perResourceTimezones'] ?? null;
+
+    if (array_key_exists('smbToolType', $values)) {
+      $this->_dirtyFields['smb_tool_type'] = true;
+    }
+    if (array_key_exists('perResourceTimezones', $values)) {
+      $this->_dirtyFields['per_resource_timezones'] = true;
+    }
+  }
+
+  public function toMultipart(): array
+  {
+    $parts = [];
+    if ($this->smbToolType !== null) {
+      $parts[] = [
+        'name' => 'smb_tool_type',
+        'contents' => $this->smbToolType
+      ];
+    }
+
+    if ($this->perResourceTimezones !== null) {
+      $parts[] = [
+        'name' => 'per_resource_timezones',
+        'contents' => $this->perResourceTimezones ? 'true' : 'false'
+      ];
+    }
+
+    return $parts;
+  }
+
+  public function validate(): void
+  {
+  }
+}

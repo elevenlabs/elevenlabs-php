@@ -1,0 +1,14 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ElevenLabs\SpeechToText\Types;
+
+/**
+ * The format of input audio. Options are 'pcm_s16le_16' or 'other' For `pcm_s16le_16`, the input audio must be 16-bit PCM at a 16kHz sample rate, single channel (mono), and little-endian byte order. Latency will be lower than with passing an encoded waveform.
+ */
+enum ConvertSpeechToTextRequestFileFormat: string
+{
+  case PcmS16Le16 = 'pcm_s16le_16';
+  case Other = 'other';
+}
