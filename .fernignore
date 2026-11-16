@@ -6,3 +6,16 @@ README.md
 # the compound `t=...,v0=...` header).
 src/Webhooks/WebhookVerifier.php
 tests/Webhooks/WebhookVerifierTest.php
+
+# Hand-written Speech Engine server model (dev hosts a WebSocket server that the
+# ElevenLabs API dials into). The generator produces only the client-dials-out
+# upstream socket; these add the inbound-connection JWT verifier, per-connection
+# session/protocol, the standalone phrity-based server, and the engine resource.
+src/SpeechEngine/SpeechEngineJwtVerifier.php
+tests/SpeechEngine/SpeechEngineJwtVerifierTest.php
+src/SpeechEngine/ConversationMessage.php
+src/SpeechEngine/SpeechEngineSession.php
+src/SpeechEngine/SpeechEngineServer.php
+src/SpeechEngine/SpeechEngineResource.php
+tests/SpeechEngine/SpeechEngineSessionTest.php
+tests/SpeechEngine/SpeechEngineResourceTest.php
