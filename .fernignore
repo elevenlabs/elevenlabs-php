@@ -6,3 +6,10 @@ README.md
 # the compound `t=...,v0=...` header).
 src/Webhooks/WebhookVerifier.php
 tests/Webhooks/WebhookVerifierTest.php
+
+# Hand-written agent workflows-as-code builder (a layer on top of the generated
+# client; emits the generated workflow request type or canonical wire JSON).
+# Conformance fixtures are shared across every SDK.
+src/AgentWorkflows/
+tests/AgentWorkflows/
+tests/fixtures/agent_workflows/
