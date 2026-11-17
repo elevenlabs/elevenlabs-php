@@ -205,10 +205,14 @@ final class WorkflowGraph
     $this->loadedOrder = [];
     $this->preventSubagentLoops = $workflow['prevent_subagent_loops'] ?? null;
 
+    // The top-level node/edge maps must be arrays for the loader. Decoding preserves an empty object
+    // as \stdClass (so `{}` in nested payloads round-trips), so an edgeless workflow's `"edges": {}`
+    // arrives here as a \stdClass; cast the structural maps to arrays. Nested payloads keep their
+    // object identity (they are deep-copied below, not re-cast).
     /** @var array<string, array<string, mixed>> $nodes */
-    $nodes = $workflow['nodes'] ?? [];
+    $nodes = (array) ($workflow['nodes'] ?? []);
     /** @var array<string, array<string, mixed>> $edges */
-    $edges = $workflow['edges'] ?? [];
+    $edges = (array) ($workflow['edges'] ?? []);
 
     foreach ($nodes as $id => $node) {
       $copy = [];

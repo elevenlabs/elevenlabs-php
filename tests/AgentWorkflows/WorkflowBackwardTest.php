@@ -72,4 +72,23 @@ class WorkflowBackwardTest extends TestCase
     $encoded = Wire::encode(Wire::canonical($decoded));
     $this->assertSame("{\n  \"config\": {},\n  \"items\": []\n}\n", $encoded);
   }
+
+  public function testEdgelessWorkflowRoundTripsThroughFromJson(): void
+  {
+    // `toJsonString()` emits `"edges": {}` for an edgeless workflow; preserving `{}` as \stdClass must
+    // not break the loader, which needs the top-level edge map as an array.
+    $json = (new Workflow())->toJsonString();
+    $reloaded = Workflow::fromJson($json);
+    $this->assertSame($json, $reloaded->toJsonString());
+  }
+
+  public function testNestedEmptyObjectSurvivesWorkflowRoundTrip(): void
+  {
+    $wf = new Workflow();
+    $wf->converse('agent', 'Help', conversationConfig: new \stdClass())->end();
+    $json = $wf->toJsonString();
+    $this->assertStringContainsString('"conversation_config": {}', $json);
+    // The empty object must still be `{}` after a load/save round-trip, not `[]`.
+    $this->assertSame($json, Workflow::fromJson($json)->toJsonString());
+  }
 }
