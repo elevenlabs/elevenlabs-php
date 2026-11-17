@@ -188,6 +188,35 @@ class SpeechEngineSessionTest extends TestCase
     $this->assertFalse($session->isOpen());
   }
 
+  public function testFailedWriteStopsConsumingTheResponseGenerator(): void
+  {
+    $session = new SpeechEngineSession(
+      send: function (string $text): void {
+        throw new \RuntimeException('socket gone'); // the first write fails
+      },
+      close: function (): void {},
+    );
+
+    $resumed = 0;
+    $generator = (function () use (&$resumed): \Generator {
+      $resumed++;
+      yield 'first';
+      // Reaching here means the generator was advanced after the failed write — for a
+      // network-backed stream that advance would block the synchronous server.
+      $resumed++;
+      yield 'second';
+    })();
+
+    $session->on('user_transcript', function (array $t, SpeechEngineSession $s) use ($generator): void {
+      $s->sendResponse($generator);
+    });
+
+    $session->handleRawMessage('{"type":"user_transcript","event_id":1,"user_transcript":[]}');
+
+    $this->assertSame(1, $resumed, 'the generator must not be advanced after a failed write');
+    $this->assertFalse($session->isOpen());
+  }
+
   public function testEncodingFailureEmitsErrorButKeepsSessionOpen(): void
   {
     $session = $this->session();

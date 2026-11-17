@@ -121,17 +121,18 @@ final class SpeechEngineSession
     }
 
     foreach ($response as $chunk) {
-      if ($this->closed) {
-        return;
-      }
       $text = self::extractText($chunk);
       if ($text !== null && $text !== '') {
         $this->sendAgentResponse($text, false, $eventId);
+        // Return before `foreach` advances the generator: a failed write marks the
+        // session closed, and advancing a network-backed LLM stream here would block
+        // the synchronous server waiting for data it would only discard.
+        if ($this->closed) {
+          return;
+        }
       }
     }
-    if (!$this->closed) {
-      $this->sendAgentResponse('', true, $eventId);
-    }
+    $this->sendAgentResponse('', true, $eventId);
   }
 
   /**
