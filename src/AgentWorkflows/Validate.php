@@ -79,6 +79,39 @@ final class Validate
           $edge->source
         );
       }
+
+      // A backward condition is a second transition the other way, target → source, that the API
+      // stores on this same edge. It must obey the same routing rules as any edge leaving the target.
+      if ($edge->backwardCondition !== null) {
+        $backName = "\"{$edge->target}\" → \"{$edge->source}\"";
+        $backSourceType = $graph->nodes[$edge->target]['type'] ?? null;
+        $backConditionType = $edge->backwardCondition['type'] ?? null;
+        if ($edge->source === $graph->startId) {
+          $error(
+            'edge_into_start',
+            "Edge {$backName} points into the start node; go to the first node after it instead",
+            $edge->target
+          );
+        }
+        if ($backSourceType === 'end' && !isset($endsWithEdges[$edge->target])) {
+          $endsWithEdges[$edge->target] = true;
+          $error('end_has_outgoing_edges', "End node \"{$edge->target}\" can't have outgoing edges", $edge->target);
+        }
+        if ($backSourceType === 'tool' && $backConditionType !== 'result') {
+          $error(
+            'tool_edge_needs_result',
+            "Edge {$backName} leaves a tool node, so it must use on_success() or on_failure()",
+            $edge->target
+          );
+        }
+        if ($backSourceType !== null && $backSourceType !== 'tool' && $backConditionType === 'result') {
+          $error(
+            'result_edge_needs_tool',
+            "Edge {$backName} uses on_success()/on_failure(), which only applies to tool nodes",
+            $edge->target
+          );
+        }
+      }
     }
 
     foreach ($graph->nodes as $id => $model) {

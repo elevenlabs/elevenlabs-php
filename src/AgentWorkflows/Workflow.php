@@ -59,7 +59,7 @@ final class Workflow extends WorkflowChain
   public static function fromJson(string|array $data): self
   {
     /** @var mixed $parsed */
-    $parsed = is_string($data) ? json_decode($data, true, 512, JSON_THROW_ON_ERROR) : $data;
+    $parsed = is_string($data) ? Wire::decodeJson($data) : $data;
     $raw = (is_array($parsed) && array_key_exists('workflow', $parsed)) ? $parsed['workflow'] : $parsed;
     $wf = new self();
     $wf->graph->load(is_array($raw) ? $raw : []);

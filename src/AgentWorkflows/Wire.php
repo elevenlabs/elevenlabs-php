@@ -21,7 +21,8 @@ final class Wire
   public static function toWire(mixed $value): mixed
   {
     if (is_object($value)) {
-      return json_decode((string) json_encode($value), true);
+      // Decode with objects preserved so an empty `{}` in the model is not flattened to `[]`.
+      return self::fromDecoded(json_decode((string) json_encode($value), false, 512, JSON_THROW_ON_ERROR));
     }
     if (is_array($value)) {
       $out = [];
@@ -60,8 +61,53 @@ final class Wire
       }
       return $out;
     }
-    if (is_float($value) && is_finite($value) && floor($value) === $value) {
+    if (
+      is_float($value) && is_finite($value) && floor($value) === $value
+      && $value >= (float) PHP_INT_MIN && $value < (float) PHP_INT_MAX
+    ) {
+      // Only when the whole float fits in an int. A value such as 1e20 is outside int range, and
+      // `(int) $value` would wrap or truncate it; leave those as floats. The upper bound is
+      // exclusive because `(float) PHP_INT_MAX` rounds up to 2^63, one past the range.
       return (int) $value;
+    }
+    return $value;
+  }
+
+  /**
+   * Decode an API-format JSON string to a wire value, preserving object/list identity. PHP's
+   * associative decode turns an empty JSON object `{}` into `[]` — indistinguishable from an empty
+   * array, and re-serialized as `[]`, which silently changes a value's wire type (e.g.
+   * `conversation_config: {}`). Decoding objects first and keeping empty ones as `\stdClass` keeps a
+   * `{}` a `{}` on round-trip. Non-empty objects become associative arrays, as the loader and
+   * canonical() expect; JSON arrays stay lists.
+   */
+  public static function decodeJson(string $json): mixed
+  {
+    /** @var mixed $decoded */
+    $decoded = json_decode($json, false, 512, JSON_THROW_ON_ERROR);
+    return self::fromDecoded($decoded);
+  }
+
+  /**
+   * Normalize a value decoded with objects preserved (assoc=false): empty objects stay as
+   * `\stdClass` (so they serialize as `{}`), non-empty objects become associative arrays, and JSON
+   * arrays stay lists.
+   */
+  private static function fromDecoded(mixed $value): mixed
+  {
+    if ($value instanceof \stdClass) {
+      $arr = (array) $value;
+      if ($arr === []) {
+        return new \stdClass();
+      }
+      $out = [];
+      foreach ($arr as $key => $item) {
+        $out[(string) $key] = self::fromDecoded($item);
+      }
+      return $out;
+    }
+    if (is_array($value)) {
+      return array_map([self::class, 'fromDecoded'], $value);
     }
     return $value;
   }
