@@ -194,8 +194,11 @@ final class SpeechEngineSession
         break;
 
       case 'close':
-        $this->closed = true;
+        // Emit before closing so a `close` handler still sees an open session
+        // and can call close() itself; close() then shuts the transport down
+        // (and is idempotent, so the explicit call here is a safe no-op after).
         $this->emit('close');
+        $this->close();
         break;
 
       case 'error':
@@ -226,9 +229,22 @@ final class SpeechEngineSession
       return;
     }
     try {
-      ($this->send)(json_encode($msg, JSON_THROW_ON_ERROR));
-    } catch (\Throwable) {
-      // Send failed — the connection is gone; the server loop detects it.
+      $encoded = json_encode($msg, JSON_THROW_ON_ERROR);
+    } catch (\JsonException $e) {
+      // Encoding failure is a bug in the payload, not a dropped connection:
+      // surface it and keep the session open.
+      $this->emit('error', $e);
+      return;
+    }
+    try {
+      ($this->send)($encoded);
+    } catch (\Throwable $e) {
+      // The transport write failed, so the connection is gone. Mark the
+      // session disconnected (this also stops sendResponse() from consuming
+      // the rest of the LLM stream, which the synchronous server cannot
+      // otherwise detect mid-handler) and surface the cause.
+      $this->handleDisconnect();
+      $this->emit('error', $e);
     }
   }
 

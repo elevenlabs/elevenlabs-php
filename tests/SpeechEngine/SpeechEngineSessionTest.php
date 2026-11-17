@@ -132,6 +132,86 @@ class SpeechEngineSessionTest extends TestCase
 
     $this->assertTrue($closedEvent);
     $this->assertFalse($session->isOpen());
+    $this->assertTrue($this->closed, 'protocol close must shut the transport down');
+  }
+
+  public function testCloseHandlerCanCloseTheTransportItself(): void
+  {
+    $session = $this->session();
+    $session->on('close', function (SpeechEngineSession $s): void {
+      // The session is still open while the handler runs, so this close()
+      // actually shuts the transport down rather than being a no-op.
+      $this->assertTrue($s->isOpen());
+      $s->close();
+    });
+
+    $session->handleRawMessage('{"type":"close"}');
+
+    $this->assertTrue($this->closed);
+    $this->assertFalse($session->isOpen());
+  }
+
+  public function testSendFailureMarksDisconnectedAndEmitsError(): void
+  {
+    $this->sent = [];
+    $this->closed = false;
+    $attempts = 0;
+    $session = new SpeechEngineSession(
+      send: function (string $text) use (&$attempts): void {
+        $attempts++;
+        throw new \RuntimeException('socket gone');
+      },
+      close: function (): void {
+        $this->closed = true;
+      },
+    );
+
+    $disconnected = 0;
+    $error = null;
+    $session->on('disconnected', function (SpeechEngineSession $s) use (&$disconnected): void {
+      $disconnected++;
+    });
+    $session->on('error', function (\Throwable $e, SpeechEngineSession $s) use (&$error): void {
+      $error = $e;
+    });
+    $session->on('user_transcript', function (array $t, SpeechEngineSession $s): void {
+      // A multi-chunk stream: the first write fails, so the rest must not be consumed.
+      $s->sendResponse(['one', 'two', 'three']);
+    });
+
+    $session->handleRawMessage('{"type":"user_transcript","event_id":1,"user_transcript":[]}');
+
+    $this->assertSame(1, $attempts, 'the stream must stop after the first failed write');
+    $this->assertSame(1, $disconnected);
+    $this->assertInstanceOf(\Throwable::class, $error);
+    $this->assertSame('socket gone', $error->getMessage());
+    $this->assertFalse($session->isOpen());
+  }
+
+  public function testEncodingFailureEmitsErrorButKeepsSessionOpen(): void
+  {
+    $session = $this->session();
+    $error = null;
+    $disconnected = 0;
+    $session->on('error', function (\Throwable $e, SpeechEngineSession $s) use (&$error): void {
+      $error = $e;
+    });
+    $session->on('disconnected', function (SpeechEngineSession $s) use (&$disconnected): void {
+      $disconnected++;
+    });
+    $session->on('user_transcript', function (array $t, SpeechEngineSession $s): void {
+      // The middle chunk is invalid UTF-8, so json_encode throws for it; the
+      // session must stay open and keep delivering the surrounding chunks.
+      $s->sendResponse(['before', "\xB1\x31", 'after']);
+    });
+
+    $session->handleRawMessage('{"type":"user_transcript","event_id":1,"user_transcript":[]}');
+
+    $this->assertInstanceOf(\JsonException::class, $error);
+    $this->assertSame(0, $disconnected, 'an encoding failure is not a transport disconnect');
+    $this->assertTrue($session->isOpen());
+    $contents = array_column($this->decodedSent(), 'content');
+    $this->assertSame(['before', 'after', ''], $contents);
   }
 
   public function testErrorMessageEmitsError(): void
