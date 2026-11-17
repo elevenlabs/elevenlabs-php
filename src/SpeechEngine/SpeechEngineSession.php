@@ -78,6 +78,13 @@ final class SpeechEngineSession
    */
   public function handleRawMessage(string $raw): void
   {
+    // Ignore frames that arrive after the session has closed (via close() or a
+    // transport disconnect): a buffered transcript delivered during shutdown would
+    // otherwise invoke a handler and start an LLM request, only for sendResponse()
+    // to throw because the session is closed.
+    if ($this->closed) {
+      return;
+    }
     try {
       $msg = json_decode($raw, true, 512, JSON_THROW_ON_ERROR);
     } catch (\JsonException $e) {

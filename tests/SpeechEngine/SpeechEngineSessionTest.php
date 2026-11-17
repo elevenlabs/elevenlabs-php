@@ -217,6 +217,21 @@ class SpeechEngineSessionTest extends TestCase
     $this->assertFalse($session->isOpen());
   }
 
+  public function testFramesAfterCloseAreIgnored(): void
+  {
+    $session = $this->session();
+    $invoked = false;
+    $session->on('user_transcript', function (array $t, SpeechEngineSession $s) use (&$invoked): void {
+      $invoked = true;
+    });
+
+    $session->close();
+    // A buffered frame delivered during shutdown must not reach a handler.
+    $session->handleRawMessage('{"type":"user_transcript","event_id":1,"user_transcript":[]}');
+
+    $this->assertFalse($invoked, 'frames arriving after close must be ignored');
+  }
+
   public function testEncodingFailureEmitsErrorButKeepsSessionOpen(): void
   {
     $session = $this->session();
