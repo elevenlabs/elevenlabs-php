@@ -33,3 +33,11 @@ tests/SpeechEngine/SpeechEngineResourceTest.php
 # (`FlowsWaiter`) because the root client and the flows clients are regenerated.
 src/Flows/Wait/
 tests/Flows/Wait/
+
+# Hand-written parsed `composeDetailed` for music. `POST /v1/music/detailed` returns a
+# `multipart/mixed` body (JSON metadata + audio) that the generator doesn't parse, and the generated
+# method drops the `song-id` header, so this sends through the generated music client's own request
+# path and splits the parts. A separate entry point (`MusicDetailed`) because the root client and
+# the music client are regenerated.
+src/Music/Detailed/
+tests/Music/Detailed/
