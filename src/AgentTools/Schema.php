@@ -162,12 +162,11 @@ abstract class Schema
       $required = $get('required');
       /** @var list<string> $requiredList */
       $requiredList = is_array($required) ? array_values(array_map('strval', $required)) : [];
-      $properties = $get('properties');
-      foreach (is_array($properties) ? $properties : [] as $name => $child) {
+      foreach (ToolWire::schemaWire($get('properties')) ?? [] as $name => $child) {
         $name = (string) $name;
         $schema->properties[] = [
           $name,
-          self::fromWire(self::asMap($child), !in_array($name, $requiredList, true)),
+          self::fromWire(ToolWire::schemaWire($child) ?? [], !in_array($name, $requiredList, true)),
         ];
       }
       $schema->loadedRequired = is_array($required) ? $requiredList : null;
@@ -178,7 +177,8 @@ abstract class Schema
     }
     if ($kind === 'array') {
       $items = $get('items');
-      $schema->items = $items === null ? null : self::fromWire(self::asMap($items), true);
+      $itemsWire = ToolWire::schemaWire($items);
+      $schema->items = $itemsWire === null ? null : self::fromWire($itemsWire, true);
       return $schema;
     }
     $schema->literalType = Wire::deepCopy($model['type'] ?? null);
@@ -289,7 +289,7 @@ abstract class Schema
         foreach ($this->properties as [$name, $child]) {
           $properties[$name] = $child->toWire();
         }
-        $wire['properties'] = $properties;
+        $wire['properties'] = ToolWire::map($properties);
       }
       $required = $this->requiredOrder();
       if ($required !== []) {
@@ -372,7 +372,8 @@ abstract class Schema
       );
     }
     if ($this->hasConstant && !self::matchesKind($this->kind, $this->constantValue, $this->isNullable())) {
-      $issues[] = ToolIssue::error('constant_type_mismatch', $path, "\"{$path}\" has a constant that isn't a {$this->kind}");
+      $what = is_float($this->constantValue) && !is_finite($this->constantValue) ? 'finite number' : $this->kind;
+      $issues[] = ToolIssue::error('constant_type_mismatch', $path, "\"{$path}\" has a constant that isn't a {$what}");
     } elseif ($this->hasConstant && $this->constantValue === '') {
       $issues[] = ToolIssue::error(
         'constant_type_mismatch',
@@ -456,7 +457,7 @@ abstract class Schema
     return match ($kind) {
       'string' => is_string($value),
       'integer' => is_int($value) || (is_float($value) && is_finite($value) && floor($value) === $value),
-      'number' => is_int($value) || is_float($value),
+      'number' => is_int($value) || (is_float($value) && is_finite($value)),
       'boolean' => is_bool($value),
       // PHP decodes `{}` to `[]` unless told otherwise, so an empty array counts as an empty object.
       'object' => $value instanceof \stdClass || (is_array($value) && ($value === [] || !array_is_list($value))),

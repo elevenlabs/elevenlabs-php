@@ -102,13 +102,15 @@ abstract class Tool
       return WebhookTool::load($config);
     }
     if ($type === 'client') {
-      $parameters = $config['parameters'] ?? null;
+      // An object when it has no `type`; a declared other type is kept, and build() reports it.
+      $parameters = ToolWire::schemaWire($config['parameters'] ?? null);
       unset($config['parameters']);
-      /** @var ObjectSchema|null $schema */
-      $schema = is_array($parameters) ? Schema::fromWire($parameters, false, 'object') : null;
+      $schema = $parameters === null
+        ? null
+        : Schema::fromWire($parameters, false, array_key_exists('type', $parameters) ? null : 'object');
       return new ClientTool($config, $schema);
     }
-    $params = is_array($config['params'] ?? null) ? $config['params'] : [];
+    $params = ToolWire::schemaWire($config['params'] ?? null) ?? [];
     unset($config['params']);
     $systemToolType = (string) ($params['system_tool_type'] ?? '');
     unset($params['system_tool_type']);
@@ -118,7 +120,7 @@ abstract class Tool
   /** Loads the result of `tools->get()`. */
   public static function fromResponse(ToolResponseModel $response): Tool
   {
-    return self::fromJson(Wire::toWire($response->toolConfig));
+    return self::fromJson($response->toolConfig);
   }
 
   /** `"webhook"`, `"client"`, `"system"`, or `"other"` for a loaded tool of a type this SDK can't edit. */

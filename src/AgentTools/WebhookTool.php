@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ElevenLabs\AgentTools;
 
+use ElevenLabs\AgentTools\Models\WebhookApiSchemaModel;
 use ElevenLabs\AgentWorkflows\Wire;
 use ElevenLabs\Core\Json\JsonSerializableType;
 use ElevenLabs\Types\WebhookToolConfigInput;
@@ -30,7 +31,10 @@ final class WebhookTool extends Tool
 
   /** @var array<string, Schema> */
   private array $pathParams = [];
-  private ?ObjectSchema $query = null;
+  /** An object, unless a loaded `query_params_schema` declares another type (reported by `build()`). */
+  private ?Schema $query = null;
+  /** Whether the query schema's `type` is the builder's, not loaded, so it isn't written. */
+  private bool $queryTypeAdded = true;
   private ?Schema $body = null;
   private ?Schema $response = null;
   /** @var array<string, mixed> */
@@ -53,7 +57,7 @@ final class WebhookTool extends Tool
    */
   public static function load(array $config): self
   {
-    $api = is_array($config['api_schema'] ?? null) ? $config['api_schema'] : [];
+    $api = ToolWire::schemaWire($config['api_schema'] ?? null) ?? [];
     unset($config['api_schema']);
     $pathParams = $api['path_params_schema'] ?? null;
     $query = $api['query_params_schema'] ?? null;
@@ -71,16 +75,18 @@ final class WebhookTool extends Tool
     foreach (is_array($pathParams) ? $pathParams : [] as $name => $model) {
       $tool->pathParams[(string) $name] = Schema::fromWire(is_array($model) ? $model : []);
     }
-    if (is_array($query)) {
-      /** @var ObjectSchema $querySchema */
-      $querySchema = Schema::fromWire($query, false, 'object');
-      $tool->query = $querySchema;
+    $query = ToolWire::schemaWire($query);
+    if ($query !== null) {
+      $tool->query = self::loadContainer($query);
+      $tool->queryTypeAdded = !array_key_exists('type', $query);
     }
-    if (is_array($body)) {
-      $tool->body = Schema::fromWire($body, false, 'object');
+    $body = ToolWire::schemaWire($body);
+    if ($body !== null) {
+      $tool->body = self::loadContainer($body);
     }
-    if (is_array($response)) {
-      $tool->response = Schema::fromWire($response, false, 'object');
+    $response = ToolWire::schemaWire($response);
+    if ($response !== null) {
+      $tool->response = self::loadContainer($response);
     }
     foreach (is_array($headers) ? $headers : [] as $name => $value) {
       $tool->headers[(string) $name] = $value;
@@ -133,7 +139,10 @@ final class WebhookTool extends Tool
   /** Sets the query param `$name`. Required unless the schema is `optional()`. Literal schemas only. */
   public function queryParam(string $name, Schema $schema): self
   {
-    $this->query = ($this->query ?? Schema::object())->property($name, $schema);
+    // A loaded query schema of another type can't take params; build() reports it.
+    if ($this->query === null || $this->query instanceof ObjectSchema) {
+      $this->query = ($this->query ?? Schema::object())->property($name, $schema);
+    }
     return $this;
   }
 
@@ -200,7 +209,11 @@ final class WebhookTool extends Tool
   /** Removes the query param `$name`. Removing one that doesn't exist does nothing. */
   public function removeQueryParam(string $name): self
   {
-    $this->query = $this->query?->without($name);
+    if ($this->query instanceof ObjectSchema && $this->query->propertySchema($name) !== null) {
+      $query = $this->query->without($name);
+      // Removing the last param leaves the query schema out.
+      $this->query = $query->propertyNames() === [] ? null : $query;
+    }
     return $this;
   }
 
@@ -214,11 +227,22 @@ final class WebhookTool extends Tool
   /** Removes every assignment to `$variable`. */
   public function removeAssignment(string $variable): self
   {
-    if (is_array($this->config['assignments'] ?? null)) {
-      $this->config['assignments'] = array_values(array_filter(
-        $this->config['assignments'],
-        static fn(mixed $a): bool => !is_array($a) || ($a['dynamic_variable'] ?? null) !== $variable
-      ));
+    $assignments = $this->config['assignments'] ?? null;
+    if (!is_array($assignments)) {
+      return $this;
+    }
+    $kept = array_values(array_filter(
+      $assignments,
+      static fn(mixed $a): bool => !is_array($a) || ($a['dynamic_variable'] ?? null) !== $variable
+    ));
+    if (count($kept) === count($assignments)) {
+      return $this;
+    }
+    // Removing the last assignment leaves the field out.
+    if ($kept === []) {
+      unset($this->config['assignments']);
+    } else {
+      $this->config['assignments'] = $kept;
     }
     return $this;
   }
@@ -249,15 +273,27 @@ final class WebhookTool extends Tool
 
   protected function configModel(array $wire): JsonSerializableType
   {
-    $model = WebhookToolConfigInput::fromJson((string) json_encode($wire));
-    // The generated deserializer reads nested schemas as literals; build them as the right models.
-    $api = is_array($wire['api_schema'] ?? null) ? $wire['api_schema'] : [];
-    if (is_array($api['request_body_schema'] ?? null)) {
-      $model->apiSchema->requestBodySchema = ToolWire::objectModel($api['request_body_schema']);
+    // The generated deserializer reads nested schemas as literals, and writes maps keyed "0", "1"…
+    // as arrays, so the schemas are built as the right models (see ToolWire::schemaModel()).
+    /** @var array<string, mixed> $api */
+    $api = ToolWire::schemaWire($wire['api_schema'] ?? null) ?? [];
+    $query = ToolWire::schemaWire($api['query_params_schema'] ?? null);
+    $body = ToolWire::schemaWire($api['request_body_schema'] ?? null);
+    $response = ToolWire::schemaWire($api['response_body_schema'] ?? null);
+    unset($api['query_params_schema'], $api['request_body_schema'], $api['response_body_schema']);
+    $wire['api_schema'] = $api;
+    $model = WebhookToolConfigInput::fromJson(ToolWire::json($wire));
+    $apiModel = WebhookApiSchemaModel::fromJson(ToolWire::json($api));
+    if ($query !== null) {
+      $apiModel->queryParamsSchema = ToolWire::queryModel($query);
     }
-    if (is_array($api['response_body_schema'] ?? null)) {
-      $model->apiSchema->responseBodySchema = ToolWire::objectModel($api['response_body_schema']);
+    if ($body !== null) {
+      $apiModel->requestBodySchema = ToolWire::objectModel($body);
     }
+    if ($response !== null) {
+      $apiModel->responseBodySchema = ToolWire::objectModel($response);
+    }
+    $model->apiSchema = $apiModel;
     return $model;
   }
 
@@ -278,7 +314,8 @@ final class WebhookTool extends Tool
   protected function validate(): array
   {
     $issues = [];
-    $url = is_string($this->api['url'] ?? null) ? $this->api['url'] : null;
+    // An empty URL is as good as none.
+    $url = is_string($this->api['url'] ?? null) && $this->api['url'] !== '' ? $this->api['url'] : null;
     if ($url === null) {
       $issues[] = ToolIssue::error('missing_url', null, 'Set the method and URL with get(), post(), put(), patch() or delete()');
     }
@@ -308,7 +345,11 @@ final class WebhookTool extends Tool
       }
       $schema->check($path, true, $issues);
     }
-    if ($this->query !== null) {
+    if ($this->query !== null && !($this->query instanceof ObjectSchema)) {
+      $issues[] = ToolIssue::error('body_not_object', 'query', 'The query params schema must be an object');
+      $this->query->check('query', false, $issues);
+    }
+    if ($this->query instanceof ObjectSchema) {
       foreach ($this->query->propertyNames() as $name) {
         /** @var Schema $schema */
         $schema = $this->query->propertySchema($name);
@@ -338,7 +379,7 @@ final class WebhookTool extends Tool
     $where = [];
     $locations = [
       'pathParams' => $pathNames,
-      'query' => $this->query?->propertyNames() ?? [],
+      'query' => $this->query instanceof ObjectSchema ? $this->query->propertyNames() : [],
       'body' => $this->body instanceof ObjectSchema ? $this->body->propertyNames() : [],
     ];
     foreach ($locations as $location => $names) {
@@ -385,15 +426,15 @@ final class WebhookTool extends Tool
       foreach ($this->pathParams as $name => $schema) {
         $pathParams[(string) $name] = $schema->toWire();
       }
-      $api['path_params_schema'] = $pathParams;
+      $api['path_params_schema'] = ToolWire::map($pathParams);
     }
     if ($this->query !== null) {
-      // Everything but the `type` the loader adds, so fields the builder doesn't model write back unchanged.
+      // Every loaded field, but not a `type` the builder added: the API's query schema has none.
       $query = $this->query->toWire();
-      unset($query['type']);
-      if (array_key_exists('properties', $query)) {
-        $api['query_params_schema'] = $query;
+      if ($this->queryTypeAdded) {
+        unset($query['type']);
       }
+      $api['query_params_schema'] = $query === [] ? new \stdClass() : $query;
     }
     if ($this->body !== null) {
       $api['request_body_schema'] = $this->body->toWire();
@@ -402,12 +443,22 @@ final class WebhookTool extends Tool
       $api['response_body_schema'] = $this->response->toWire();
     }
     if ($this->headers !== []) {
-      $api['request_headers'] = $this->headers;
+      $api['request_headers'] = ToolWire::map($this->headers);
     }
     $wire = $this->config;
     $wire['type'] = 'webhook';
     $wire['api_schema'] = Wire::deepCopy($api);
     return $wire;
+  }
+
+  /**
+   * A loaded body, response or query schema: an object when it has no `type`, or as declared.
+   *
+   * @param array<string, mixed> $wire
+   */
+  private static function loadContainer(array $wire): Schema
+  {
+    return Schema::fromWire($wire, false, array_key_exists('type', $wire) ? null : 'object');
   }
 
   private function request(string $method, string $url): self
