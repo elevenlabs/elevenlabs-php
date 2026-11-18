@@ -196,6 +196,32 @@ if ($generation->isCompleted()) {
 This is meant for scripts and quickstarts. In production, set a `webhook` on the request and
 handle the webhook event instead of holding a process open.
 
+## Composing music with metadata
+
+`POST /v1/music/detailed` returns the song's metadata and its audio file in one `multipart/mixed`
+response. `MusicDetailed::composeDetailed` sends that request and splits the response for you
+(`$client->music->composeDetailed()` returns the raw multipart body).
+
+```php
+use ElevenLabs\Music\Detailed\MusicDetailed;
+use ElevenLabs\Music\Requests\BodyComposeMusicWithADetailedResponseV1MusicDetailedPost;
+
+$music = new MusicDetailed($client);
+
+$song = $music->composeDetailed(new BodyComposeMusicWithADetailedResponseV1MusicDetailedPost([
+    'prompt' => 'Epic orchestral music with dramatic strings and powerful brass',
+    'musicLengthMs' => 60000,
+]));
+
+echo $song->json['song_metadata']['title'] . "\n";
+file_put_contents($song->filename, $song->audio);
+```
+
+- `json` is the metadata part as the API sends it: `composition_plan`, `song_metadata` and
+  `words_timestamps`.
+- `audio` is the audio file's bytes and `filename` the name the API suggests for it.
+- `songId` is set when the request has `storeForInpainting` enabled.
+
 ## Environments
 
 This SDK allows you to configure different environments for API requests. It defaults to the `Production` environment.
