@@ -222,6 +222,55 @@ file_put_contents($song->filename, $song->audio);
 - `audio` is the audio file's bytes and `filename` the name the API suggests for it.
 - `songId` is set when the request has `storeForInpainting` enabled.
 
+## Agent tools as code
+
+`ElevenLabs\AgentTools` defines agent tools in code: webhook tools the server calls, client tools
+that send an event to the user's client, and system tools such as ending or transferring the call.
+`build()` validates the tool and returns the `ToolRequestModel` that `$client->agents->tools->create()`
+and `update()` accept. `toJsonString()` writes the same tool in the format the ElevenLabs CLI keeps
+in `tool_configs/*.json`.
+
+```php
+use ElevenLabs\AgentTools\Header;
+use ElevenLabs\AgentTools\Schema;
+use ElevenLabs\AgentTools\SystemTool;
+use ElevenLabs\AgentTools\Tool;
+use ElevenLabs\AgentWorkflows\Destination;
+
+$getOrder = Tool::webhook('get_order', 'Look up an order by the number the caller gives')
+    ->get('https://api.example.com/orders/{order_id}')
+    ->pathParam('order_id', Schema::string()->describe('The order number, e.g. A-1042'))
+    ->queryParam('include', Schema::string()->constant('items'))
+    ->header('Authorization', Header::secret('sec_orders_api'))
+    ->assign('order_status', 'order.status')
+    ->options(responseTimeoutSecs: 10, preToolSpeech: 'force');
+
+$refund = Tool::webhook('issue_refund', 'Refund an order the caller asked to return')
+    ->post('https://api.example.com/refunds')
+    ->body(Schema::object()
+        ->property('order_id', Schema::string()->fromVariable('order_id'))
+        ->property('reason', Schema::string()->describe('Why the caller wants a refund')->choices(['damaged', 'late', 'other']))
+        ->property('note', Schema::string()->describe('Anything else the caller said')->optional()));
+
+$transfer = SystemTool::transferToNumber()
+    ->transfer('Caller asks for billing', Destination::phone('+15551234567'))
+    ->transfer('Caller asks for a manager', Destination::sipVariable('manager_sip'), transferType: 'sip_refer');
+
+$created = $client->agents->tools->create($getOrder->build());
+file_put_contents('tool_configs/issue_refund.json', $refund->toJsonString());
+```
+
+- Every literal param needs one value source: `describe()` (the LLM provides it), `fromVariable()`,
+  `constant()`, `systemProvided()` or `omit()`. Properties are required unless marked `optional()`.
+- `Schema` values are immutable, so one schema can be reused across tools and properties.
+- `build()`, `buildConfig()` and `toJson()` throw `ToolValidationError` listing every problem; each
+  `ToolIssue` has a `code` such as `missing_path_param`. Warnings go to `build($onWarning)`.
+- `Tool::fromJson()` loads a CLI file or JSON string, and `Tool::fromResponse()` the result of
+  `tools->get()`, for editing. Fields the builder doesn't model are written back unchanged, and a tool
+  of a type it can't edit (such as `mcp`) loads with `kind()` `"other"` and round-trips.
+- A system tool goes in the agent's `prompt.builtInTools` rather than `tools->create()`:
+  `new BuiltInToolsInput(['endCall' => SystemTool::endCall()->buildConfig()])`.
+
 ## Environments
 
 This SDK allows you to configure different environments for API requests. It defaults to the `Production` environment.
