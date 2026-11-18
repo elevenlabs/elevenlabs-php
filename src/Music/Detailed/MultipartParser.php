@@ -62,8 +62,11 @@ final class MultipartParser
       }
       $pos = $found + 1;
     }
-    // The body uses one line ending throughout; read it from the first delimiter line.
-    $break = substr($body, $pos + strlen($delimiter), 2) === "\r\n" ? "\r\n" : "\n";
+    // The body uses one line ending throughout; read it from the end of the first delimiter line, past
+    // any transport padding (spaces or tabs, which MIME allows after a delimiter).
+    $lineEnd = $pos + strlen($delimiter);
+    $lineEnd += strspn($body, " \t", $lineEnd);
+    $break = substr($body, $lineEnd, 2) === "\r\n" ? "\r\n" : "\n";
 
     $parts = [];
     while (true) {
@@ -71,6 +74,7 @@ final class MultipartParser
       if (substr($body, $after, 2) === '--') {
         break; // Closing delimiter.
       }
+      $after += strspn($body, " \t", $after); // Transport padding.
       $start = substr($body, $after, strlen($break)) === $break ? $after + strlen($break) : $after;
       $next = strpos($body, $break . $delimiter, $start);
       if ($next === false) {
@@ -121,16 +125,16 @@ final class MultipartParser
    */
   private static function splitPart(string $part, string $break): array
   {
-    // Prepend a line break so a part with no headers (the blank line straight after the delimiter)
-    // is found at offset 0 too.
-    $withBreak = $break . $part;
-    $separator = strpos($withBreak, $break . $break);
+    // A part with no headers starts with the blank line that ends them.
+    if (str_starts_with($part, $break)) {
+      return ['headers' => [], 'body' => substr($part, strlen($break)), 'separated' => true];
+    }
+    $separator = strpos($part, $break . $break);
     if ($separator === false) {
       return ['headers' => self::headers($part, $break), 'body' => '', 'separated' => false];
     }
-    $headerBlock = substr($withBreak, strlen($break), max(0, $separator - strlen($break)));
-    $body = substr($withBreak, $separator + 2 * strlen($break));
-    return ['headers' => self::headers($headerBlock, $break), 'body' => $body, 'separated' => true];
+    $body = substr($part, $separator + 2 * strlen($break));
+    return ['headers' => self::headers(substr($part, 0, $separator), $break), 'body' => $body, 'separated' => true];
   }
 
   /**
