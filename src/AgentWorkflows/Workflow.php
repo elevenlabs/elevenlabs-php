@@ -135,6 +135,12 @@ final class Workflow extends WorkflowChain
       $graph->issue('unknown_edge', "There is no edge from \"{$sourceId}\" to \"{$targetId}\" to insert into", $sourceId);
       return null;
     }
+    // Splitting a bidirectional edge can't preserve the original target's reverse route, so reject it
+    // rather than silently drop or misattach that route. Remove the backward condition first.
+    if ($graph->edges[$index]->backwardCondition !== null) {
+      $graph->issue('cannot_insert_bidirectional', "Edge \"{$sourceId}\" → \"{$targetId}\" has a backward condition; inserting into a bidirectional edge would drop its reverse route. Remove the backward condition first", $sourceId);
+      return null;
+    }
     $original = $graph->edges[$index];
     array_splice($graph->edges, $index, 1);
     $before = count($graph->edges);
@@ -262,7 +268,12 @@ final class Workflow extends WorkflowChain
         $edgesWire[$idOf[$reverse]]['backward_condition'] = $edge->forwardCondition;
         continue;
       }
-      $outgoing[$edge->source][] = $edge;
+      // An edge belongs in a node's outgoing order only for a transition that leaves it: the source
+      // when it has a forward condition, the target when it has a backward condition. A loaded edge
+      // may carry only one.
+      if ($edge->forwardCondition !== null) {
+        $outgoing[$edge->source][] = $edge;
+      }
       if ($edge->backwardCondition !== null) {
         $outgoing[$edge->target][] = $edge;
       }

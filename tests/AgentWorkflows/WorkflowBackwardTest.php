@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ElevenLabs\Tests\AgentWorkflows;
 
+use ElevenLabs\AgentWorkflows\Condition;
 use ElevenLabs\AgentWorkflows\Wire;
 use ElevenLabs\AgentWorkflows\Workflow;
 use ElevenLabs\AgentWorkflows\WorkflowValidationError;
@@ -63,6 +64,57 @@ class WorkflowBackwardTest extends TestCase
   public function testCanonicalConvertsInRangeWholeFloatToInt(): void
   {
     $this->assertSame(300, Wire::canonical(300.0));
+  }
+
+  public function testInsertBetweenBidirectionalEdgeIsRejected(): void
+  {
+    $wf = new Workflow();
+    $wf->converse('a', 'A')->when('to b', 'back to a')->converse('b', 'B'); // a <-> b
+    $result = $wf->insertBetween('a', 'b', fn($br) => $br->converse('mid', 'M'));
+    $this->assertNull($result, 'inserting into a bidirectional edge must be rejected');
+    $this->assertContains('cannot_insert_bidirectional', $this->buildErrorCodes($wf));
+  }
+
+  public function testPositionAcceptedForUnmappedNodeTypes(): void
+  {
+    $fc = Condition::llm('go')->toWire();
+    $wire = [
+      'nodes' => [
+        'start_node' => ['type' => 'start'],
+        'announce' => ['type' => 'say', 'text' => 'hello'],
+      ],
+      'edges' => [
+        'start_node__announce' => ['source' => 'start_node', 'target' => 'announce', 'forward_condition' => $fc],
+      ],
+    ];
+    $wf = Workflow::fromJson($wire);
+    $wf->node('announce')->update(position: ['x' => 10, 'y' => 20]);
+    // toJson validates (it would throw invalid_option before the fix) without deserializing the say
+    // node into its typed model, which isolates the position-acceptance behaviour.
+    $wf->toJson();
+    $this->addToAssertionCount(1);
+  }
+
+  public function testLoadedBackwardOnlyEdgeHasNoForwardTransition(): void
+  {
+    $fc = Condition::llm('go')->toWire();
+    $bc = Condition::llm('restart')->toWire();
+    $wire = [
+      'nodes' => [
+        'start_node' => ['type' => 'start'],
+        'hub' => ['type' => 'override_agent', 'label' => 'hub', 'additional_prompt' => 'H'],
+        'x' => ['type' => 'override_agent', 'label' => 'x', 'additional_prompt' => 'X'],
+        'end' => ['type' => 'end'],
+      ],
+      'edges' => [
+        'e1' => ['source' => 'start_node', 'target' => 'hub', 'forward_condition' => $fc],
+        'e2' => ['source' => 'hub', 'target' => 'x', 'forward_condition' => $fc],
+        'e3' => ['source' => 'hub', 'target' => 'end', 'forward_condition' => $fc],
+        'e4' => ['source' => 'x', 'target' => 'start_node', 'backward_condition' => $bc],
+      ],
+    ];
+    $out = Workflow::fromJson($wire)->toJson();
+    $this->assertNotContains('e4', $out['nodes']['x']['edge_order'], 'x has no forward transition via e4');
   }
 
   public function testDecodeJsonPreservesEmptyObjectVsEmptyArray(): void

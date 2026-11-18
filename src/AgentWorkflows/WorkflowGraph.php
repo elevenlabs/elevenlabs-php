@@ -179,7 +179,9 @@ final class WorkflowGraph
       }
     }
 
-    $fields = self::FIELDS[$node['type'] ?? ''] ?? [];
+    // Node kinds without a dedicated field map (e.g. generated say/update_state) still accept
+    // position, which is common to every node kind.
+    $fields = self::FIELDS[$node['type'] ?? ''] ?? ['position' => 'position'];
     foreach ($rest as $key => $value) {
       $field = $fields[$key] ?? null;
       if ($field === null) {

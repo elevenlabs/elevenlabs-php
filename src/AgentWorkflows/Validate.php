@@ -51,33 +51,37 @@ final class Validate
           $error('unknown_node', "Edge {$name} refers to unknown node \"{$id}\"", $id);
         }
       }
-      if ($edge->target === $graph->startId) {
-        $error(
-          'edge_into_start',
-          "Edge {$name} points into the start node; go to the first node after it instead",
-          $edge->source
-        );
-      }
+      // Forward routing rules apply only when there is a forward transition (a forward condition).
+      // A loaded edge can be backward-only, and then source → target does not exist.
+      if ($edge->forwardCondition !== null) {
+        if ($edge->target === $graph->startId) {
+          $error(
+            'edge_into_start',
+            "Edge {$name} points into the start node; go to the first node after it instead",
+            $edge->source
+          );
+        }
 
-      $sourceType = $graph->nodes[$edge->source]['type'] ?? null;
-      $conditionType = $edge->forwardCondition['type'] ?? null;
-      if ($sourceType === 'end' && !isset($endsWithEdges[$edge->source])) {
-        $endsWithEdges[$edge->source] = true;
-        $error('end_has_outgoing_edges', "End node \"{$edge->source}\" can't have outgoing edges", $edge->source);
-      }
-      if ($sourceType === 'tool' && $conditionType !== 'result') {
-        $error(
-          'tool_edge_needs_result',
-          "Edge {$name} leaves a tool node, so it must use on_success() or on_failure()",
-          $edge->source
-        );
-      }
-      if ($sourceType !== null && $sourceType !== 'tool' && $conditionType === 'result') {
-        $error(
-          'result_edge_needs_tool',
-          "Edge {$name} uses on_success()/on_failure(), which only applies to tool nodes",
-          $edge->source
-        );
+        $sourceType = $graph->nodes[$edge->source]['type'] ?? null;
+        $conditionType = $edge->forwardCondition['type'] ?? null;
+        if ($sourceType === 'end' && !isset($endsWithEdges[$edge->source])) {
+          $endsWithEdges[$edge->source] = true;
+          $error('end_has_outgoing_edges', "End node \"{$edge->source}\" can't have outgoing edges", $edge->source);
+        }
+        if ($sourceType === 'tool' && $conditionType !== 'result') {
+          $error(
+            'tool_edge_needs_result',
+            "Edge {$name} leaves a tool node, so it must use on_success() or on_failure()",
+            $edge->source
+          );
+        }
+        if ($sourceType !== null && $sourceType !== 'tool' && $conditionType === 'result') {
+          $error(
+            'result_edge_needs_tool',
+            "Edge {$name} uses on_success()/on_failure(), which only applies to tool nodes",
+            $edge->source
+          );
+        }
       }
 
       // A backward condition is a second transition the other way, target → source, that the API
@@ -194,7 +198,7 @@ final class Validate
       while ($queue !== []) {
         $current = array_shift($queue);
         foreach ($graph->edges as $edge) {
-          if ($edge->source === $current && !isset($depths[$edge->target]) && isset($graph->nodes[$edge->target])) {
+          if ($edge->source === $current && $edge->forwardCondition !== null && !isset($depths[$edge->target]) && isset($graph->nodes[$edge->target])) {
             $depths[$edge->target] = $depths[$current] + 1;
             $queue[] = $edge->target;
           }
