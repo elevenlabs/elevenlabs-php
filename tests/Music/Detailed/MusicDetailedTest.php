@@ -215,6 +215,29 @@ class MusicDetailedTest extends TestCase
     $this->assertNull(MultipartParser::boundaryFrom('application/json'));
   }
 
+  public function testSkipsTransportPaddingAfterEachDelimiter(): void
+  {
+    $padded = str_replace(self::BOUNDARY . "\r\n", self::BOUNDARY . " \t\r\n", self::multipart("\r\n"));
+    $this->reply($padded);
+
+    $song = $this->music->composeDetailed(self::request());
+
+    $this->assertSame(self::METADATA, $song->json);
+    $this->assertSame(self::audio(), $song->audio);
+    $this->assertSame('test_song.mp3', $song->filename);
+  }
+
+  public function testParsesAPartWithNoHeaders(): void
+  {
+    $b = self::BOUNDARY;
+    $body = "{$b}\r\nContent-Type: application/json\r\n\r\n{\"a\":1}\r\n{$b}\r\n\r\n" . self::audio() . "\r\n{$b}--\r\n";
+
+    $parsed = MultipartParser::parse($body);
+
+    $this->assertSame(['a' => 1], $parsed['json']);
+    $this->assertSame(self::audio(), $parsed['audio']);
+  }
+
   public function testParserFindsTheAudioPartBeforeTheJsonPart(): void
   {
     $b = self::BOUNDARY;
