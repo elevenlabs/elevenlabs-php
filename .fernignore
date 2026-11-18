@@ -7,6 +7,13 @@ README.md
 src/Webhooks/WebhookVerifier.php
 tests/Webhooks/WebhookVerifierTest.php
 
+# Hand-written agent workflows-as-code builder (a layer on top of the generated
+# client; emits the generated workflow request type or canonical wire JSON).
+# Conformance fixtures are shared across every SDK.
+src/AgentWorkflows/
+tests/AgentWorkflows/
+tests/fixtures/agent_workflows/
+
 # Hand-written Speech Engine server model (dev hosts a WebSocket server that the
 # ElevenLabs API dials into). The generator produces only the client-dials-out
 # upstream socket; these add the inbound-connection JWT verifier, per-connection
