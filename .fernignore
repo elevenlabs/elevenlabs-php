@@ -26,3 +26,10 @@ src/SpeechEngine/SpeechEngineServer.php
 src/SpeechEngine/SpeechEngineResource.php
 tests/SpeechEngine/SpeechEngineSessionTest.php
 tests/SpeechEngine/SpeechEngineResourceTest.php
+
+# Hand-written Flows `createAndWait` helpers (start a generation or template run and poll until it
+# finishes). The generated methods return only the body, and the wait needs the `Retry-After`
+# header, so these send through the generated services' own request path. A separate entry point
+# (`FlowsWaiter`) because the root client and the flows clients are regenerated.
+src/Flows/Wait/
+tests/Flows/Wait/

@@ -148,6 +148,54 @@ while (!$audio->eof()) {
 }
 ```
 
+## Waiting for Flows generations
+
+Image, video and text-to-speech generations and template runs under `$client->flows` run
+asynchronously: `create` returns an ID and `get` reports the status. `createAndWait` does both,
+polling until the generation is `completed` or `failed`.
+
+```php
+use ElevenLabs\Flows\Wait\FlowsWaiter;
+use ElevenLabs\Flows\Wait\FlowsWaitTimeoutError;
+use ElevenLabs\Types\GptImage1Request;
+use ElevenLabs\Types\ImageGenerationRequest;
+
+$flows = new FlowsWaiter($client);
+
+try {
+    $generation = $flows->image->createAndWait(
+        ImageGenerationRequest::gptImage1(new GptImage1Request([
+            'modelId' => 'gpt-image-1',
+            'prompt' => 'A lighthouse at dusk',
+        ])),
+        waitTimeoutInSeconds: 600,
+    );
+} catch (FlowsWaitTimeoutError $e) {
+    // Still running on the server: resume with $client->flows->image->get($e->id).
+    exit(1);
+}
+
+if ($generation->isCompleted()) {
+    echo $generation->asCompleted()->contentUrl . "\n";
+} else {
+    echo $generation->asFailed()->errorMessage . "\n";
+}
+```
+
+`$flows->video` and `$flows->textToSpeech` work the same way, and
+`$flows->templates->runs->createAndWait($templateId, $request)` waits for a template run.
+
+- Between status checks it waits for the server's `Retry-After` header, never less than
+  `minPollIntervalInSeconds` (default 3, minimum 0.5), plus up to 20% jitter.
+- `waitTimeoutInSeconds` bounds the whole wait. It defaults to `null`, which waits indefinitely.
+  When it runs out, `FlowsWaitTimeoutError` carries the `id` (and `templateId` for a run) and the
+  last status.
+- A `failed` generation or run is returned, not thrown.
+- `options` apply to every request, except `bodyProperties`, which only the create call gets.
+
+This is meant for scripts and quickstarts. In production, set a `webhook` on the request and
+handle the webhook event instead of holding a process open.
+
 ## Environments
 
 This SDK allows you to configure different environments for API requests. It defaults to the `Production` environment.
