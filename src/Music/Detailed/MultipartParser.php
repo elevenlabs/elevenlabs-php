@@ -23,31 +23,63 @@ final class MultipartParser
   public const DEFAULT_FILENAME = 'generated_music.mp3';
 
   /**
-   * @return array{json: array<mixed>, audio: string, filename: string}
-   * @throws ElevenlabsException When the body isn't a multipart body with a JSON part and an audio part.
+   * The `boundary` parameter of a `Content-Type` header, unquoted, or null.
    */
-  public static function parse(string $body): array
+  public static function boundaryFrom(?string $contentType): ?string
   {
-    $firstBreak = strpos($body, "\n");
-    $delimiter = trim($firstBreak === false ? $body : substr($body, 0, $firstBreak));
-    if (!str_starts_with($delimiter, '--') || strlen($delimiter) < 3) {
-      throw new ElevenlabsException(message: 'Could not find the multipart boundary in the music response');
+    if ($contentType !== null && preg_match('/boundary=(?:"([^"]+)"|([^;\s]+))/i', $contentType, $match, PREG_UNMATCHED_AS_NULL) === 1) {
+      return $match[1] ?? $match[2];
     }
-    // The body uses one line ending throughout; read it from the delimiter line.
-    $break = ($firstBreak !== false && $firstBreak > 0 && $body[$firstBreak - 1] === "\r") ? "\r\n" : "\n";
+    return null;
+  }
+
+  /**
+   * @param ?string $boundary The `boundary` parameter of the response's `Content-Type`. Without it the
+   *     delimiter is read from the body's first line.
+   * @return array{json: array<mixed>, audio: string, filename: string}
+   * @throws ElevenlabsException When the body isn't a complete multipart body with a JSON part and an
+   *     audio part, including when it ends before the closing `--boundary--` (a truncated response).
+   */
+  public static function parse(string $body, ?string $boundary = null): array
+  {
+    if ($boundary !== null && $boundary !== '') {
+      $delimiter = '--' . $boundary;
+    } else {
+      $firstBreak = strpos($body, "\n");
+      $delimiter = trim($firstBreak === false ? $body : substr($body, 0, $firstBreak));
+      if (!str_starts_with($delimiter, '--') || strlen($delimiter) < 3) {
+        throw new ElevenlabsException(message: 'Could not find the multipart boundary in the music response');
+      }
+    }
+
+    // The first delimiter starts the body or a line: anything before it is a preamble, which is ignored.
+    if (str_starts_with($body, $delimiter)) {
+      $pos = 0;
+    } else {
+      $found = strpos($body, "\n" . $delimiter);
+      if ($found === false) {
+        throw new ElevenlabsException(message: 'Could not find the multipart boundary in the music response');
+      }
+      $pos = $found + 1;
+    }
+    // The body uses one line ending throughout; read it from the first delimiter line.
+    $break = substr($body, $pos + strlen($delimiter), 2) === "\r\n" ? "\r\n" : "\n";
 
     $parts = [];
-    $pos = strpos($body, $delimiter);
-    while ($pos !== false) {
+    while (true) {
       $after = $pos + strlen($delimiter);
       if (substr($body, $after, 2) === '--') {
         break; // Closing delimiter.
       }
       $start = substr($body, $after, strlen($break)) === $break ? $after + strlen($break) : $after;
       $next = strpos($body, $break . $delimiter, $start);
-      $end = $next === false ? strlen($body) : $next;
-      $parts[] = self::splitPart(substr($body, $start, $end - $start), $break);
-      $pos = $next === false ? false : $next + strlen($break);
+      if ($next === false) {
+        // Every part ends at a delimiter, and the body at `--boundary--`; the API always sends it. A body
+        // that stops first was cut off, so its last part (the audio, usually) is incomplete.
+        throw new ElevenlabsException(message: 'The music response ended before its closing multipart boundary; it is incomplete');
+      }
+      $parts[] = self::splitPart(substr($body, $start, $next - $start), $break);
+      $pos = $next + strlen($break);
     }
 
     $json = null;

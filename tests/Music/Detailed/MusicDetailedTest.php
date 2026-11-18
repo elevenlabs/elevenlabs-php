@@ -177,6 +177,44 @@ class MusicDetailedTest extends TestCase
     $this->music->composeDetailed(self::request());
   }
 
+  public function testThrowsWhenTheBodyEndsMidAudio(): void
+  {
+    $full = self::multipart("\r\n");
+    // Cut inside the audio, so the closing delimiter never arrives.
+    $this->reply(substr($full, 0, strlen($full) - strlen("\r\n" . self::BOUNDARY . "--\r\n") - 100));
+
+    $this->expectException(ElevenlabsException::class);
+    $this->expectExceptionMessage('incomplete');
+    $this->music->composeDetailed(self::request());
+  }
+
+  public function testThrowsOnAPartialClosingBoundary(): void
+  {
+    $full = self::multipart("\r\n");
+    $this->reply(substr($full, 0, strlen($full) - strlen("3--\r\n")));
+
+    $this->expectException(ElevenlabsException::class);
+    $this->expectExceptionMessage('incomplete');
+    $this->music->composeDetailed(self::request());
+  }
+
+  public function testSkipsAPreambleUsingTheContentTypeBoundary(): void
+  {
+    $this->reply("This is a multipart message.\r\n" . self::multipart("\r\n"));
+
+    $song = $this->music->composeDetailed(self::request());
+
+    $this->assertSame(self::METADATA, $song->json);
+    $this->assertSame(self::audio(), $song->audio);
+  }
+
+  public function testReadsTheBoundaryParameter(): void
+  {
+    $this->assertSame('abc', MultipartParser::boundaryFrom('multipart/mixed; boundary="abc"'));
+    $this->assertSame('----boundaryf00', MultipartParser::boundaryFrom('multipart/mixed; boundary=----boundaryf00'));
+    $this->assertNull(MultipartParser::boundaryFrom('application/json'));
+  }
+
   public function testParserFindsTheAudioPartBeforeTheJsonPart(): void
   {
     $b = self::BOUNDARY;

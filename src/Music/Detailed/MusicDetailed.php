@@ -66,7 +66,10 @@ final class MusicDetailed
     ?array $options = null,
   ): ComposeDetailedResponse {
     $response = self::send($this->music, $request, $options);
-    $parsed = MultipartParser::parse((string) $response->getBody());
+    $parsed = MultipartParser::parse(
+      (string) $response->getBody(),
+      MultipartParser::boundaryFrom($response->getHeaderLine('Content-Type')),
+    );
     $songId = $response->getHeaderLine('song-id');
 
     return new ComposeDetailedResponse(
