@@ -24,4 +24,10 @@ final class WebhookApiSchemaModel extends WebhookToolApiSchemaConfigInput
   {
     return ['path_params_schema', 'request_headers'];
   }
+
+  /** No constant on this model. */
+  private function publicConstant(): mixed
+  {
+    return null;
+  }
 }

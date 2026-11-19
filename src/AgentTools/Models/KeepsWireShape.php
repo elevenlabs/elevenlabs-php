@@ -11,7 +11,9 @@ namespace ElevenLabs\AgentTools\Models;
  * - A map field (such as `properties`) whose keys are `"0"`, `"1"`… is a PHP list, and an empty
  *   one is `[]`; json_encode would write either as a JSON array. These are written as objects.
  * - The generated `fromJson()` decodes with associative arrays, so a `{}` inside a free-form
- *   constant becomes `[]`. The constant is written exactly as the builder had it.
+ *   constant becomes `[]`. The constant is written exactly as the builder had it, as long as the
+ *   public `constantValue` is still the value it was loaded with; a changed or cleared value is
+ *   written as it is.
  *
  * Hand-written (see `.fernignore`).
  */
@@ -19,12 +21,17 @@ trait KeepsWireShape
 {
   private bool $hasWireConstant = false;
   private mixed $wireConstant = null;
+  private mixed $loadedConstant = null;
 
-  /** Writes `constant_value` exactly as given, `{}` included. */
+  /**
+   * Writes `constant_value` exactly as given, `{}` included, until the public `constantValue`
+   * changes.
+   */
   public function keepConstant(mixed $value): void
   {
     $this->hasWireConstant = true;
     $this->wireConstant = $value;
+    $this->loadedConstant = $this->publicConstant();
   }
 
   /**
@@ -38,7 +45,7 @@ trait KeepsWireShape
         $out[$key] = (object) $out[$key];
       }
     }
-    if ($this->hasWireConstant) {
+    if ($this->hasWireConstant && $this->publicConstant() === $this->loadedConstant) {
       $out['constant_value'] = $this->wireConstant;
     }
     return $out;

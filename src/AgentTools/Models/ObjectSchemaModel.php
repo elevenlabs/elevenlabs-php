@@ -24,4 +24,10 @@ final class ObjectSchemaModel extends ObjectJsonSchemaPropertyInput
   {
     return ['properties'];
   }
+
+  /** The public constant, which `keepConstant()` gives way to once it changes. */
+  private function publicConstant(): mixed
+  {
+    return $this->constantValue;
+  }
 }

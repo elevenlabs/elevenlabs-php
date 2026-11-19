@@ -77,6 +77,11 @@ final class ToolWire
         continue;
       }
       $key = $attribute->newInstance()->name;
+      if (in_array($key, self::FREE_FORM_KEYS, true)) {
+        // Free-form JSON holds no schema models, and its serialized form is already right: the
+        // model's public value can't hold `{}` (see KeepsWireShape).
+        continue;
+      }
       $item = $property->getValue($value);
       if (array_key_exists($key, $wire) && (is_array($item) || $item instanceof JsonSerializableType)) {
         $wire[$key] = self::modelToWire($item);

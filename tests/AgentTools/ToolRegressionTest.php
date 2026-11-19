@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace ElevenLabs\Tests\AgentTools;
 
+use ElevenLabs\AgentTools\Models\ArraySchemaModel;
+use ElevenLabs\AgentTools\Models\ObjectSchemaModel;
 use ElevenLabs\AgentTools\Schema;
 use ElevenLabs\AgentTools\Tool;
 use ElevenLabs\AgentTools\ToolIssue;
 use ElevenLabs\AgentTools\ToolValidationError;
 use ElevenLabs\AgentWorkflows\Wire;
+use ElevenLabs\Types\ClientToolConfigInput;
 use ElevenLabs\Types\ToolResponseModel;
 use PHPUnit\Framework\TestCase;
 
@@ -244,6 +247,94 @@ class ToolRegressionTest extends TestCase
       Wire::encode(Wire::canonical(Wire::decodeJson($sent)['tool_config'])),
       $tool->toJsonString()
     );
+  }
+
+  // PHP: the kept `{}` constant gives way to an edited or cleared `constantValue`.
+
+  public function testEditedOrClearedConstantsOnTheBuiltModelAreSent(): void
+  {
+    $config = Tool::client('c', 'C')
+      ->param('obj', Schema::object()->constant(['a' => new \stdClass()]))
+      ->param('list', Schema::array(Schema::string()->describe('S'))->constant([new \stdClass()]))
+      ->param('kept', Schema::object()->constant(['a' => new \stdClass()]))
+      ->buildConfig();
+    $this->assertInstanceOf(ClientToolConfigInput::class, $config);
+    $properties = $config->parameters->properties ?? [];
+    $obj = $properties['obj'];
+    $list = $properties['list'];
+    $this->assertInstanceOf(ObjectSchemaModel::class, $obj);
+    $this->assertInstanceOf(ArraySchemaModel::class, $list);
+
+    $obj->constantValue = ['a' => 1];
+    $list->constantValue = null;
+    $sent = (string) json_encode($config);
+    $this->assertStringContainsString('"obj":{"constant_value":{"a":1}', $sent);
+    $this->assertStringNotContainsString('"constant_value":[{}]', $sent);
+    $this->assertStringContainsString('"kept":{"constant_value":{"a":{}}', $sent);
+  }
+
+  // PHP: loading the built model keeps `{}` inside container constants.
+
+  public function testEmptyObjectsInConstantsSurviveLoadingTheBuiltModel(): void
+  {
+    $tool = Tool::client('c', 'C')
+      ->param('nested', Schema::object()->constant(['a' => new \stdClass(), 'b' => [new \stdClass()]]))
+      ->param('list', Schema::array(Schema::string()->describe('S'))->constant([new \stdClass(), ['x' => new \stdClass()]]));
+
+    $json = Tool::fromJson($tool->build())->toJsonString();
+    $this->assertSame($tool->toJsonString(), $json);
+    $this->assertStringContainsString('"a": {}', $json);
+    $this->assertStringContainsString('"x": {}', $json);
+  }
+
+  // PHP: numeric names added out of order stay a map once sorted.
+
+  public function testReverseOrderNumericNamesStayAMap(): void
+  {
+    $literal = ['type' => 'string', 'description' => 'X'];
+    $webhook = Tool::webhook('w', 'W')
+      ->post('https://api.example.com/{1}/{0}')
+      ->pathParam('1', Schema::fromJson($literal))
+      ->pathParam('0', Schema::fromJson($literal))
+      ->queryParam('3', Schema::fromJson($literal))
+      ->queryParam('2', Schema::fromJson($literal))
+      ->body(Schema::object()
+        ->property('5', Schema::string()->describe('Five'))
+        ->property('4', Schema::object()->property('1', Schema::string()->describe('A'))->property('0', Schema::string()->describe('B'))));
+    $client = Tool::client('c', 'C')
+      ->param('1', Schema::string()->describe('One'))
+      ->param('0', Schema::string()->describe('Zero'));
+
+    foreach ([$webhook, $client] as $tool) {
+      $json = $tool->toJsonString();
+      $this->assertStringNotContainsString('": [', str_replace('"required": [', '', $json));
+      $this->assertSame($json, Tool::fromJson($json)->toJsonString());
+    }
+    $this->assertStringContainsString("\"path_params_schema\": {\n      \"0\": {", $webhook->toJsonString());
+    $this->assertStringContainsString("\"properties\": {\n        \"2\": {", $webhook->toJsonString());
+    $this->assertStringContainsString("\"properties\": {\n      \"0\": {", $client->toJsonString());
+  }
+
+  // Cross-SDK: numbers are written as JavaScript writes them.
+
+  public function testNumberConstantsAreWrittenAsJavaScriptWritesThem(): void
+  {
+    foreach ([
+      [1e-7, '1e-7'],
+      [1.5e-7, '1.5e-7'],
+      [-2.5e-8, '-2.5e-8'],
+      [0.000001, '0.000001'],
+      [0.1, '0.1'],
+      [1e20, '100000000000000000000'],
+      [123456789012345680000.0, '123456789012345680000'],
+      [1e21, '1e+21'],
+      [1.5e300, '1.5e+300'],
+      [PHP_FLOAT_MAX, '1.7976931348623157e+308'],
+      [5e-324, '5e-324'],
+    ] as [$value, $expected]) {
+      $json = Tool::client('c', 'C')->param('n', Schema::number()->constant($value))->toJsonString();
+      $this->assertStringContainsString('"constant_value": ' . $expected . ",\n", $json, (string) $expected);
+    }
   }
 
   private function nestedTool(): Tool

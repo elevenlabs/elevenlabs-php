@@ -24,4 +24,10 @@ final class ArraySchemaModel extends ArrayJsonSchemaPropertyInput
   {
     return [];
   }
+
+  /** The public constant, which `keepConstant()` gives way to once it changes. */
+  private function publicConstant(): mixed
+  {
+    return $this->constantValue;
+  }
 }

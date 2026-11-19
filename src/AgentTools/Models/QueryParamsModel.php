@@ -24,4 +24,10 @@ final class QueryParamsModel extends QueryParamsJsonSchemaInput
   {
     return ['properties'];
   }
+
+  /** No constant on this model. */
+  private function publicConstant(): mixed
+  {
+    return null;
+  }
 }
