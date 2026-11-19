@@ -55,11 +55,14 @@ final class Wire
         return array_map([self::class, 'canonical'], $value);
       }
       ksort($value);
+      // Keys such as `"1"`, `"0"` are an object to PHP until sorting puts them in list order,
+      // when they would be written as a JSON array. Keep the object.
+      $sortedAsList = array_is_list($value);
       $out = [];
       foreach ($value as $key => $item) {
         $out[(string) $key] = self::canonical($item);
       }
-      return $out;
+      return $sortedAsList ? (object) $out : $out;
     }
     if (
       is_float($value) && is_finite($value) && floor($value) === $value
@@ -160,9 +163,48 @@ final class Wire
       return (string) $value;
     }
     if (is_float($value)) {
-      return (string) json_encode($value);
+      return self::encodeFloat($value);
     }
     return (string) json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+  }
+
+  /**
+   * A float as JavaScript writes it (ECMAScript `Number.prototype.toString`): the shortest digits
+   * that read back as the same float, written out in full while the decimal exponent is from -7
+   * to 20 and as `1e-7` or `1.5e+21` otherwise. PHP's own encoder writes `1.0e-7` and `1.0e+20`.
+   */
+  private static function encodeFloat(float $value): string
+  {
+    if ($value === 0.0) {
+      return '0';
+    }
+    $abs = abs($value);
+    // The shortest round-tripping digits: 17 significant digits always round-trip.
+    $repr = sprintf('%.16e', $abs);
+    for ($precision = 0; $precision < 16; $precision++) {
+      $candidate = sprintf('%.' . $precision . 'e', $abs);
+      if ((float) $candidate === $abs) {
+        $repr = $candidate;
+        break;
+      }
+    }
+    [$mantissa, $exponent] = explode('e', $repr);
+    $digits = rtrim(str_replace('.', '', $mantissa), '0');
+    $k = strlen($digits);
+    $n = (int) $exponent + 1;
+    $sign = $value < 0 ? '-' : '';
+    if ($k <= $n && $n <= 21) {
+      return $sign . $digits . str_repeat('0', $n - $k);
+    }
+    if (0 < $n && $n <= 21) {
+      return $sign . substr($digits, 0, $n) . '.' . substr($digits, $n);
+    }
+    if (-6 < $n && $n <= 0) {
+      return $sign . '0.' . str_repeat('0', -$n) . $digits;
+    }
+    $e = $n - 1;
+    $significand = $k === 1 ? $digits : $digits[0] . '.' . substr($digits, 1);
+    return $sign . $significand . 'e' . ($e < 0 ? '-' : '+') . abs($e);
   }
 
   /**
