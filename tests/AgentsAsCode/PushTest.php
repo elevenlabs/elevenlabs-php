@@ -133,6 +133,94 @@ class PushTest extends TestCase
     $this->assertNotContains('DELETE', array_column($server->calls, 'method'));
   }
 
+  /** @return array<string, mixed> */
+  private static function mcpConfig(): array
+  {
+    return [
+      'type' => 'mcp',
+      'name' => 'docs_search',
+      'description' => 'Searches the docs',
+      'mcp_server_id' => 'mcp_1',
+    ];
+  }
+
+  public function testLeavesAnMcpToolAttachedByItsIdWithoutCreatingOrUpdatingIt(): void
+  {
+    $server = new FakeServer();
+    $server->addTool('tool_mcp', self::mcpConfig(), ['agent_1']);
+    $server->addAgent('agent_1', [
+      'name' => 'Docs',
+      'conversation_config' => ['agent' => ['prompt' => ['prompt' => 'p', 'tool_ids' => ['tool_mcp']]]],
+    ]);
+    $server->clearCalls();
+    $mcp = Tool::fromJson(self::mcpConfig());
+    $agent = Agent::fromJson(
+      ['name' => 'Docs', 'conversation_config' => ['agent' => ['prompt' => ['prompt' => 'p', 'tool_ids' => ['tool_mcp']]]]],
+      ['tool_mcp' => $mcp],
+    );
+    $this->assertSame([], $agent->tools());
+    $agent->update(firstMessage: 'Hello');
+
+    $result = self::agents($server)->push($agent, agentId: 'agent_1');
+
+    $this->assertSame(['PATCH /v1/convai/agents/agent_1'], $server->writes());
+    $this->assertSame([], $result->toArray()['tools']);
+    $this->assertSame(['tool_mcp'], $server->agents['agent_1']['conversation_config']['agent']['prompt']['tool_ids']);
+  }
+
+  public function testRejectsAnMcpToolWithoutAnIdBeforeAnyRequest(): void
+  {
+    $wf = new Workflow();
+    $wf->converse('triage', 'Find out what the caller needs')
+      ->when('Caller asked about the docs')
+      ->tool('search', [Tool::fromJson(self::mcpConfig())])
+      ->onSuccess()
+      ->converse('resolve', 'Answer');
+    foreach ([
+      new Agent('Docs', prompt: 'p', tools: [Tool::fromJson(self::mcpConfig())]),
+      (new Agent('Docs', prompt: 'p'))->addTool(Tool::fromJson(self::mcpConfig())),
+      new Agent('Docs', prompt: 'p', workflow: $wf),
+    ] as $agent) {
+      try {
+        $agent->validate();
+        $this->fail('expected an AgentValidationError');
+      } catch (AgentValidationError $e) {
+        $issues = array_values(array_filter($e->issues, static fn($i): bool => $i->code === 'invalid_tool'));
+        $this->assertCount(1, $issues);
+        $this->assertSame('tools.docs_search', $issues[0]->path);
+        $this->assertSame(
+          'Tool "docs_search" has type "mcp", which push doesn\'t create or update: load it with its id or attach it with toolIds',
+          $issues[0]->message,
+        );
+      }
+      $server = new FakeServer();
+      try {
+        self::agents($server)->push($agent);
+        $this->fail('expected an AgentValidationError');
+      } catch (AgentValidationError) {
+      }
+      $this->assertSame([], $server->calls);
+    }
+  }
+
+  public function testAWorkflowNodeKeepsAnMcpToolsLoadedId(): void
+  {
+    $mcp = Tool::fromJson(self::mcpConfig());
+    $agent = Agent::fromJson(
+      ['name' => 'Docs', 'conversation_config' => ['agent' => ['prompt' => ['prompt' => 'p']]]],
+      ['tool_mcp' => $mcp],
+    );
+    $wf = new Workflow();
+    $wf->converse('triage', 'Find out what the caller needs')
+      ->when('Caller asked about the docs')
+      ->tool('search', [$mcp])
+      ->onSuccess()
+      ->converse('resolve', 'Answer');
+    $agent->update(workflow: $wf);
+    $this->assertSame([], $agent->tools());
+    $this->assertSame([['tool_id' => 'tool_mcp']], $agent->toJson()['workflow']['nodes']['search']['tools']);
+  }
+
   public function testMatchesABranchPushAgainstTheBranchsToolsNotTheMainBranchs(): void
   {
     $server = new FakeServer();

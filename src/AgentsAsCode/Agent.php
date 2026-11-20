@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ElevenLabs\AgentsAsCode;
 
+use ElevenLabs\AgentTools\OtherTool;
 use ElevenLabs\AgentTools\SystemTool;
 use ElevenLabs\AgentTools\Tool;
 use ElevenLabs\AgentWorkflows\Wire;
@@ -321,7 +322,8 @@ final class Agent
   /**
    * Every webhook and client tool the agent and its workflow use, each once, in first-use order:
    * the tools `push()` creates or updates. System tools aren't included; they live inside the
-   * agent's config.
+   * agent's config. Nor are tools of other kinds, such as MCP tools: they stay attached by the id
+   * the agent was loaded with.
    *
    * @return list<Tool>
    */
@@ -330,7 +332,7 @@ final class Agent
     $seen = new \SplObjectStorage();
     $out = [];
     foreach (array_merge($this->tools, $this->workflowTools()) as $tool) {
-      if ($tool instanceof SystemTool || isset($seen[$tool])) {
+      if (!self::isManaged($tool) || isset($seen[$tool])) {
         continue;
       }
       $seen[$tool] = true;
@@ -393,6 +395,23 @@ final class Agent
     );
   }
 
+  /** Whether `push()` creates and updates the tool: webhook and client tools. */
+  private static function isManaged(Tool $tool): bool
+  {
+    return $tool->kind() === 'webhook' || $tool->kind() === 'client';
+  }
+
+  /** The id the agent was loaded with for a tool, found by object. */
+  private function knownId(Tool $tool): ?string
+  {
+    foreach ($this->toolsById as $id => $loaded) {
+      if ($loaded === $tool) {
+        return (string) $id;
+      }
+    }
+    return null;
+  }
+
   /**
    * @return list<Tool>
    */
@@ -424,7 +443,10 @@ final class Agent
     $issues = [];
     /** @var array<string, mixed> $config */
     $config = Wire::deepCopy($this->base);
-    $idOf = static fn(Tool $tool): string => $toolIds[$tool->name()] ?? WorkflowGraph::toolPlaceholder($tool->name());
+    // Webhook and client tools get the id push gave them; other kinds keep the id they were loaded with.
+    $idOf = fn(Tool $tool): string => self::isManaged($tool)
+      ? $toolIds[$tool->name()] ?? WorkflowGraph::toolPlaceholder($tool->name())
+      : $this->knownId($tool) ?? WorkflowGraph::toolPlaceholder($tool->name());
 
     if (trim($this->name) === '') {
       $issues[] = new AgentIssue('missing_name', 'error', 'The agent needs a name');
@@ -478,16 +500,26 @@ final class Agent
         } catch (\Throwable $e) {
           $issues[] = new AgentIssue('invalid_tool', 'error', $e->getMessage(), "tools.{$tool->name()}");
         }
+        // Push only creates and updates webhook and client tools; any other kind needs an id.
+        if ($tool instanceof OtherTool && $this->knownId($tool) === null) {
+          $issues[] = new AgentIssue(
+            'invalid_tool',
+            'error',
+            "Tool \"{$tool->name()}\" has type \"{$tool->type()}\", which push doesn't create or update: "
+              . 'load it with its id or attach it with toolIds',
+            "tools.{$tool->name()}",
+          );
+        }
       }
     }
 
-    $managed = [];
+    $attached = [];
     $system = [];
     foreach ($this->tools as $tool) {
       if ($tool instanceof SystemTool) {
         $system[] = $tool;
       } else {
-        $managed[] = $tool;
+        $attached[] = $tool;
       }
     }
     if ($this->toolListGiven) {
@@ -497,7 +529,7 @@ final class Agent
       ConfigWire::set(
         $config,
         ConfigWire::TOOL_IDS_PATH,
-        self::keepOrder(array_merge($this->toolIds, array_map($idOf, $managed)), $this->loadedToolIds),
+        self::keepOrder(array_merge($this->toolIds, array_map($idOf, $attached)), $this->loadedToolIds),
       );
     }
     foreach ($system as $tool) {
@@ -552,7 +584,7 @@ final class Agent
         $copy,
         static function (string $id) use ($byId, $toolIds): string {
           $tool = $byId[$id] ?? null;
-          return $tool === null ? $id : ($toolIds[$tool->name()] ?? $id);
+          return $tool === null || !self::isManaged($tool) ? $id : ($toolIds[$tool->name()] ?? $id);
         },
       );
     }
