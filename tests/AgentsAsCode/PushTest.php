@@ -526,6 +526,47 @@ class PushTest extends TestCase
     $this->assertSame(1, self::json($reloaded->toFiles()['tool_configs/get_order.json'])['future_field']);
   }
 
+  public function testKeepsAProjectToolsNestedUnmodeledFieldsWhenTheSameToolIsRebuiltInCode(): void
+  {
+    $server = new FakeServer();
+    $agents = self::agents($server);
+    $project = AgentProject::fromFiles([]);
+    $agents->push(self::supportAgent(), project: $project);
+    $files = $project->toFiles();
+    $withExtra = self::json($files['tool_configs/get_order.json']);
+    $withExtra['api_schema']['future_field'] = 1;
+    $withExtra['api_schema']['path_params_schema']['order_id']['future_field'] = 2;
+    $files['tool_configs/get_order.json'] = (string) json_encode($withExtra, JSON_PRETTY_PRINT);
+    $server->tools['tool_new_2']['config'] = $withExtra;
+
+    $reloaded = AgentProject::fromFiles($files);
+    $result = $agents->push(self::supportAgent(), project: $reloaded);
+    $this->assertSame('unchanged', $result->tools['get_order']->action);
+    $saved = self::json($reloaded->toFiles()['tool_configs/get_order.json']);
+    $this->assertSame(1, $saved['api_schema']['future_field'] ?? null);
+    $this->assertSame(2, $saved['api_schema']['path_params_schema']['order_id']['future_field'] ?? null);
+  }
+
+  public function testUpdatesAProjectToolRebuiltInCodeWithAChangedNestedField(): void
+  {
+    $server = new FakeServer();
+    $agents = self::agents($server);
+    $project = AgentProject::fromFiles([]);
+    $agents->push(self::supportAgent(), project: $project);
+    $files = $project->toFiles();
+    $withExtra = self::json($files['tool_configs/get_order.json']);
+    $withExtra['api_schema']['future_field'] = 1;
+    $withExtra['api_schema']['path_params_schema']['order_id']['description'] = 'Old description';
+    $files['tool_configs/get_order.json'] = (string) json_encode($withExtra, JSON_PRETTY_PRINT);
+    $server->tools['tool_new_2']['config'] = $withExtra;
+
+    $reloaded = AgentProject::fromFiles($files);
+    $result = $agents->push(self::supportAgent(), project: $reloaded);
+    $this->assertSame('updated', $result->tools['get_order']->action);
+    $saved = self::json($reloaded->toFiles()['tool_configs/get_order.json']);
+    $this->assertSame('The order number', $saved['api_schema']['path_params_schema']['order_id']['description']);
+  }
+
   public function testFollowsTheToolListCursor(): void
   {
     $server = new FakeServerPaged();

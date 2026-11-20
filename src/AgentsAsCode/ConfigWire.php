@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ElevenLabs\AgentsAsCode;
 
+use ElevenLabs\AgentTools\Tool;
 use ElevenLabs\AgentWorkflows\Wire;
 
 /**
@@ -120,6 +121,18 @@ final class ConfigWire
     }
     self::delete($child, $path);
     $target[$key] = $child === [] ? new \stdClass() : $child;
+  }
+
+  /**
+   * The tool as its generated config model serializes it, in canonical form: fields the SDK
+   * doesn't model are dropped at every level.
+   *
+   * @throws \Throwable if the tool doesn't build
+   */
+  public static function modeled(Tool $tool): string
+  {
+    $json = json_decode(json_encode($tool->buildConfig(), JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR);
+    return Wire::encode(Wire::canonical($json));
   }
 
   /**

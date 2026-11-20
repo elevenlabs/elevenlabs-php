@@ -6,7 +6,6 @@ namespace ElevenLabs\AgentsAsCode;
 
 use ElevenLabs\AgentTools\Tool;
 use ElevenLabs\AgentWorkflows\Wire;
-use ElevenLabs\Core\Json\JsonProperty;
 
 /**
  * An agents-as-code project in the ElevenLabs CLI's layout: `agents.json` and `tools.json` list the
@@ -222,7 +221,7 @@ final class AgentProject
    * @internal The loaded config to send for a tool whose definition matches its project entry
    * (the loaded object, or one rebuilt in code with the same name), so fields this SDK doesn't
    * model survive. A tool rebuilt in code can't hold the entry's unmodeled fields, so it matches
-   * when it equals the entry's modeled fields: those the generated config model declares.
+   * when it equals the entry as the generated config model holds it, at every level.
    */
   public function unchangedRaw(Tool $tool): mixed
   {
@@ -238,40 +237,18 @@ final class AgentProject
     if ($current === $baseline) {
       return Wire::deepCopy($raw);
     }
-    $modeled = $loaded === $tool ? null : self::modeledKeys($loaded);
-    if ($current === null || $modeled === null) {
+    if ($loaded === $tool || $current === null || ($loaded->kind() !== 'webhook' && $loaded->kind() !== 'client')) {
       return null;
     }
-    $loadedWire = ConfigWire::fields(Wire::decodeJson($baseline)) ?? [];
-    return Wire::encode(Wire::canonical(array_intersect_key($loadedWire, $modeled))) === $current
-      ? Wire::deepCopy($raw)
-      : null;
-  }
-
-  /**
-   * The top-level fields the tool's generated config model declares, or null for a tool kind
-   * without one.
-   *
-   * @return array<string, true>|null
-   */
-  private static function modeledKeys(Tool $tool): ?array
-  {
-    if ($tool->kind() !== 'webhook' && $tool->kind() !== 'client') {
-      return null;
-    }
+    // Compared as the generated config model holds them, which drops unmodeled fields at every
+    // level; the code-built tool must also carry nothing the entry lacks.
     try {
-      $model = $tool->buildConfig();
+      $same = ConfigWire::modeled($loaded) === ConfigWire::modeled($tool)
+        && ConfigWire::isSubset(Wire::decodeJson($current), Wire::decodeJson($baseline));
     } catch (\Throwable) {
       return null;
     }
-    $keys = ['type' => true];
-    foreach ((new \ReflectionObject($model))->getProperties() as $property) {
-      $attribute = $property->getAttributes(JsonProperty::class)[0] ?? null;
-      if ($attribute !== null) {
-        $keys[$attribute->newInstance()->name] = true;
-      }
-    }
-    return $keys;
+    return $same ? Wire::deepCopy($raw) : null;
   }
 
   /**

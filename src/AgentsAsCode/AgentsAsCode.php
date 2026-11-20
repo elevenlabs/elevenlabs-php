@@ -313,19 +313,12 @@ final class AgentsAsCode
   {
     try {
       $wire = $remote['tool_config'] ?? null;
-      return self::modeled(Tool::fromJson(ConfigWire::fields($wire) ?? []))
-          === self::modeled(Tool::fromJson(ConfigWire::fields($config) ?? []))
+      return ConfigWire::modeled(Tool::fromJson(ConfigWire::fields($wire) ?? []))
+          === ConfigWire::modeled(Tool::fromJson(ConfigWire::fields($config) ?? []))
         && ConfigWire::isSubset($config, $wire);
     } catch (\Throwable) {
       return false;
     }
-  }
-
-  /** The tool as its generated config model serializes it, in canonical form. */
-  private static function modeled(Tool $tool): string
-  {
-    $json = json_decode(json_encode($tool->buildConfig(), JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR);
-    return Wire::encode(Wire::canonical($json));
   }
 
   private static function saveQuietly(?AgentProject $project): void
