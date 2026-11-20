@@ -149,9 +149,10 @@ final class Agent
 
   /**
    * Loads an agent config in API format (snake_case): a CLI `agent_configs/*.json` file, or the
-   * `toJson()` of an agent, as a JSON string or a parsed array. Tool ids found in `$toolsById`
-   * become `Tool` objects the agent manages; the rest stay as `toolIds()`. Fields this SDK doesn't
-   * model are kept, so an unedited agent round-trips exactly.
+   * `toJson()` of an agent, as a JSON string or a parsed array. Webhook and client tools found in
+   * `$toolsById` become `Tool` objects the agent manages; the other ids, including tools of kinds
+   * push doesn't manage such as MCP tools, stay as `toolIds()`. Fields this SDK doesn't model are
+   * kept, so an unedited agent round-trips exactly.
    *
    * @param string|array<string, mixed> $config
    * @param array<string, Tool> $toolsById
@@ -179,7 +180,8 @@ final class Agent
         $id = (string) $id;
         $agent->loadedToolIds[] = $id;
         $tool = $toolsById[$id] ?? null;
-        if ($tool === null) {
+        // Like pull: a kind push doesn't manage stays attached by its id.
+        if ($tool === null || !self::isManaged($tool)) {
           $agent->toolIds[] = $id;
         } else {
           $agent->tools[] = $tool;

@@ -168,6 +168,25 @@ class PushTest extends TestCase
     $this->assertSame(['tool_mcp'], $server->agents['agent_1']['conversation_config']['agent']['prompt']['tool_ids']);
   }
 
+  public function testALoadedMcpToolStaysInToolIdsWhenTheToolsAreReplaced(): void
+  {
+    $ping = Tool::client('ping', 'Ping the client');
+    $agent = Agent::fromJson(
+      [
+        'name' => 'Docs',
+        'conversation_config' => ['agent' => ['prompt' => ['prompt' => 'p', 'tool_ids' => ['tool_mcp', 'tool_ping']]]],
+      ],
+      ['tool_mcp' => Tool::fromJson(self::mcpConfig()), 'tool_ping' => $ping],
+    );
+    $this->assertSame(['tool_mcp'], $agent->toolIds());
+    $this->assertSame([$ping], $agent->tools());
+
+    $agent->update(tools: [AgentTest::getOrder()]);
+    $this->assertSame(['tool_mcp'], $agent->toolIds());
+    $ids = $agent->toJson(['get_order' => 'tool_get'])['conversation_config']['agent']['prompt']['tool_ids'];
+    $this->assertSame(['tool_mcp', 'tool_get'], $ids);
+  }
+
   public function testRejectsAnMcpToolWithoutAnIdBeforeAnyRequest(): void
   {
     $wf = new Workflow();
