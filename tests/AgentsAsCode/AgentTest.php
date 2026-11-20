@@ -332,4 +332,41 @@ class AgentTest extends TestCase
     $this->assertStringContainsString('tool_other', $built);
     $this->assertStringNotContainsString('"tool_1"', $built);
   }
+  /** A workflow whose two nodes use two different tool ids. */
+  private static function twoToolIdsWorkflow(): mixed
+  {
+    $wf = new Workflow();
+    $wf->tool('a', ['tool_1'])->onSuccess()->tool('b', ['tool_2']);
+    return $wf->toJson();
+  }
+
+  public function testReportsTwoLoadedToolIdsWhoseToolsShareANameInsteadOfMergingThem(): void
+  {
+    $first = Tool::client('get_order', 'First');
+    $second = Tool::client('get_order', 'Second');
+    $loaded = Workflow::fromJson(self::twoToolIdsWorkflow(), ['tool_1' => $first, 'tool_2' => $second]);
+    try {
+      $loaded->toJson(['get_order' => 'tool_9']);
+      $this->fail('expected a WorkflowValidationError');
+    } catch (WorkflowValidationError $e) {
+      $this->assertSame(['duplicate_tool_name'], array_map(static fn($i) => $i->code, $e->issues));
+    }
+  }
+
+  public function testReportsALoadedAgentsWorkflowToolsThatShareANameOnceTheWorkflowIsRead(): void
+  {
+    $first = Tool::client('get_order', 'First');
+    $second = Tool::client('get_order', 'Second');
+    $agent = Agent::fromJson(
+      ['name' => 'A', 'conversation_config' => ['agent' => ['prompt' => ['prompt' => 'p']]], 'workflow' => self::twoToolIdsWorkflow()],
+      ['tool_1' => $first, 'tool_2' => $second],
+    );
+    $this->assertNotNull($agent->workflow());
+    try {
+      $agent->validate();
+      $this->fail('expected an AgentValidationError');
+    } catch (AgentValidationError $e) {
+      $this->assertStringContainsString('also named "get_order"', $e->getMessage());
+    }
+  }
 }

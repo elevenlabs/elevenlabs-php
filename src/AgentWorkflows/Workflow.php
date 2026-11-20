@@ -72,17 +72,28 @@ final class Workflow extends WorkflowChain
     $wf->graph->load(is_array($raw) ? $raw : []);
     if ($toolsById !== []) {
       $graph = $wf->graph;
-      $swap = static function (string $id) use ($graph, $toolsById): string {
-        $tool = $toolsById[$id] ?? null;
-        if ($tool === null) {
-          return $id;
-        }
-        $key = WorkflowGraph::toolPlaceholder($tool->name());
-        $graph->toolRefs[$key] = $tool;
-        return $key;
-      };
-      foreach ($graph->nodes as $id => $model) {
-        $graph->nodes[$id] = WorkflowGraph::mapNodeToolIds($model, $swap);
+      foreach ($graph->nodes as $nodeId => $model) {
+        $swap = static function (string $id) use ($graph, $toolsById, $nodeId): string {
+          $tool = $toolsById[$id] ?? null;
+          if ($tool === null) {
+            return $id;
+          }
+          $key = WorkflowGraph::toolPlaceholder($tool->name());
+          // Two ids whose tools share a name would collapse into one placeholder, so both nodes
+          // would point at the second tool. Report it, as building with `Tool` objects does.
+          $known = $graph->toolRefs[$key] ?? null;
+          if ($known !== null && $known !== $tool) {
+            $graph->issue(
+              'duplicate_tool_name',
+              "Node \"{$nodeId}\" uses a different tool also named \"{$tool->name()}\"",
+              (string) $nodeId
+            );
+            return $id;
+          }
+          $graph->toolRefs[$key] = $tool;
+          return $key;
+        };
+        $graph->nodes[$nodeId] = WorkflowGraph::mapNodeToolIds($model, $swap);
       }
     }
     return $wf;
