@@ -245,10 +245,24 @@ final class SystemTool extends Tool
 
   protected function validate(): array
   {
-    $transfers = $this->params['transfers'] ?? null;
     $isTransfer = $this->systemToolType === 'transfer_to_number' || $this->systemToolType === 'transfer_to_agent';
-    if ($isTransfer && (!is_array($transfers) || $transfers === [])) {
+    if (!$isTransfer) {
+      return [];
+    }
+    // A loaded transfer_to_number tool may use transfer_rules instead of transfers; the API takes exactly one.
+    $transfers = $this->params['transfers'] ?? null;
+    $rules = $this->params['transfer_rules'] ?? null;
+    $hasTransfers = is_array($transfers) && $transfers !== [];
+    $hasRules = is_array($rules) && $rules !== [];
+    if (!$hasTransfers && !$hasRules) {
       return [ToolIssue::error('no_transfers', 'transfer', "{$this->systemToolType} needs at least one transfer()")];
+    }
+    if ($hasTransfers && $hasRules) {
+      return [ToolIssue::error(
+        'conflicting_transfers',
+        'transfer',
+        "{$this->systemToolType} has both transfers and transfer_rules; the API takes only one",
+      )];
     }
     return [];
   }
