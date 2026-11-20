@@ -187,6 +187,22 @@ class PushTest extends TestCase
     $this->assertSame(['tool_mcp', 'tool_get'], $ids);
   }
 
+  public function testAddingBackALoadedMcpToolDoesNotAttachItsIdTwice(): void
+  {
+    $mcp = Tool::fromJson(self::mcpConfig());
+    $agent = Agent::fromJson(
+      [
+        'name' => 'Docs',
+        'conversation_config' => ['agent' => ['prompt' => ['prompt' => 'p', 'tool_ids' => ['tool_mcp', 'tool_ping']]]],
+      ],
+      ['tool_mcp' => $mcp, 'tool_ping' => Tool::client('ping', 'Ping the client')],
+    );
+    $agent->update(tools: [AgentTest::getOrder()]);
+    $agent->addTool($mcp);
+    $ids = $agent->toJson(['get_order' => 'tool_get'])['conversation_config']['agent']['prompt']['tool_ids'];
+    $this->assertSame(['tool_mcp', 'tool_get'], $ids);
+  }
+
   public function testRejectsAnMcpToolWithoutAnIdBeforeAnyRequest(): void
   {
     $wf = new Workflow();

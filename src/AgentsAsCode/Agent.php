@@ -528,11 +528,16 @@ final class Agent
       if (ConfigWire::has($raw, ConfigWire::TOOL_IDS_PATH)) {
         $issues[] = self::conflict('tools', ConfigWire::TOOL_IDS_PATH);
       }
-      ConfigWire::set(
-        $config,
-        ConfigWire::TOOL_IDS_PATH,
-        self::keepOrder(array_merge($this->toolIds, array_map($idOf, $attached)), $this->loadedToolIds),
-      );
+      $ids = $this->toolIds;
+      foreach ($attached as $tool) {
+        $id = $idOf($tool);
+        // A tool push doesn't manage may already be attached by its id, e.g. a loaded MCP tool added back.
+        if (!self::isManaged($tool) && in_array($id, $ids, true)) {
+          continue;
+        }
+        $ids[] = $id;
+      }
+      ConfigWire::set($config, ConfigWire::TOOL_IDS_PATH, self::keepOrder($ids, $this->loadedToolIds));
     }
     foreach ($system as $tool) {
       $path = array_merge(ConfigWire::BUILT_IN_TOOLS_PATH, [$tool->systemToolType()]);
