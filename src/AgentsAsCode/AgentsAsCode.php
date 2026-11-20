@@ -298,11 +298,14 @@ final class AgentsAsCode
   }
 
   /**
-   * Whether the server already has the config `push` would send. Both sides are compared through
-   * the builder, so they normalize alike (the server's `null`s for unset fields, defaults written
-   * out or not); the config to send must also be contained in the server's, so a change to any
-   * field still counts. The builder keeps fields it doesn't model, so this compares the config
-   * to send, a loaded tool's unmodeled fields included, rather than the `Tool` object.
+   * Whether the server already has the config `push` would send.
+   *
+   * Both sides are compared as the generated config model holds them, so fields the SDK doesn't
+   * model (which the API adds on get, at any level) and its `null`s for unset fields don't count
+   * as a change: the builder itself keeps unmodeled fields, so comparing its output would see
+   * every tool as changed and PATCH it on every push. The config to send must also be contained
+   * in the server's, so a change to any field it carries, a loaded tool's unmodeled ones
+   * included, still counts.
    *
    * @param array<string, mixed> $remote
    */
@@ -310,12 +313,19 @@ final class AgentsAsCode
   {
     try {
       $wire = $remote['tool_config'] ?? null;
-      return Tool::fromJson(ConfigWire::fields($wire) ?? [])->toJsonString()
-          === Tool::fromJson(ConfigWire::fields($config) ?? [])->toJsonString()
+      return self::modeled(Tool::fromJson(ConfigWire::fields($wire) ?? []))
+          === self::modeled(Tool::fromJson(ConfigWire::fields($config) ?? []))
         && ConfigWire::isSubset($config, $wire);
     } catch (\Throwable) {
       return false;
     }
+  }
+
+  /** The tool as its generated config model serializes it, in canonical form. */
+  private static function modeled(Tool $tool): string
+  {
+    $json = json_decode(json_encode($tool->buildConfig(), JSON_THROW_ON_ERROR), true, 512, JSON_THROW_ON_ERROR);
+    return Wire::encode(Wire::canonical($json));
   }
 
   private static function saveQuietly(?AgentProject $project): void

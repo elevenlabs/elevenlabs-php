@@ -102,6 +102,24 @@ class PushTest extends TestCase
     $this->assertSame("Someone else's", $server->tools['tool_other']['config']['description']);
   }
 
+  public function testToolsTheServerAddsFieldsToStillCountAsUnchanged(): void
+  {
+    $server = new FakeServer();
+    $agents = self::agents($server);
+    $agentId = (string) $agents->push(self::supportAgent())->agentId;
+    // The API's copy carries fields the builder doesn't model, at the top level and nested, plus nulls.
+    $server->tools['tool_new_2']['config']['server_only'] = 'x';
+    $server->tools['tool_new_2']['config']['assignments'] = null;
+    $server->tools['tool_new_2']['config']['api_schema']['server_nested'] = ['a' => 1];
+    $server->clearCalls();
+
+    $again = $agents->push(self::supportAgent(), agentId: $agentId);
+
+    $this->assertSame(["PATCH /v1/convai/agents/{$agentId}"], $server->writes());
+    $this->assertSame('unchanged', $again->tools['get_order']->action);
+    $this->assertSame('x', $server->tools['tool_new_2']['config']['server_only']);
+  }
+
   public function testReportsToolsTheAgentStoppedUsingAsDetachedWithoutDeletingThem(): void
   {
     $server = new FakeServer();
