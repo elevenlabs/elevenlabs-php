@@ -321,6 +321,24 @@ class PushTest extends TestCase
     }
   }
 
+  public function testDoesNotReportDetachedToolsWhenTheAgentUpdateFails(): void
+  {
+    $server = new FakeServer();
+    $agents = self::agents($server);
+    $agentId = (string) $agents->push(self::supportAgent())->agentId;
+    $agent = self::supportAgent();
+    $agent->update(tools: []);
+    $server->failOn = '#^PATCH /v1/convai/agents/#';
+    try {
+      $agents->push($agent, agentId: $agentId);
+      $this->fail('expected an AgentPushError');
+    } catch (AgentPushError $e) {
+      $this->assertStringStartsWith("Couldn't update agent", $e->getMessage());
+      $this->assertArrayNotHasKey('show_order', $e->result->tools);
+      $this->assertSame(['get_order' => ['id' => 'tool_new_2', 'action' => 'unchanged']], $e->result->toArray()['tools']);
+    }
+  }
+
   public function testRejectsABranchWithoutAnAgentToUpdateBeforeAnyRequest(): void
   {
     $server = new FakeServer();

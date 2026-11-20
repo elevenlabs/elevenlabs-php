@@ -148,13 +148,17 @@ final class AgentsAsCode
       $step = "Couldn't build agent \"{$agent->name()}\"";
       $config = $agent->toJson($ids);
 
-      // Every id the new config still uses, wherever it is: the agent's tool_ids and the workflow's nodes.
+      // Every id the new config still uses, wherever it is: the agent's tool_ids and the workflow's
+      // nodes. The others are reported as detached once the agent write succeeds, not before: until
+      // then the server's agent still uses them.
       $kept = array_flip(ConfigWire::agentToolIds($config));
+      /** @var array<string, ToolPushResult> $detached */
+      $detached = [];
       foreach ($inUse as $remote) {
         $remoteId = self::idOf($remote);
         $remoteName = self::toolName($remote);
         if ($remoteId !== null && !isset($kept[$remoteId]) && !isset($result->tools[$remoteName])) {
-          $result->tools[$remoteName] = new ToolPushResult($remoteId, 'detached');
+          $detached[$remoteName] = new ToolPushResult($remoteId, 'detached');
         }
       }
 
@@ -175,6 +179,9 @@ final class AgentsAsCode
         $result->action = 'updated';
       }
       $result->agentId = $id;
+      foreach ($detached as $name => $tool) {
+        $result->tools[$name] = $tool;
+      }
       $project?->recordAgent($agent, $id, $config, branchId: $branchId, versionId: $versionId);
     } catch (\Throwable $e) {
       self::saveQuietly($project);
