@@ -341,9 +341,15 @@ final class AgentProject
       if ($versionId !== null) {
         $branch['version_id'] = $versionId;
       }
+      // Never the main branch's file: checkBranch() has made sure the branch has its own.
+      $branchFile = $branch['config'] ?? null;
+      if (!is_string($branchFile) || $branchFile === '') {
+        unset($entry);
+        throw self::noBranchFile($branchId ?? '', $agent->name());
+      }
       $branches[$branchKey] = $branch;
       $entry['branches'] = $branches;
-      $file = (string) ($branch['config'] ?? $file);
+      $file = $branchFile;
     } elseif ($versionId !== null) {
       $entry['version_id'] = $versionId;
     }
@@ -382,10 +388,19 @@ final class AgentProject
     }
     foreach (ConfigWire::fields($entry['branches'] ?? null) ?? [] as $branch) {
       if (ConfigWire::get($branch, ['branch_id']) === $branchId) {
-        return;
+        $config = ConfigWire::get($branch, ['config']);
+        if (is_string($config) && $config !== '') {
+          return;
+        }
+        break;
       }
     }
-    throw new AgentProjectError(
+    throw self::noBranchFile($branchId, $label);
+  }
+
+  private static function noBranchFile(string $branchId, string $label): AgentProjectError
+  {
+    return new AgentProjectError(
       "Branch {$branchId} of \"{$label}\" has no config file in " . self::AGENTS_FILE . '. Add it under "branches" '
         . "(the CLI's `agents pull --all-branches` does), or push the main branch"
     );

@@ -271,6 +271,45 @@ class ProjectTest extends TestCase
     $this->assertSame([], $server->calls);
   }
 
+  public function testRejectsABranchEntryWithoutAConfigFileBeforeAnyWrite(): void
+  {
+    $files = self::readTree(AgentTest::CLI_PROJECT);
+    $index = json_decode($files['agents.json'], true);
+    $index['agents'][0]['branches'] = ['beta' => ['branch_id' => 'agtbrch_beta']];
+    $files['agents.json'] = (string) json_encode($index, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    $project = AgentProject::fromFiles($files);
+    $server = new FakeServer();
+    $server->addAgent('agent_support', AgentTest::readJson('agent_configs/support.json'));
+    $server->clearCalls();
+    $agents = new AgentsAsCode($server->client());
+    $support = $project->agent('Support');
+    $support->update(firstMessage: 'Hi from beta');
+    foreach ([
+      fn() => $agents->push($support, project: $project, branchId: 'agtbrch_beta'),
+      fn() => $agents->pull('agent_support', project: $project, branchId: 'agtbrch_beta'),
+    ] as $call) {
+      try {
+        $call();
+        $this->fail('expected an AgentProjectError');
+      } catch (AgentProjectError $e) {
+        $this->assertStringContainsString('has no config file', $e->getMessage());
+      }
+    }
+    $this->assertSame([], $server->calls);
+    $this->assertSame([], $project->changedFiles());
+    $this->assertSame($files['agent_configs/support.json'], $project->toFiles()['agent_configs/support.json']);
+
+    // Recorded directly, the branch still never lands in the main branch's file.
+    try {
+      $config = $support->toJson(['lookup_order' => 'tool_lookup']);
+      $project->recordAgent($support, 'agent_support', $config, branchId: 'agtbrch_beta', matchBy: 'id');
+      $this->fail('expected an AgentProjectError');
+    } catch (AgentProjectError $e) {
+      $this->assertStringContainsString('has no config file', $e->getMessage());
+    }
+    $this->assertSame($files['agent_configs/support.json'], $project->toFiles()['agent_configs/support.json']);
+  }
+
   public function testPushesARecordedBranchIntoItsOwnFile(): void
   {
     $project = AgentProject::fromFiles(self::readTree(AgentTest::CLI_PROJECT));
