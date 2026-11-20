@@ -85,11 +85,15 @@ class ToolFixtureTest extends TestCase
     try {
       $model = $tool->build();
     } catch (ToolValidationError $e) {
-      // The generated model predates a field the fixture loads (such as transfer_rules), so build()
-      // refuses to drop it. The gap closes, and the checks below run, once the SDK is regenerated.
+      // The generated TransferToNumberToolConfigInput predates transfer_rules, so build() refuses to
+      // drop them. Only that fixture may fail here, and only for that field; the checks below run for
+      // it too once the SDK is regenerated with the field.
+      if (basename($path) !== '22-transfer-rules.json') {
+        throw $e;
+      }
       $this->assertSame(
-        ['invalid_model'],
-        array_values(array_unique(array_map(static fn($issue) => $issue->code, $e->issues))),
+        ['invalid_model@params.transfer_rules'],
+        array_map(static fn($issue) => "{$issue->code}@{$issue->path}", $e->issues),
         $fixture['name']
       );
       return;
