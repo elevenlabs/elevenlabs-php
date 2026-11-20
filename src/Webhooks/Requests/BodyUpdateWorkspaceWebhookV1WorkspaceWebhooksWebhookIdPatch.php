@@ -52,12 +52,20 @@ class BodyUpdateWorkspaceWebhookV1WorkspaceWebhooksWebhookIdPatch extends JsonSe
   public ?array $events;
 
   /**
+   * @var string[]|null
+   * Field names whose values the delivery log hides when it shows the request payload, matched at any depth, ignoring case and punctuation such as _ or -. Fields with secret-looking names, such as tokens and passwords, are always hidden. The stored log and redeliveries keep the original values. At most 50 names, each 1 to 128 characters, with no whitespace, dots or wildcards.
+   */
+  #[JsonProperty('log_redacted_fields'), ArrayType(['string'])]
+  public ?array $logRedactedFields;
+
+  /**
    * @param array{
    *   isDisabled: bool,
    *   name: string,
    *   retryEnabled?: ?bool,
    *   requestHeaders?: array<string, string>|null,
    *   events?: array<value-of<\ElevenLabs\Types\WorkspaceWebhookEventType>>|null,
+   *   logRedactedFields?: string[]|null,
    * } $values
    */
   public function __construct(array $values)
@@ -67,6 +75,7 @@ class BodyUpdateWorkspaceWebhookV1WorkspaceWebhooksWebhookIdPatch extends JsonSe
     $this->retryEnabled = $values['retryEnabled'] ?? null;
     $this->requestHeaders = $values['requestHeaders'] ?? null;
     $this->events = $values['events'] ?? null;
+    $this->logRedactedFields = $values['logRedactedFields'] ?? null;
 
     $this->_dirtyFields = [
       'is_disabled' => true,
@@ -80,6 +89,9 @@ class BodyUpdateWorkspaceWebhookV1WorkspaceWebhooksWebhookIdPatch extends JsonSe
     }
     if (array_key_exists('events', $values)) {
       $this->_dirtyFields['events'] = true;
+    }
+    if (array_key_exists('logRedactedFields', $values)) {
+      $this->_dirtyFields['log_redacted_fields'] = true;
     }
   }
 
@@ -115,6 +127,15 @@ class BodyUpdateWorkspaceWebhookV1WorkspaceWebhooksWebhookIdPatch extends JsonSe
       foreach ($this->events ?? [] as $item) {
         $parts[] = [
           'name' => 'events',
+          'contents' => $item
+        ];
+      }
+    }
+
+    if ($this->logRedactedFields !== null) {
+      foreach ($this->logRedactedFields ?? [] as $item) {
+        $parts[] = [
+          'name' => 'log_redacted_fields',
           'contents' => $item
         ];
       }

@@ -1,0 +1,45 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ElevenLabs\Tests\Unit\Types;
+
+use PHPUnit\Framework\TestCase;
+
+class AgentConfigOverrideInputTest extends TestCase
+{
+  public function testFullyPopulatedRoundTrip(): void
+  {
+    $json = <<<'JSON'
+    {
+        "first_message": "test-value",
+        "language": "test-value",
+        "max_conversation_duration_message": "test-value",
+        "prompt": {
+            "prompt": "test-value",
+            "llm": "gpt-4o-mini",
+            "reasoning_effort": "none",
+            "tool_ids": [
+                "test-value"
+            ],
+            "tool_ids_strict": true,
+            "native_mcp_server_ids": [
+                "test-value"
+            ],
+            "knowledge_base": [
+                {
+                    "type": "file",
+                    "name": "test-value",
+                    "id": "test-value",
+                    "usage_mode": "prompt"
+                }
+            ]
+        }
+    }
+    JSON;
+
+    $instance = \ElevenLabs\Types\AgentConfigOverrideInput::fromArray(json_decode($json, true));
+
+    $this->assertJsonStringEqualsJsonString($json, json_encode($instance));
+  }
+}

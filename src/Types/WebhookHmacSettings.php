@@ -48,11 +48,19 @@ class WebhookHmacSettings extends JsonSerializableType
   public ?array $requestHeaders;
 
   /**
+   * @var string[]|null
+   * Field names whose values the delivery log hides when it shows the request payload, matched at any depth, ignoring case and punctuation such as _ or -. Fields with secret-looking names, such as tokens and passwords, are always hidden. The stored log and redeliveries keep the original values. At most 50 names, each 1 to 128 characters, with no whitespace, dots or wildcards.
+   */
+  #[JsonProperty('log_redacted_fields'), ArrayType(['string'])]
+  public ?array $logRedactedFields;
+
+  /**
    * @param array{
    *   authType: value-of<\ElevenLabs\Types\WebhookHmacSettingsAuthType>,
    *   name: string,
    *   webhookUrl: string,
    *   requestHeaders?: array<string, string>|null,
+   *   logRedactedFields?: string[]|null,
    * } $values
    */
   public function __construct(array $values)
@@ -61,6 +69,7 @@ class WebhookHmacSettings extends JsonSerializableType
     $this->name = $values['name'];
     $this->webhookUrl = $values['webhookUrl'];
     $this->requestHeaders = $values['requestHeaders'] ?? null;
+    $this->logRedactedFields = $values['logRedactedFields'] ?? null;
 
     $this->_dirtyFields = [
       'auth_type' => true,
@@ -69,6 +78,9 @@ class WebhookHmacSettings extends JsonSerializableType
     ];
     if (array_key_exists('requestHeaders', $values)) {
       $this->_dirtyFields['request_headers'] = true;
+    }
+    if (array_key_exists('logRedactedFields', $values)) {
+      $this->_dirtyFields['log_redacted_fields'] = true;
     }
   }
 
@@ -96,6 +108,15 @@ class WebhookHmacSettings extends JsonSerializableType
         'contents' => json_encode($this->requestHeaders),
         'headers' => ['Content-Type' => 'application/json']
       ];
+    }
+
+    if ($this->logRedactedFields !== null) {
+      foreach ($this->logRedactedFields ?? [] as $item) {
+        $parts[] = [
+          'name' => 'log_redacted_fields',
+          'contents' => $item
+        ];
+      }
     }
 
     return $parts;

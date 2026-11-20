@@ -64,9 +64,9 @@ class V1TranslationRealtimeRequest extends JsonSerializableType
   public ?string $clientSessionId;
 
   /**
-   * @var ?bool $enableZrm
+   * @var ?bool $enableLogging
    */
-  public ?bool $enableZrm;
+  public ?bool $enableLogging;
 
   /**
    * @param array{
@@ -80,7 +80,7 @@ class V1TranslationRealtimeRequest extends JsonSerializableType
    *   applyTextNormalization?: ?value-of<TranslationRealtimeApplyTextNormalization>,
    *   eagerness?: ?value-of<TranslationRealtimeEagerness>,
    *   clientSessionId?: ?string,
-   *   enableZrm?: ?bool,
+   *   enableLogging?: ?bool,
    * } $values
    */
   public function __construct(array $values)
@@ -95,7 +95,7 @@ class V1TranslationRealtimeRequest extends JsonSerializableType
     $this->applyTextNormalization = $values['applyTextNormalization'] ?? null;
     $this->eagerness = $values['eagerness'] ?? null;
     $this->clientSessionId = $values['clientSessionId'] ?? null;
-    $this->enableZrm = $values['enableZrm'] ?? null;
+    $this->enableLogging = $values['enableLogging'] ?? null;
   }
 
   /**
@@ -115,7 +115,7 @@ class V1TranslationRealtimeRequest extends JsonSerializableType
       'applyTextNormalization' => $data['apply_text_normalization'] ?? null,
       'eagerness' => $data['eagerness'] ?? null,
       'clientSessionId' => $data['client_session_id'] ?? null,
-      'enableZrm' => $data['enable_zrm'] ?? null
+      'enableLogging' => $data['enable_logging'] ?? null
     ]);
   }
 
@@ -151,8 +151,8 @@ class V1TranslationRealtimeRequest extends JsonSerializableType
     if ($this->clientSessionId !== null) {
       $result['client_session_id'] = $this->clientSessionId;
     }
-    if ($this->enableZrm !== null) {
-      $result['enable_zrm'] = $this->enableZrm;
+    if ($this->enableLogging !== null) {
+      $result['enable_logging'] = $this->enableLogging;
     }
     return $result;
   }

@@ -35,16 +35,13 @@ class AgentConversationTicketResponseModel extends JsonSerializableType
   public bool $needsClustering;
 
   /**
-   * One-line headline for the ticket. None only on tickets created before titles existed.
+   * One-line headline for the agent issue. None only on issues created before titles existed.
    */
   #[JsonProperty('title', required: true)]
   public ?string $title;
 
-  /**
-   * @var ?value-of<\ElevenLabs\Types\AgentConversationTicketIssueType>
-   */
-  #[JsonProperty('issue_type', required: true)]
-  public ?string $issueType;
+  #[JsonProperty('issue_type')]
+  public mixed $issueType;
 
   /**
    * @var string[]
@@ -116,7 +113,7 @@ class AgentConversationTicketResponseModel extends JsonSerializableType
   public array $statusChanges;
 
   /**
-   * The ticket this one was merged into, set while its status is 'merged'.
+   * The agent issue this one was merged into, set while its status is 'merged'.
    */
   #[JsonProperty('merged_into_ticket_id')]
   public ?string $mergedIntoTicketId;
@@ -150,7 +147,6 @@ class AgentConversationTicketResponseModel extends JsonSerializableType
    *   agentId: string,
    *   needsClustering: bool,
    *   title: ?string,
-   *   issueType: ?value-of<\ElevenLabs\Types\AgentConversationTicketIssueType>,
    *   labels: string[],
    *   conversationIds: string[],
    *   firstSeenUnixSecs: ?int,
@@ -166,6 +162,7 @@ class AgentConversationTicketResponseModel extends JsonSerializableType
    *   assigneeUserId: ?string,
    *   createdAtUnixSecs: int,
    *   updatedAtUnixSecs: int,
+   *   issueType?: mixed,
    *   mergedIntoTicketId?: ?string,
    *   searchMatch?: ?\ElevenLabs\Types\TicketSearchMatchResponseModel,
    * } $values
@@ -178,7 +175,7 @@ class AgentConversationTicketResponseModel extends JsonSerializableType
     $this->agentId = $values['agentId'];
     $this->needsClustering = $values['needsClustering'];
     $this->title = $values['title'];
-    $this->issueType = $values['issueType'];
+    $this->issueType = $values['issueType'] ?? null;
     $this->labels = $values['labels'];
     $this->conversationIds = $values['conversationIds'];
     $this->firstSeenUnixSecs = $values['firstSeenUnixSecs'];
@@ -204,7 +201,6 @@ class AgentConversationTicketResponseModel extends JsonSerializableType
       'agent_id' => true,
       'needs_clustering' => true,
       'title' => true,
-      'issue_type' => true,
       'labels' => true,
       'conversation_ids' => true,
       'first_seen_unix_secs' => true,
@@ -221,6 +217,9 @@ class AgentConversationTicketResponseModel extends JsonSerializableType
       'created_at_unix_secs' => true,
       'updated_at_unix_secs' => true
     ];
+    if (array_key_exists('issueType', $values)) {
+      $this->_dirtyFields['issue_type'] = true;
+    }
     if (array_key_exists('mergedIntoTicketId', $values)) {
       $this->_dirtyFields['merged_into_ticket_id'] = true;
     }
@@ -262,10 +261,13 @@ class AgentConversationTicketResponseModel extends JsonSerializableType
       'contents' => $this->title
     ];
 
-    $parts[] = [
-      'name' => 'issue_type',
-      'contents' => $this->issueType
-    ];
+    if ($this->issueType !== null) {
+      $parts[] = [
+        'name' => 'issue_type',
+        'contents' => json_encode($this->issueType),
+        'headers' => ['Content-Type' => 'application/json']
+      ];
+    }
 
     foreach ($this->labels as $item) {
       $parts[] = [

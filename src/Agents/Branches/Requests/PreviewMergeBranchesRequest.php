@@ -14,7 +14,7 @@ class PreviewMergeBranchesRequest extends JsonSerializableType
   public string $targetBranchId;
 
   /**
-   * @var ?bool $force When true, source branch changes always win conflicts regardless of timestamps
+   * @var ?bool $force When true, the preview keeps the source branch's value for every conflict, as a merge with `force` does. Without it, a merge with conflicts needs `conflict_resolutions`.
    */
   public ?bool $force;
 

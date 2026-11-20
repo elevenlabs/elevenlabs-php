@@ -35,6 +35,12 @@ class PartialTranscript extends JsonSerializableType
   public ?float $turnProbability;
 
   /**
+   * The language of the speech so far in the current turn. Only present when include_language_detection is true, and then always present: null until the text is long enough to tell and the same language has been seen on consecutive partials. The committed transcript's language_code is authoritative.
+   */
+  #[JsonProperty('language_code')]
+  public ?string $languageCode;
+
+  /**
    * @var \ElevenLabs\Types\PartialTranscriptWordsItem[]|null
    * Draft words with speaker IDs when diarize is enabled. Speaker IDs and timestamps may change as more audio is received.
    */
@@ -46,6 +52,7 @@ class PartialTranscript extends JsonSerializableType
    *   text: string,
    *   messageType?: ?value-of<\ElevenLabs\Types\PartialTranscriptMessageType>,
    *   turnProbability?: ?float,
+   *   languageCode?: ?string,
    *   words?: \ElevenLabs\Types\PartialTranscriptWordsItem[]|null,
    * } $values
    */
@@ -54,6 +61,7 @@ class PartialTranscript extends JsonSerializableType
     $this->messageType = $values['messageType'] ?? 'partial_transcript';
     $this->text = $values['text'];
     $this->turnProbability = $values['turnProbability'] ?? null;
+    $this->languageCode = $values['languageCode'] ?? null;
     $this->words = $values['words'] ?? null;
 
     $this->_dirtyFields = [
@@ -64,6 +72,9 @@ class PartialTranscript extends JsonSerializableType
     }
     if (array_key_exists('turnProbability', $values)) {
       $this->_dirtyFields['turn_probability'] = true;
+    }
+    if (array_key_exists('languageCode', $values)) {
+      $this->_dirtyFields['language_code'] = true;
     }
     if (array_key_exists('words', $values)) {
       $this->_dirtyFields['words'] = true;
@@ -89,6 +100,13 @@ class PartialTranscript extends JsonSerializableType
       $parts[] = [
         'name' => 'turn_probability',
         'contents' => (string) $this->turnProbability
+      ];
+    }
+
+    if ($this->languageCode !== null) {
+      $parts[] = [
+        'name' => 'language_code',
+        'contents' => $this->languageCode
       ];
     }
 

@@ -62,6 +62,9 @@ class AgentConfig extends JsonSerializableType
   ]
   public ?array $textBehaviorOverrides;
 
+  #[JsonProperty('subagent_config')]
+  public ?\ElevenLabs\Types\SubagentConfigOutput $subagentConfig;
+
   #[JsonProperty('prompt')]
   public ?\ElevenLabs\Types\PromptAgentApiModelOutput $prompt;
 
@@ -74,6 +77,7 @@ class AgentConfig extends JsonSerializableType
    *   disableFirstMessageInterruptions?: ?bool,
    *   maxConversationDurationMessage?: ?string,
    *   textBehaviorOverrides?: array<string, \ElevenLabs\Types\BehaviorOverride>|null,
+   *   subagentConfig?: ?\ElevenLabs\Types\SubagentConfigOutput,
    *   prompt?: ?\ElevenLabs\Types\PromptAgentApiModelOutput,
    * } $values
    */
@@ -86,6 +90,7 @@ class AgentConfig extends JsonSerializableType
     $this->disableFirstMessageInterruptions = $values['disableFirstMessageInterruptions'] ?? null;
     $this->maxConversationDurationMessage = $values['maxConversationDurationMessage'] ?? null;
     $this->textBehaviorOverrides = $values['textBehaviorOverrides'] ?? null;
+    $this->subagentConfig = $values['subagentConfig'] ?? null;
     $this->prompt = $values['prompt'] ?? null;
 
     if (array_key_exists('firstMessage', $values)) {
@@ -108,6 +113,9 @@ class AgentConfig extends JsonSerializableType
     }
     if (array_key_exists('textBehaviorOverrides', $values)) {
       $this->_dirtyFields['text_behavior_overrides'] = true;
+    }
+    if (array_key_exists('subagentConfig', $values)) {
+      $this->_dirtyFields['subagent_config'] = true;
     }
     if (array_key_exists('prompt', $values)) {
       $this->_dirtyFields['prompt'] = true;
@@ -168,6 +176,14 @@ class AgentConfig extends JsonSerializableType
       ];
     }
 
+    if ($this->subagentConfig !== null) {
+      $parts[] = [
+        'name' => 'subagent_config',
+        'contents' => json_encode($this->subagentConfig),
+        'headers' => ['Content-Type' => 'application/json']
+      ];
+    }
+
     if ($this->prompt !== null) {
       $parts[] = [
         'name' => 'prompt',
@@ -181,6 +197,7 @@ class AgentConfig extends JsonSerializableType
 
   public function validate(): void
   {
+    $this->subagentConfig?->validate();
     $this->prompt?->validate();
   }
 }

@@ -27,7 +27,7 @@ class PromptAgentApiModelInputToolsItem extends JsonSerializableType
   public readonly string $type;
 
   /**
-   * @var \ElevenLabs\Types\WebhookToolConfigInput|\ElevenLabs\Types\ClientToolConfigInput|\ElevenLabs\Types\SystemToolConfigInput|mixed|\ElevenLabs\Types\ApiIntegrationWebhookToolConfigInput|array<string, mixed> The value, exactly one of the variant types
+   * @var \ElevenLabs\Types\WebhookToolConfigInput|\ElevenLabs\Types\ClientToolConfigInput|\ElevenLabs\Types\SystemToolConfigInput|\ElevenLabs\Types\ApiIntegrationWebhookToolConfigInput|mixed|array<string, mixed> The value, exactly one of the variant types
    */
   public readonly mixed $value;
 
@@ -72,7 +72,7 @@ class PromptAgentApiModelInputToolsItem extends JsonSerializableType
 
   /**
    * Private constructor - use factory methods to create instances
-   * @param \ElevenLabs\Types\WebhookToolConfigInput|\ElevenLabs\Types\ClientToolConfigInput|\ElevenLabs\Types\SystemToolConfigInput|mixed|\ElevenLabs\Types\ApiIntegrationWebhookToolConfigInput|array<string, mixed> $value
+   * @param \ElevenLabs\Types\WebhookToolConfigInput|\ElevenLabs\Types\ClientToolConfigInput|\ElevenLabs\Types\SystemToolConfigInput|\ElevenLabs\Types\ApiIntegrationWebhookToolConfigInput|mixed|array<string, mixed> $value
    */
   private function __construct($value, int $typeIndex)
   {
@@ -82,9 +82,8 @@ class PromptAgentApiModelInputToolsItem extends JsonSerializableType
       0 => 'webhook',
       1 => 'client',
       2 => 'system',
-      3 => 'mcp',
-      4 => 'api_integration_webhook',
-      5 => 'smb',
+      3 => 'api_integration_webhook',
+      4 => 'smb',
       self::UNKNOWN => '_unknown',
       default => throw new \UnexpectedValueException("Unknown type index: $typeIndex")
     };
@@ -116,20 +115,12 @@ class PromptAgentApiModelInputToolsItem extends JsonSerializableType
   }
 
   /**
-   * Create a PromptAgentApiModelInputToolsItem instance containing a mixed
-   */
-  public static function mcp(mixed $mcp): self
-  {
-    return new self($mcp, 3);
-  }
-
-  /**
    * Create a PromptAgentApiModelInputToolsItem instance containing a \ElevenLabs\Types\ApiIntegrationWebhookToolConfigInput
    */
   public static function apiIntegrationWebhook(
     \ElevenLabs\Types\ApiIntegrationWebhookToolConfigInput $apiIntegrationWebhook
   ): self {
-    return new self($apiIntegrationWebhook, 4);
+    return new self($apiIntegrationWebhook, 3);
   }
 
   /**
@@ -137,7 +128,7 @@ class PromptAgentApiModelInputToolsItem extends JsonSerializableType
    */
   public static function smb(mixed $smb): self
   {
-    return new self($smb, 5);
+    return new self($smb, 4);
   }
 
   // Type checking methods
@@ -166,19 +157,11 @@ class PromptAgentApiModelInputToolsItem extends JsonSerializableType
   }
 
   /**
-   * Check if this PromptAgentApiModelInputToolsItem contains a mixed
-   */
-  public function isMcp(): bool
-  {
-    return $this->typeIndex === 3;
-  }
-
-  /**
    * Check if this PromptAgentApiModelInputToolsItem contains a \ElevenLabs\Types\ApiIntegrationWebhookToolConfigInput
    */
   public function isApiIntegrationWebhook(): bool
   {
-    return $this->typeIndex === 4;
+    return $this->typeIndex === 3;
   }
 
   /**
@@ -186,7 +169,7 @@ class PromptAgentApiModelInputToolsItem extends JsonSerializableType
    */
   public function isSmb(): bool
   {
-    return $this->typeIndex === 5;
+    return $this->typeIndex === 4;
   }
 
   // Throwing getters (fail-fast)
@@ -228,18 +211,6 @@ class PromptAgentApiModelInputToolsItem extends JsonSerializableType
       throw new \RuntimeException(
         'PromptAgentApiModelInputToolsItem does not contain \ElevenLabs\Types\SystemToolConfigInput'
       );
-    }
-    return $this->value;
-  }
-
-  /**
-   * Get the mixed value
-   * @throws \RuntimeException if this PromptAgentApiModelInputToolsItem does not contain a mixed
-   */
-  public function asMcp(): mixed
-  {
-    if (!$this->isMcp()) {
-      throw new \RuntimeException('PromptAgentApiModelInputToolsItem does not contain mixed');
     }
     return $this->value;
   }
@@ -299,15 +270,6 @@ class PromptAgentApiModelInputToolsItem extends JsonSerializableType
   }
 
   /**
-   * Try to get the mixed value
-   * @return mixed Returns the value if this PromptAgentApiModelInputToolsItem contains a mixed, null otherwise
-   */
-  public function tryAsMcp(): mixed
-  {
-    return $this->isMcp() ? $this->value : null;
-  }
-
-  /**
    * Try to get the \ElevenLabs\Types\ApiIntegrationWebhookToolConfigInput value
    * @return \ElevenLabs\Types\ApiIntegrationWebhookToolConfigInput|null Returns the value if this PromptAgentApiModelInputToolsItem contains a \ElevenLabs\Types\ApiIntegrationWebhookToolConfigInput, null otherwise
    */
@@ -331,7 +293,6 @@ class PromptAgentApiModelInputToolsItem extends JsonSerializableType
    * @param callable(\ElevenLabs\Types\WebhookToolConfigInput): T $onWebhook
    * @param callable(\ElevenLabs\Types\ClientToolConfigInput): T $onClient
    * @param callable(\ElevenLabs\Types\SystemToolConfigInput): T $onSystem
-   * @param callable(mixed): T $onMcp
    * @param callable(\ElevenLabs\Types\ApiIntegrationWebhookToolConfigInput): T $onApiIntegrationWebhook
    * @param callable(mixed): T $onSmb
    * @return T
@@ -340,7 +301,6 @@ class PromptAgentApiModelInputToolsItem extends JsonSerializableType
     callable $onWebhook,
     callable $onClient,
     callable $onSystem,
-    callable $onMcp,
     callable $onApiIntegrationWebhook,
     callable $onSmb
   ): mixed {
@@ -348,9 +308,8 @@ class PromptAgentApiModelInputToolsItem extends JsonSerializableType
       0 => $onWebhook($this->value),
       1 => $onClient($this->value),
       2 => $onSystem($this->value),
-      3 => $onMcp($this->value),
-      4 => $onApiIntegrationWebhook($this->value),
-      5 => $onSmb($this->value),
+      3 => $onApiIntegrationWebhook($this->value),
+      4 => $onSmb($this->value),
       default => throw new \UnexpectedValueException("Unknown type index: $this->typeIndex")
     };
   }
@@ -379,14 +338,12 @@ class PromptAgentApiModelInputToolsItem extends JsonSerializableType
         case 'api_integration_webhook':
           return new self(
             \ElevenLabs\Types\ApiIntegrationWebhookToolConfigInput::fromArray($data),
-            4
+            3
           );
         case 'client':
           return new self(\ElevenLabs\Types\ClientToolConfigInput::fromArray($data), 1);
-        case 'mcp':
-          return new self($data, 3);
         case 'smb':
-          return new self($data, 5);
+          return new self($data, 4);
         case 'system':
           return new self(\ElevenLabs\Types\SystemToolConfigInput::fromArray($data), 2);
         case 'webhook':
@@ -439,7 +396,7 @@ class PromptAgentApiModelInputToolsItem extends JsonSerializableType
       $candidate = \ElevenLabs\Types\ApiIntegrationWebhookToolConfigInput::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 4, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 3, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not

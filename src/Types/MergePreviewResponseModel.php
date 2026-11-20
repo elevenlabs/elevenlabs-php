@@ -119,7 +119,7 @@ class MergePreviewResponseModel extends JsonSerializableType
 
   /**
    * @var \ElevenLabs\Types\FieldConflict[]|null
-   * Structured view of the same conflicts as overridden_fields, each carrying the value on the base (common ancestor), source branch, and target branch so the divergence can be presented and resolved field-by-field.
+   * Structured view of the same conflicts as overridden_fields, each carrying the value on the base (common ancestor), source branch, and target branch so the divergence can be presented and resolved field-by-field. A merge or rebase is rejected while any of them has no resolution in `conflict_resolutions`, unless the merge is forced.
    */
   #[JsonProperty('conflicts'), ArrayType([\ElevenLabs\Types\FieldConflict::class])]
   public ?array $conflicts;
@@ -129,6 +129,24 @@ class MergePreviewResponseModel extends JsonSerializableType
    */
   #[JsonProperty('source_identical_to_target')]
   public ?bool $sourceIdenticalToTarget;
+
+  /**
+   * Tip version of the source branch (the rebased branch for a rebase) the preview was computed from.
+   */
+  #[JsonProperty('source_tip_version_id')]
+  public ?string $sourceTipVersionId;
+
+  /**
+   * Tip version of the target branch (main for a rebase) the preview was computed from.
+   */
+  #[JsonProperty('target_tip_version_id')]
+  public ?string $targetTipVersionId;
+
+  /**
+   * Why the merge doesn't combine into a valid configuration while conflicts are left to resolve. The preview then shows the branch the merge writes unchanged.
+   */
+  #[JsonProperty('merge_error')]
+  public ?string $mergeError;
 
   /**
    * @param array{
@@ -150,6 +168,9 @@ class MergePreviewResponseModel extends JsonSerializableType
    *   overriddenFields?: string[]|null,
    *   conflicts?: \ElevenLabs\Types\FieldConflict[]|null,
    *   sourceIdenticalToTarget?: ?bool,
+   *   sourceTipVersionId?: ?string,
+   *   targetTipVersionId?: ?string,
+   *   mergeError?: ?string,
    * } $values
    */
   public function __construct(array $values)
@@ -172,6 +193,9 @@ class MergePreviewResponseModel extends JsonSerializableType
     $this->overriddenFields = $values['overriddenFields'] ?? null;
     $this->conflicts = $values['conflicts'] ?? null;
     $this->sourceIdenticalToTarget = $values['sourceIdenticalToTarget'] ?? null;
+    $this->sourceTipVersionId = $values['sourceTipVersionId'] ?? null;
+    $this->targetTipVersionId = $values['targetTipVersionId'] ?? null;
+    $this->mergeError = $values['mergeError'] ?? null;
 
     $this->_dirtyFields = [
       'agent_id' => true,
@@ -220,6 +244,15 @@ class MergePreviewResponseModel extends JsonSerializableType
     }
     if (array_key_exists('sourceIdenticalToTarget', $values)) {
       $this->_dirtyFields['source_identical_to_target'] = true;
+    }
+    if (array_key_exists('sourceTipVersionId', $values)) {
+      $this->_dirtyFields['source_tip_version_id'] = true;
+    }
+    if (array_key_exists('targetTipVersionId', $values)) {
+      $this->_dirtyFields['target_tip_version_id'] = true;
+    }
+    if (array_key_exists('mergeError', $values)) {
+      $this->_dirtyFields['merge_error'] = true;
     }
   }
 
@@ -354,6 +387,27 @@ class MergePreviewResponseModel extends JsonSerializableType
       $parts[] = [
         'name' => 'source_identical_to_target',
         'contents' => $this->sourceIdenticalToTarget ? 'true' : 'false'
+      ];
+    }
+
+    if ($this->sourceTipVersionId !== null) {
+      $parts[] = [
+        'name' => 'source_tip_version_id',
+        'contents' => $this->sourceTipVersionId
+      ];
+    }
+
+    if ($this->targetTipVersionId !== null) {
+      $parts[] = [
+        'name' => 'target_tip_version_id',
+        'contents' => $this->targetTipVersionId
+      ];
+    }
+
+    if ($this->mergeError !== null) {
+      $parts[] = [
+        'name' => 'merge_error',
+        'contents' => $this->mergeError
       ];
     }
 

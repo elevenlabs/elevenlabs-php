@@ -74,6 +74,12 @@ class WorkflowOverrideAgentNodeModelInput extends JsonSerializableType
   public ?string $entryBehavior;
 
   /**
+   * Lets the caller interrupt the response this node gives on entry. Ignored unless entry_behavior is "generate_immediately".
+   */
+  #[JsonProperty('allow_interruptions_on_entry')]
+  public ?bool $allowInterruptionsOnEntry;
+
+  /**
    * @param array{
    *   label: string,
    *   type?: ?value-of<\ElevenLabs\Types\WorkflowOverrideAgentNodeModelInputType>,
@@ -84,6 +90,7 @@ class WorkflowOverrideAgentNodeModelInput extends JsonSerializableType
    *   additionalKnowledgeBase?: \ElevenLabs\Types\KnowledgeBaseLocator[]|null,
    *   additionalToolIds?: string[]|null,
    *   entryBehavior?: ?value-of<\ElevenLabs\Types\EntryBehavior>,
+   *   allowInterruptionsOnEntry?: ?bool,
    * } $values
    */
   public function __construct(array $values)
@@ -97,6 +104,7 @@ class WorkflowOverrideAgentNodeModelInput extends JsonSerializableType
     $this->additionalToolIds = $values['additionalToolIds'] ?? null;
     $this->label = $values['label'];
     $this->entryBehavior = $values['entryBehavior'] ?? null;
+    $this->allowInterruptionsOnEntry = $values['allowInterruptionsOnEntry'] ?? null;
 
     $this->_dirtyFields = [
       'label' => true
@@ -124,6 +132,9 @@ class WorkflowOverrideAgentNodeModelInput extends JsonSerializableType
     }
     if (array_key_exists('entryBehavior', $values)) {
       $this->_dirtyFields['entry_behavior'] = true;
+    }
+    if (array_key_exists('allowInterruptionsOnEntry', $values)) {
+      $this->_dirtyFields['allow_interruptions_on_entry'] = true;
     }
   }
 
@@ -195,6 +206,13 @@ class WorkflowOverrideAgentNodeModelInput extends JsonSerializableType
       $parts[] = [
         'name' => 'entry_behavior',
         'contents' => $this->entryBehavior
+      ];
+    }
+
+    if ($this->allowInterruptionsOnEntry !== null) {
+      $parts[] = [
+        'name' => 'allow_interruptions_on_entry',
+        'contents' => $this->allowInterruptionsOnEntry ? 'true' : 'false'
       ];
     }
 

@@ -37,6 +37,7 @@ class SingleUseClient extends BaseService
    * Generate a time limited single-use token with embedded authentication for frontend clients.
    *
    * @param string $tokenType
+   * @param \ElevenLabs\Tokens\SingleUse\Requests\CreateSingleUseRequest $request Request parameters
    * @param ?array{
    *   baseUrl?: string,
    *   maxRetries?: int,
@@ -51,15 +52,21 @@ class SingleUseClient extends BaseService
    */
   public function create(
     string $tokenType,
+    \ElevenLabs\Tokens\SingleUse\Requests\CreateSingleUseRequest $request = new \ElevenLabs\Tokens\SingleUse\Requests\CreateSingleUseRequest(),
     ?array $options = null
   ): ?\ElevenLabs\Types\SingleUseTokenResponseModel {
+    $maxSessionDurationSeconds = $request->maxSessionDurationSeconds;
+
     $resolvedConfig = $this->getResolvedConfig($this->createConfig, $options);
     $response = $this->sendJsonRequest(
       new JsonApiRequest(
         baseUrl: $this->getBaseUrl($resolvedConfig),
         path: '/v1/single-use-token/' .
           \ElevenLabs\Core\Client\RawClient::encodePathParam($tokenType),
-        method: HttpMethod::POST
+        method: HttpMethod::POST,
+        query: [
+          'max_session_duration_seconds' => $maxSessionDurationSeconds
+        ]
       ),
       $resolvedConfig
     );

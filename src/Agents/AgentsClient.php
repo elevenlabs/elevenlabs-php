@@ -18,6 +18,7 @@ use ElevenLabs\Agents\Exotel\ExotelClient;
 use ElevenLabs\Agents\Whatsapp\WhatsappClient;
 use ElevenLabs\Agents\Summaries\SummariesClient;
 use ElevenLabs\Agents\KnowledgeBase\KnowledgeBaseClient;
+use ElevenLabs\Agents\Subagents\SubagentsClient;
 use ElevenLabs\Agents\Widget\WidgetClient;
 use ElevenLabs\Agents\Link\LinkClient;
 use ElevenLabs\Agents\HoldAudio\HoldAudioClient;
@@ -61,6 +62,7 @@ class AgentsClient extends BaseService
   public WhatsappClient $whatsapp;
   public SummariesClient $summaries;
   public KnowledgeBaseClient $knowledgeBase;
+  public SubagentsClient $subagents;
   public WidgetClient $widget;
   public LinkClient $link;
   public HoldAudioClient $holdAudio;
@@ -98,6 +100,7 @@ class AgentsClient extends BaseService
     $this->whatsapp = new WhatsappClient($client, $options);
     $this->summaries = new SummariesClient($client, $options);
     $this->knowledgeBase = new KnowledgeBaseClient($client, $options);
+    $this->subagents = new SubagentsClient($client, $options);
     $this->widget = new WidgetClient($client, $options);
     $this->link = new LinkClient($client, $options);
     $this->holdAudio = new HoldAudioClient($client, $options);

@@ -67,6 +67,9 @@ enum AuditActivityName: string
   case NotificationPreferenceDeletion = 'Notification Preference Deletion';
   case NotificationPreferenceManagement = 'Notification Preference Management';
   case NotificationPreferenceUpdate = 'Notification Preference Update';
+  case OAuthAppAuthorizationGrant = 'OAuth App Authorization Grant';
+  case OAuthAppAuthorizationManagement = 'OAuth App Authorization Management';
+  case OAuthAppAuthorizationRevocation = 'OAuth App Authorization Revocation';
   case PasswordResetEmailRequest = 'Password Reset Email Request';
   case PasswordResetLinkGeneration = 'Password Reset Link Generation';
   case ReportingWorkspaceSsoInheritanceUpdate = 'Reporting Workspace SSO Inheritance Update';
@@ -123,6 +126,14 @@ enum AuditActivityName: string
   case WebhookDeletion = 'Webhook Deletion';
   case WebhookManagement = 'Webhook Management';
   case WebhookUpdate = 'Webhook Update';
+  case WorkloadIdentityFederationAssignmentCreation = 'Workload Identity Federation Assignment Creation';
+  case WorkloadIdentityFederationAssignmentDeletion = 'Workload Identity Federation Assignment Deletion';
+  case WorkloadIdentityFederationAssignmentManagement = 'Workload Identity Federation Assignment Management';
+  case WorkloadIdentityFederationPoolCreation = 'Workload Identity Federation Pool Creation';
+  case WorkloadIdentityFederationPoolDeletion = 'Workload Identity Federation Pool Deletion';
+  case WorkloadIdentityFederationPoolManagement = 'Workload Identity Federation Pool Management';
+  case WorkloadIdentityFederationPoolUpdate = 'Workload Identity Federation Pool Update';
+  case WorkloadIdentityFederationTokenExchange = 'Workload Identity Federation Token Exchange';
   case WorkspaceCreation = 'Workspace Creation';
   case WorkspaceDeletion = 'Workspace Deletion';
   case WorkspaceDeletionCancellation = 'Workspace Deletion Cancellation';

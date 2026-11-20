@@ -74,6 +74,16 @@ class WorkflowPhoneNumberNodeModelOutput extends JsonSerializableType
   public array $edgeOrder;
 
   /**
+   * @var \ElevenLabs\Types\WorkflowPhoneNumberNodeModelOutputProviderConfigsItem[]
+   * Per-provider transfer configuration. Mutually exclusive with a non-empty `transfer_destination`: when present, the configuration matching the call's telephony provider is executed and the legacy transfer fields are ignored.
+   */
+  #[
+    JsonProperty('provider_configs', required: true),
+    ArrayType([\ElevenLabs\Types\WorkflowPhoneNumberNodeModelOutputProviderConfigsItem::class])
+  ]
+  public array $providerConfigs;
+
+  /**
    * @param array{
    *   customSipHeaders: \ElevenLabs\Types\WorkflowPhoneNumberNodeModelOutputCustomSipHeadersItem[],
    *   transferDestination: \ElevenLabs\Types\WorkflowPhoneNumberNodeModelOutputTransferDestination,
@@ -84,6 +94,7 @@ class WorkflowPhoneNumberNodeModelOutput extends JsonSerializableType
    *   type: value-of<\ElevenLabs\Types\WorkflowPhoneNumberNodeModelOutputType>,
    *   position: \ElevenLabs\Types\PositionOutput,
    *   edgeOrder: string[],
+   *   providerConfigs: \ElevenLabs\Types\WorkflowPhoneNumberNodeModelOutputProviderConfigsItem[],
    * } $values
    */
   public function __construct(array $values)
@@ -97,6 +108,7 @@ class WorkflowPhoneNumberNodeModelOutput extends JsonSerializableType
     $this->type = $values['type'];
     $this->position = $values['position'];
     $this->edgeOrder = $values['edgeOrder'];
+    $this->providerConfigs = $values['providerConfigs'];
 
     $this->_dirtyFields = [
       'custom_sip_headers' => true,
@@ -107,7 +119,8 @@ class WorkflowPhoneNumberNodeModelOutput extends JsonSerializableType
       'post_dial_digits' => true,
       'type' => true,
       'position' => true,
-      'edge_order' => true
+      'edge_order' => true,
+      'provider_configs' => true
     ];
   }
 
@@ -165,6 +178,12 @@ class WorkflowPhoneNumberNodeModelOutput extends JsonSerializableType
         'contents' => $item
       ];
     }
+
+    $parts[] = [
+      'name' => 'provider_configs',
+      'contents' => json_encode($this->providerConfigs),
+      'headers' => ['Content-Type' => 'application/json']
+    ];
 
     return $parts;
   }

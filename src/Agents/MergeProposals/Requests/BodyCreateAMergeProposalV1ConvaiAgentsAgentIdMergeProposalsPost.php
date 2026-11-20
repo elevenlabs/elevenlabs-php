@@ -52,7 +52,7 @@ class BodyCreateAMergeProposalV1ConvaiAgentsAgentIdMergeProposalsPost extends Js
   public ?array $requestedReviewerUserIds;
 
   /**
-   * Triage ticket of this agent that the merge_proposal resolves. Merging it resolves the ticket if still open.
+   * Issue of this agent that the merge_proposal resolves. Merging it resolves the issue if still open.
    */
   #[JsonProperty('triage_ticket_id')]
   public ?string $triageTicketId;

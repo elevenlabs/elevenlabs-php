@@ -36,7 +36,7 @@ class TranslationClient extends BaseService
     $applyTextNormalization = $request->applyTextNormalization;
     $eagerness = $request->eagerness;
     $clientSessionId = $request->clientSessionId;
-    $enableZrm = $request->enableZrm;
+    $enableLogging = $request->enableLogging;
     $resolvedConfig = $this->getResolvedConfig(null, $options);
     return new V1TranslationRealtimeSocket(
       \ElevenLabs\Core\WebSocket\WebSocketConnector::connect(
@@ -54,7 +54,7 @@ class TranslationClient extends BaseService
               'apply_text_normalization' => $applyTextNormalization,
               'eagerness' => $eagerness,
               'client_session_id' => $clientSessionId,
-              'enable_zrm' => $enableZrm
+              'enable_logging' => $enableLogging
             ]
           ],
           $resolvedConfig

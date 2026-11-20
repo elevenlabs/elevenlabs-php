@@ -24,7 +24,7 @@ class SmbToolConfigParams extends JsonSerializableType
   public readonly string $smbToolType;
 
   /**
-   * @var \ElevenLabs\Types\SearchClientsParams|\ElevenLabs\Types\SendCustomEmailParams|\ElevenLabs\Types\ListClientsParams|\ElevenLabs\Types\GetClientByPhoneParams|\ElevenLabs\Types\CreateClientParams|\ElevenLabs\Types\UpdateClientParams|\ElevenLabs\Types\DeleteClientParams|\ElevenLabs\Types\ListStaffParams|\ElevenLabs\Types\CreateStaffParams|\ElevenLabs\Types\UpdateStaffParams|\ElevenLabs\Types\DeleteStaffParams|\ElevenLabs\Types\ListAssetsParams|\ElevenLabs\Types\CreateAssetParams|\ElevenLabs\Types\UpdateAssetParams|\ElevenLabs\Types\DeleteAssetParams|\ElevenLabs\Types\ListServicesParams|\ElevenLabs\Types\CreateServiceParams|\ElevenLabs\Types\UpdateServiceParams|\ElevenLabs\Types\DeleteServiceParams|\ElevenLabs\Types\ListProductsParams|\ElevenLabs\Types\CreateProductParams|\ElevenLabs\Types\UpdateProductParams|\ElevenLabs\Types\DeleteProductParams|\ElevenLabs\Types\CheckServiceAvailabilityParams|\ElevenLabs\Types\CreateClientAppointmentParams|\ElevenLabs\Types\GetClientAppointmentsParams|\ElevenLabs\Types\GetAppointmentByConfirmationNumberParams|\ElevenLabs\Types\CreateOrderParams|\ElevenLabs\Types\GetOrderByConfirmationNumberParams|\ElevenLabs\Types\GetClientOrdersParams|\ElevenLabs\Types\UpdateOrderParams|\ElevenLabs\Types\CancelOrderParams|\ElevenLabs\Types\ListGroupSessionsParams|\ElevenLabs\Types\ScheduleGroupSessionParams|\ElevenLabs\Types\RegisterForGroupSessionParams|\ElevenLabs\Types\CancelGroupSessionRegistrationParams|\ElevenLabs\Types\UpdateGroupSessionSeatsParams|\ElevenLabs\Types\CancelGroupSessionForAllParams|\ElevenLabs\Types\DeleteGroupSessionParams|\ElevenLabs\Types\ListCalendarEventsParams|\ElevenLabs\Types\UpdateCalendarEventParams|\ElevenLabs\Types\CancelCalendarEventParams|\ElevenLabs\Types\RestoreCalendarEventParams|\ElevenLabs\Types\DeleteCalendarEventParams|\ElevenLabs\Types\ListCustomerFacingAgentsParams|\ElevenLabs\Types\GetAgentConfigParams|\ElevenLabs\Types\ListAgentRulesParams|\ElevenLabs\Types\CreateAgentRuleParams|\ElevenLabs\Types\UpdateAgentRuleParams|\ElevenLabs\Types\DeleteAgentRuleParams|\ElevenLabs\Types\ListTransferRulesParams|\ElevenLabs\Types\CreateTransferRuleParams|\ElevenLabs\Types\UpdateTransferRuleParams|\ElevenLabs\Types\DeleteTransferRuleParams|\ElevenLabs\Types\ListAgentProceduresParams|\ElevenLabs\Types\ListAgentReferencesParams|\ElevenLabs\Types\CreateAgentProcedureParams|\ElevenLabs\Types\UpdateAgentProcedureParams|\ElevenLabs\Types\DeleteAgentProcedureParams|\ElevenLabs\Types\ListHolidaysParams|\ElevenLabs\Types\CreateHolidayParams|\ElevenLabs\Types\UpdateHolidayParams|\ElevenLabs\Types\DeleteHolidayParams|\ElevenLabs\Types\GetScheduleParams|\ElevenLabs\Types\SubmitBusinessInfoParams|\ElevenLabs\Types\UpdateBusinessInfoParams|\ElevenLabs\Types\UpdateAgentConfigParams|\ElevenLabs\Types\GetAnalyticsSummaryParams|\ElevenLabs\Types\GetWorkspacePlanParams|\ElevenLabs\Types\GetBookingPageSettingsParams|\ElevenLabs\Types\UpdateBookingPageSettingsParams|\ElevenLabs\Types\UpdateBookingPageAppearanceParams|\ElevenLabs\Types\GetBookingSlugStatusParams|\ElevenLabs\Types\SetBookingSlugParams|\ElevenLabs\Types\ListClientInteractionsParams|\ElevenLabs\Types\CreateClientInteractionParams|\ElevenLabs\Types\DeleteClientInteractionParams|\ElevenLabs\Types\ListLocationsParams|\ElevenLabs\Types\CreateLocationParams|\ElevenLabs\Types\UpdateLocationParams|\ElevenLabs\Types\DeleteLocationParams|\ElevenLabs\Types\LeaveMessageParams|\ElevenLabs\Types\CreateServiceQuoteRequestParams|\ElevenLabs\Types\CreateProductQuoteRequestParams|\ElevenLabs\Types\ReportKnowledgeGapParams|\ElevenLabs\Types\OptInSmsReminderParams|\ElevenLabs\Types\OptOutSmsReminderParams|\ElevenLabs\Types\TriggerUserVerificationParams|\ElevenLabs\Types\ValidateUserVerificationCodeParams|\ElevenLabs\Types\OwnerListStaffParams|\ElevenLabs\Types\OwnerListAssetsParams|\ElevenLabs\Types\OwnerListLocationsParams|\ElevenLabs\Types\OwnerListServicesParams|\ElevenLabs\Types\OwnerListProductsParams|\ElevenLabs\Types\OwnerGetClientAppointmentsParams|array<string, mixed> The value, exactly one of the variant types
+   * @var \ElevenLabs\Types\SearchClientsParams|\ElevenLabs\Types\SendCustomEmailParams|\ElevenLabs\Types\ListClientsParams|\ElevenLabs\Types\GetClientByPhoneParams|\ElevenLabs\Types\CreateClientParams|\ElevenLabs\Types\UpdateClientParams|\ElevenLabs\Types\DeleteClientParams|\ElevenLabs\Types\ListStaffParams|\ElevenLabs\Types\CreateStaffParams|\ElevenLabs\Types\UpdateStaffParams|\ElevenLabs\Types\DeleteStaffParams|\ElevenLabs\Types\ListAssetsParams|\ElevenLabs\Types\CreateAssetParams|\ElevenLabs\Types\UpdateAssetParams|\ElevenLabs\Types\DeleteAssetParams|\ElevenLabs\Types\ListServicesParams|\ElevenLabs\Types\CreateServiceParams|\ElevenLabs\Types\UpdateServiceParams|\ElevenLabs\Types\DeleteServiceParams|\ElevenLabs\Types\ListProductsParams|\ElevenLabs\Types\CreateProductParams|\ElevenLabs\Types\UpdateProductParams|\ElevenLabs\Types\DeleteProductParams|\ElevenLabs\Types\CheckServiceAvailabilityParams|\ElevenLabs\Types\CreateClientAppointmentParams|\ElevenLabs\Types\GetClientAppointmentsParams|\ElevenLabs\Types\GetAppointmentByConfirmationNumberParams|\ElevenLabs\Types\CreateOrderParams|\ElevenLabs\Types\GetOrderByConfirmationNumberParams|\ElevenLabs\Types\GetClientOrdersParams|\ElevenLabs\Types\UpdateOrderParams|\ElevenLabs\Types\CancelOrderParams|\ElevenLabs\Types\ListGroupSessionsParams|\ElevenLabs\Types\ScheduleGroupSessionParams|\ElevenLabs\Types\RegisterForGroupSessionParams|\ElevenLabs\Types\CancelGroupSessionRegistrationParams|\ElevenLabs\Types\UpdateGroupSessionSeatsParams|\ElevenLabs\Types\CancelGroupSessionForAllParams|\ElevenLabs\Types\DeleteGroupSessionParams|\ElevenLabs\Types\ListCalendarEventsParams|\ElevenLabs\Types\UpdateCalendarEventParams|\ElevenLabs\Types\CancelCalendarEventParams|\ElevenLabs\Types\RestoreCalendarEventParams|\ElevenLabs\Types\DeleteCalendarEventParams|\ElevenLabs\Types\ListCustomerFacingAgentsParams|\ElevenLabs\Types\GetAgentConfigParams|\ElevenLabs\Types\ListAgentRulesParams|\ElevenLabs\Types\CreateAgentRuleParams|\ElevenLabs\Types\UpdateAgentRuleParams|\ElevenLabs\Types\DeleteAgentRuleParams|\ElevenLabs\Types\ListTransferRulesParams|\ElevenLabs\Types\CreateTransferRuleParams|\ElevenLabs\Types\UpdateTransferRuleParams|\ElevenLabs\Types\DeleteTransferRuleParams|\ElevenLabs\Types\ListAgentProceduresParams|\ElevenLabs\Types\ListAgentReferencesParams|\ElevenLabs\Types\CreateAgentProcedureParams|\ElevenLabs\Types\UpdateAgentProcedureParams|\ElevenLabs\Types\DeleteAgentProcedureParams|\ElevenLabs\Types\ListHolidaysParams|\ElevenLabs\Types\CreateHolidayParams|\ElevenLabs\Types\UpdateHolidayParams|\ElevenLabs\Types\DeleteHolidayParams|\ElevenLabs\Types\GetScheduleParams|\ElevenLabs\Types\SubmitBusinessInfoParams|\ElevenLabs\Types\UpdateBusinessInfoParams|\ElevenLabs\Types\UpdateAgentConfigParams|\ElevenLabs\Types\GetAnalyticsSummaryParams|\ElevenLabs\Types\GetWorkspacePlanParams|\ElevenLabs\Types\GetBookingPageSettingsParams|\ElevenLabs\Types\UpdateBookingPageSettingsParams|\ElevenLabs\Types\UpdateBookingPageAppearanceParams|\ElevenLabs\Types\GetBookingSlugStatusParams|\ElevenLabs\Types\ConfirmChangeParams|\ElevenLabs\Types\SetBookingSlugParams|\ElevenLabs\Types\ListClientInteractionsParams|\ElevenLabs\Types\CreateClientInteractionParams|\ElevenLabs\Types\DeleteClientInteractionParams|\ElevenLabs\Types\ListLocationsParams|\ElevenLabs\Types\CreateLocationParams|\ElevenLabs\Types\UpdateLocationParams|\ElevenLabs\Types\DeleteLocationParams|\ElevenLabs\Types\LeaveMessageParams|\ElevenLabs\Types\CreateServiceQuoteRequestParams|\ElevenLabs\Types\CreateProductQuoteRequestParams|\ElevenLabs\Types\ReportKnowledgeGapParams|\ElevenLabs\Types\OptInSmsReminderParams|\ElevenLabs\Types\OptOutSmsReminderParams|\ElevenLabs\Types\TriggerUserVerificationParams|\ElevenLabs\Types\ValidateUserVerificationCodeParams|\ElevenLabs\Types\OwnerListStaffParams|\ElevenLabs\Types\OwnerListAssetsParams|\ElevenLabs\Types\OwnerListLocationsParams|\ElevenLabs\Types\OwnerListServicesParams|\ElevenLabs\Types\OwnerListProductsParams|\ElevenLabs\Types\OwnerGetClientAppointmentsParams|array<string, mixed> The value, exactly one of the variant types
    */
   public readonly mixed $value;
 
@@ -67,7 +67,7 @@ class SmbToolConfigParams extends JsonSerializableType
 
   /**
    * Private constructor - use factory methods to create instances
-   * @param \ElevenLabs\Types\SearchClientsParams|\ElevenLabs\Types\SendCustomEmailParams|\ElevenLabs\Types\ListClientsParams|\ElevenLabs\Types\GetClientByPhoneParams|\ElevenLabs\Types\CreateClientParams|\ElevenLabs\Types\UpdateClientParams|\ElevenLabs\Types\DeleteClientParams|\ElevenLabs\Types\ListStaffParams|\ElevenLabs\Types\CreateStaffParams|\ElevenLabs\Types\UpdateStaffParams|\ElevenLabs\Types\DeleteStaffParams|\ElevenLabs\Types\ListAssetsParams|\ElevenLabs\Types\CreateAssetParams|\ElevenLabs\Types\UpdateAssetParams|\ElevenLabs\Types\DeleteAssetParams|\ElevenLabs\Types\ListServicesParams|\ElevenLabs\Types\CreateServiceParams|\ElevenLabs\Types\UpdateServiceParams|\ElevenLabs\Types\DeleteServiceParams|\ElevenLabs\Types\ListProductsParams|\ElevenLabs\Types\CreateProductParams|\ElevenLabs\Types\UpdateProductParams|\ElevenLabs\Types\DeleteProductParams|\ElevenLabs\Types\CheckServiceAvailabilityParams|\ElevenLabs\Types\CreateClientAppointmentParams|\ElevenLabs\Types\GetClientAppointmentsParams|\ElevenLabs\Types\GetAppointmentByConfirmationNumberParams|\ElevenLabs\Types\CreateOrderParams|\ElevenLabs\Types\GetOrderByConfirmationNumberParams|\ElevenLabs\Types\GetClientOrdersParams|\ElevenLabs\Types\UpdateOrderParams|\ElevenLabs\Types\CancelOrderParams|\ElevenLabs\Types\ListGroupSessionsParams|\ElevenLabs\Types\ScheduleGroupSessionParams|\ElevenLabs\Types\RegisterForGroupSessionParams|\ElevenLabs\Types\CancelGroupSessionRegistrationParams|\ElevenLabs\Types\UpdateGroupSessionSeatsParams|\ElevenLabs\Types\CancelGroupSessionForAllParams|\ElevenLabs\Types\DeleteGroupSessionParams|\ElevenLabs\Types\ListCalendarEventsParams|\ElevenLabs\Types\UpdateCalendarEventParams|\ElevenLabs\Types\CancelCalendarEventParams|\ElevenLabs\Types\RestoreCalendarEventParams|\ElevenLabs\Types\DeleteCalendarEventParams|\ElevenLabs\Types\ListCustomerFacingAgentsParams|\ElevenLabs\Types\GetAgentConfigParams|\ElevenLabs\Types\ListAgentRulesParams|\ElevenLabs\Types\CreateAgentRuleParams|\ElevenLabs\Types\UpdateAgentRuleParams|\ElevenLabs\Types\DeleteAgentRuleParams|\ElevenLabs\Types\ListTransferRulesParams|\ElevenLabs\Types\CreateTransferRuleParams|\ElevenLabs\Types\UpdateTransferRuleParams|\ElevenLabs\Types\DeleteTransferRuleParams|\ElevenLabs\Types\ListAgentProceduresParams|\ElevenLabs\Types\ListAgentReferencesParams|\ElevenLabs\Types\CreateAgentProcedureParams|\ElevenLabs\Types\UpdateAgentProcedureParams|\ElevenLabs\Types\DeleteAgentProcedureParams|\ElevenLabs\Types\ListHolidaysParams|\ElevenLabs\Types\CreateHolidayParams|\ElevenLabs\Types\UpdateHolidayParams|\ElevenLabs\Types\DeleteHolidayParams|\ElevenLabs\Types\GetScheduleParams|\ElevenLabs\Types\SubmitBusinessInfoParams|\ElevenLabs\Types\UpdateBusinessInfoParams|\ElevenLabs\Types\UpdateAgentConfigParams|\ElevenLabs\Types\GetAnalyticsSummaryParams|\ElevenLabs\Types\GetWorkspacePlanParams|\ElevenLabs\Types\GetBookingPageSettingsParams|\ElevenLabs\Types\UpdateBookingPageSettingsParams|\ElevenLabs\Types\UpdateBookingPageAppearanceParams|\ElevenLabs\Types\GetBookingSlugStatusParams|\ElevenLabs\Types\SetBookingSlugParams|\ElevenLabs\Types\ListClientInteractionsParams|\ElevenLabs\Types\CreateClientInteractionParams|\ElevenLabs\Types\DeleteClientInteractionParams|\ElevenLabs\Types\ListLocationsParams|\ElevenLabs\Types\CreateLocationParams|\ElevenLabs\Types\UpdateLocationParams|\ElevenLabs\Types\DeleteLocationParams|\ElevenLabs\Types\LeaveMessageParams|\ElevenLabs\Types\CreateServiceQuoteRequestParams|\ElevenLabs\Types\CreateProductQuoteRequestParams|\ElevenLabs\Types\ReportKnowledgeGapParams|\ElevenLabs\Types\OptInSmsReminderParams|\ElevenLabs\Types\OptOutSmsReminderParams|\ElevenLabs\Types\TriggerUserVerificationParams|\ElevenLabs\Types\ValidateUserVerificationCodeParams|\ElevenLabs\Types\OwnerListStaffParams|\ElevenLabs\Types\OwnerListAssetsParams|\ElevenLabs\Types\OwnerListLocationsParams|\ElevenLabs\Types\OwnerListServicesParams|\ElevenLabs\Types\OwnerListProductsParams|\ElevenLabs\Types\OwnerGetClientAppointmentsParams|array<string, mixed> $value
+   * @param \ElevenLabs\Types\SearchClientsParams|\ElevenLabs\Types\SendCustomEmailParams|\ElevenLabs\Types\ListClientsParams|\ElevenLabs\Types\GetClientByPhoneParams|\ElevenLabs\Types\CreateClientParams|\ElevenLabs\Types\UpdateClientParams|\ElevenLabs\Types\DeleteClientParams|\ElevenLabs\Types\ListStaffParams|\ElevenLabs\Types\CreateStaffParams|\ElevenLabs\Types\UpdateStaffParams|\ElevenLabs\Types\DeleteStaffParams|\ElevenLabs\Types\ListAssetsParams|\ElevenLabs\Types\CreateAssetParams|\ElevenLabs\Types\UpdateAssetParams|\ElevenLabs\Types\DeleteAssetParams|\ElevenLabs\Types\ListServicesParams|\ElevenLabs\Types\CreateServiceParams|\ElevenLabs\Types\UpdateServiceParams|\ElevenLabs\Types\DeleteServiceParams|\ElevenLabs\Types\ListProductsParams|\ElevenLabs\Types\CreateProductParams|\ElevenLabs\Types\UpdateProductParams|\ElevenLabs\Types\DeleteProductParams|\ElevenLabs\Types\CheckServiceAvailabilityParams|\ElevenLabs\Types\CreateClientAppointmentParams|\ElevenLabs\Types\GetClientAppointmentsParams|\ElevenLabs\Types\GetAppointmentByConfirmationNumberParams|\ElevenLabs\Types\CreateOrderParams|\ElevenLabs\Types\GetOrderByConfirmationNumberParams|\ElevenLabs\Types\GetClientOrdersParams|\ElevenLabs\Types\UpdateOrderParams|\ElevenLabs\Types\CancelOrderParams|\ElevenLabs\Types\ListGroupSessionsParams|\ElevenLabs\Types\ScheduleGroupSessionParams|\ElevenLabs\Types\RegisterForGroupSessionParams|\ElevenLabs\Types\CancelGroupSessionRegistrationParams|\ElevenLabs\Types\UpdateGroupSessionSeatsParams|\ElevenLabs\Types\CancelGroupSessionForAllParams|\ElevenLabs\Types\DeleteGroupSessionParams|\ElevenLabs\Types\ListCalendarEventsParams|\ElevenLabs\Types\UpdateCalendarEventParams|\ElevenLabs\Types\CancelCalendarEventParams|\ElevenLabs\Types\RestoreCalendarEventParams|\ElevenLabs\Types\DeleteCalendarEventParams|\ElevenLabs\Types\ListCustomerFacingAgentsParams|\ElevenLabs\Types\GetAgentConfigParams|\ElevenLabs\Types\ListAgentRulesParams|\ElevenLabs\Types\CreateAgentRuleParams|\ElevenLabs\Types\UpdateAgentRuleParams|\ElevenLabs\Types\DeleteAgentRuleParams|\ElevenLabs\Types\ListTransferRulesParams|\ElevenLabs\Types\CreateTransferRuleParams|\ElevenLabs\Types\UpdateTransferRuleParams|\ElevenLabs\Types\DeleteTransferRuleParams|\ElevenLabs\Types\ListAgentProceduresParams|\ElevenLabs\Types\ListAgentReferencesParams|\ElevenLabs\Types\CreateAgentProcedureParams|\ElevenLabs\Types\UpdateAgentProcedureParams|\ElevenLabs\Types\DeleteAgentProcedureParams|\ElevenLabs\Types\ListHolidaysParams|\ElevenLabs\Types\CreateHolidayParams|\ElevenLabs\Types\UpdateHolidayParams|\ElevenLabs\Types\DeleteHolidayParams|\ElevenLabs\Types\GetScheduleParams|\ElevenLabs\Types\SubmitBusinessInfoParams|\ElevenLabs\Types\UpdateBusinessInfoParams|\ElevenLabs\Types\UpdateAgentConfigParams|\ElevenLabs\Types\GetAnalyticsSummaryParams|\ElevenLabs\Types\GetWorkspacePlanParams|\ElevenLabs\Types\GetBookingPageSettingsParams|\ElevenLabs\Types\UpdateBookingPageSettingsParams|\ElevenLabs\Types\UpdateBookingPageAppearanceParams|\ElevenLabs\Types\GetBookingSlugStatusParams|\ElevenLabs\Types\ConfirmChangeParams|\ElevenLabs\Types\SetBookingSlugParams|\ElevenLabs\Types\ListClientInteractionsParams|\ElevenLabs\Types\CreateClientInteractionParams|\ElevenLabs\Types\DeleteClientInteractionParams|\ElevenLabs\Types\ListLocationsParams|\ElevenLabs\Types\CreateLocationParams|\ElevenLabs\Types\UpdateLocationParams|\ElevenLabs\Types\DeleteLocationParams|\ElevenLabs\Types\LeaveMessageParams|\ElevenLabs\Types\CreateServiceQuoteRequestParams|\ElevenLabs\Types\CreateProductQuoteRequestParams|\ElevenLabs\Types\ReportKnowledgeGapParams|\ElevenLabs\Types\OptInSmsReminderParams|\ElevenLabs\Types\OptOutSmsReminderParams|\ElevenLabs\Types\TriggerUserVerificationParams|\ElevenLabs\Types\ValidateUserVerificationCodeParams|\ElevenLabs\Types\OwnerListStaffParams|\ElevenLabs\Types\OwnerListAssetsParams|\ElevenLabs\Types\OwnerListLocationsParams|\ElevenLabs\Types\OwnerListServicesParams|\ElevenLabs\Types\OwnerListProductsParams|\ElevenLabs\Types\OwnerGetClientAppointmentsParams|array<string, mixed> $value
    */
   private function __construct($value, int $typeIndex)
   {
@@ -147,28 +147,29 @@ class SmbToolConfigParams extends JsonSerializableType
       70 => 'update_booking_page_settings',
       71 => 'update_booking_page_appearance',
       72 => 'get_booking_slug_status',
-      73 => 'set_booking_slug',
-      74 => 'list_client_interactions',
-      75 => 'create_client_interaction',
-      76 => 'delete_client_interaction',
-      77 => 'list_locations',
-      78 => 'create_location',
-      79 => 'update_location',
-      80 => 'delete_location',
-      81 => 'leave_message',
-      82 => 'create_service_quote_request',
-      83 => 'create_product_quote_request',
-      84 => 'report_knowledge_gap',
-      85 => 'opt_in_sms_reminder',
-      86 => 'opt_out_sms_reminder',
-      87 => 'trigger_user_verification',
-      88 => 'validate_user_verification_code',
-      89 => 'owner_list_staff',
-      90 => 'owner_list_assets',
-      91 => 'owner_list_locations',
-      92 => 'owner_list_services',
-      93 => 'owner_list_products',
-      94 => 'owner_get_client_appointments',
+      73 => 'smb_confirm_change',
+      74 => 'set_booking_slug',
+      75 => 'list_client_interactions',
+      76 => 'create_client_interaction',
+      77 => 'delete_client_interaction',
+      78 => 'list_locations',
+      79 => 'create_location',
+      80 => 'update_location',
+      81 => 'delete_location',
+      82 => 'leave_message',
+      83 => 'create_service_quote_request',
+      84 => 'create_product_quote_request',
+      85 => 'report_knowledge_gap',
+      86 => 'opt_in_sms_reminder',
+      87 => 'opt_out_sms_reminder',
+      88 => 'trigger_user_verification',
+      89 => 'validate_user_verification_code',
+      90 => 'owner_list_staff',
+      91 => 'owner_list_assets',
+      92 => 'owner_list_locations',
+      93 => 'owner_list_services',
+      94 => 'owner_list_products',
+      95 => 'owner_get_client_appointments',
       self::UNKNOWN => '_unknown',
       default => throw new \UnexpectedValueException("Unknown type index: $typeIndex")
     };
@@ -804,12 +805,21 @@ class SmbToolConfigParams extends JsonSerializableType
   }
 
   /**
+   * Create a SmbToolConfigParams instance containing a \ElevenLabs\Types\ConfirmChangeParams
+   */
+  public static function smbConfirmChange(
+    \ElevenLabs\Types\ConfirmChangeParams $smbConfirmChange
+  ): self {
+    return new self($smbConfirmChange, 73);
+  }
+
+  /**
    * Create a SmbToolConfigParams instance containing a \ElevenLabs\Types\SetBookingSlugParams
    */
   public static function setBookingSlug(
     \ElevenLabs\Types\SetBookingSlugParams $setBookingSlug
   ): self {
-    return new self($setBookingSlug, 73);
+    return new self($setBookingSlug, 74);
   }
 
   /**
@@ -818,7 +828,7 @@ class SmbToolConfigParams extends JsonSerializableType
   public static function listClientInteractions(
     \ElevenLabs\Types\ListClientInteractionsParams $listClientInteractions
   ): self {
-    return new self($listClientInteractions, 74);
+    return new self($listClientInteractions, 75);
   }
 
   /**
@@ -827,7 +837,7 @@ class SmbToolConfigParams extends JsonSerializableType
   public static function createClientInteraction(
     \ElevenLabs\Types\CreateClientInteractionParams $createClientInteraction
   ): self {
-    return new self($createClientInteraction, 75);
+    return new self($createClientInteraction, 76);
   }
 
   /**
@@ -836,7 +846,7 @@ class SmbToolConfigParams extends JsonSerializableType
   public static function deleteClientInteraction(
     \ElevenLabs\Types\DeleteClientInteractionParams $deleteClientInteraction
   ): self {
-    return new self($deleteClientInteraction, 76);
+    return new self($deleteClientInteraction, 77);
   }
 
   /**
@@ -844,7 +854,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public static function listLocations(\ElevenLabs\Types\ListLocationsParams $listLocations): self
   {
-    return new self($listLocations, 77);
+    return new self($listLocations, 78);
   }
 
   /**
@@ -853,7 +863,7 @@ class SmbToolConfigParams extends JsonSerializableType
   public static function createLocation(
     \ElevenLabs\Types\CreateLocationParams $createLocation
   ): self {
-    return new self($createLocation, 78);
+    return new self($createLocation, 79);
   }
 
   /**
@@ -862,7 +872,7 @@ class SmbToolConfigParams extends JsonSerializableType
   public static function updateLocation(
     \ElevenLabs\Types\UpdateLocationParams $updateLocation
   ): self {
-    return new self($updateLocation, 79);
+    return new self($updateLocation, 80);
   }
 
   /**
@@ -871,7 +881,7 @@ class SmbToolConfigParams extends JsonSerializableType
   public static function deleteLocation(
     \ElevenLabs\Types\DeleteLocationParams $deleteLocation
   ): self {
-    return new self($deleteLocation, 80);
+    return new self($deleteLocation, 81);
   }
 
   /**
@@ -879,7 +889,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public static function leaveMessage(\ElevenLabs\Types\LeaveMessageParams $leaveMessage): self
   {
-    return new self($leaveMessage, 81);
+    return new self($leaveMessage, 82);
   }
 
   /**
@@ -888,7 +898,7 @@ class SmbToolConfigParams extends JsonSerializableType
   public static function createServiceQuoteRequest(
     \ElevenLabs\Types\CreateServiceQuoteRequestParams $createServiceQuoteRequest
   ): self {
-    return new self($createServiceQuoteRequest, 82);
+    return new self($createServiceQuoteRequest, 83);
   }
 
   /**
@@ -897,7 +907,7 @@ class SmbToolConfigParams extends JsonSerializableType
   public static function createProductQuoteRequest(
     \ElevenLabs\Types\CreateProductQuoteRequestParams $createProductQuoteRequest
   ): self {
-    return new self($createProductQuoteRequest, 83);
+    return new self($createProductQuoteRequest, 84);
   }
 
   /**
@@ -906,7 +916,7 @@ class SmbToolConfigParams extends JsonSerializableType
   public static function reportKnowledgeGap(
     \ElevenLabs\Types\ReportKnowledgeGapParams $reportKnowledgeGap
   ): self {
-    return new self($reportKnowledgeGap, 84);
+    return new self($reportKnowledgeGap, 85);
   }
 
   /**
@@ -915,7 +925,7 @@ class SmbToolConfigParams extends JsonSerializableType
   public static function optInSmsReminder(
     \ElevenLabs\Types\OptInSmsReminderParams $optInSmsReminder
   ): self {
-    return new self($optInSmsReminder, 85);
+    return new self($optInSmsReminder, 86);
   }
 
   /**
@@ -924,7 +934,7 @@ class SmbToolConfigParams extends JsonSerializableType
   public static function optOutSmsReminder(
     \ElevenLabs\Types\OptOutSmsReminderParams $optOutSmsReminder
   ): self {
-    return new self($optOutSmsReminder, 86);
+    return new self($optOutSmsReminder, 87);
   }
 
   /**
@@ -933,7 +943,7 @@ class SmbToolConfigParams extends JsonSerializableType
   public static function triggerUserVerification(
     \ElevenLabs\Types\TriggerUserVerificationParams $triggerUserVerification
   ): self {
-    return new self($triggerUserVerification, 87);
+    return new self($triggerUserVerification, 88);
   }
 
   /**
@@ -942,7 +952,7 @@ class SmbToolConfigParams extends JsonSerializableType
   public static function validateUserVerificationCode(
     \ElevenLabs\Types\ValidateUserVerificationCodeParams $validateUserVerificationCode
   ): self {
-    return new self($validateUserVerificationCode, 88);
+    return new self($validateUserVerificationCode, 89);
   }
 
   /**
@@ -951,7 +961,7 @@ class SmbToolConfigParams extends JsonSerializableType
   public static function ownerListStaff(
     \ElevenLabs\Types\OwnerListStaffParams $ownerListStaff
   ): self {
-    return new self($ownerListStaff, 89);
+    return new self($ownerListStaff, 90);
   }
 
   /**
@@ -960,7 +970,7 @@ class SmbToolConfigParams extends JsonSerializableType
   public static function ownerListAssets(
     \ElevenLabs\Types\OwnerListAssetsParams $ownerListAssets
   ): self {
-    return new self($ownerListAssets, 90);
+    return new self($ownerListAssets, 91);
   }
 
   /**
@@ -969,7 +979,7 @@ class SmbToolConfigParams extends JsonSerializableType
   public static function ownerListLocations(
     \ElevenLabs\Types\OwnerListLocationsParams $ownerListLocations
   ): self {
-    return new self($ownerListLocations, 91);
+    return new self($ownerListLocations, 92);
   }
 
   /**
@@ -978,7 +988,7 @@ class SmbToolConfigParams extends JsonSerializableType
   public static function ownerListServices(
     \ElevenLabs\Types\OwnerListServicesParams $ownerListServices
   ): self {
-    return new self($ownerListServices, 92);
+    return new self($ownerListServices, 93);
   }
 
   /**
@@ -987,7 +997,7 @@ class SmbToolConfigParams extends JsonSerializableType
   public static function ownerListProducts(
     \ElevenLabs\Types\OwnerListProductsParams $ownerListProducts
   ): self {
-    return new self($ownerListProducts, 93);
+    return new self($ownerListProducts, 94);
   }
 
   /**
@@ -996,7 +1006,7 @@ class SmbToolConfigParams extends JsonSerializableType
   public static function ownerGetClientAppointments(
     \ElevenLabs\Types\OwnerGetClientAppointmentsParams $ownerGetClientAppointments
   ): self {
-    return new self($ownerGetClientAppointments, 94);
+    return new self($ownerGetClientAppointments, 95);
   }
 
   // Type checking methods
@@ -1585,11 +1595,19 @@ class SmbToolConfigParams extends JsonSerializableType
   }
 
   /**
+   * Check if this SmbToolConfigParams contains a \ElevenLabs\Types\ConfirmChangeParams
+   */
+  public function isSmbConfirmChange(): bool
+  {
+    return $this->typeIndex === 73;
+  }
+
+  /**
    * Check if this SmbToolConfigParams contains a \ElevenLabs\Types\SetBookingSlugParams
    */
   public function isSetBookingSlug(): bool
   {
-    return $this->typeIndex === 73;
+    return $this->typeIndex === 74;
   }
 
   /**
@@ -1597,7 +1615,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public function isListClientInteractions(): bool
   {
-    return $this->typeIndex === 74;
+    return $this->typeIndex === 75;
   }
 
   /**
@@ -1605,7 +1623,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public function isCreateClientInteraction(): bool
   {
-    return $this->typeIndex === 75;
+    return $this->typeIndex === 76;
   }
 
   /**
@@ -1613,7 +1631,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public function isDeleteClientInteraction(): bool
   {
-    return $this->typeIndex === 76;
+    return $this->typeIndex === 77;
   }
 
   /**
@@ -1621,7 +1639,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public function isListLocations(): bool
   {
-    return $this->typeIndex === 77;
+    return $this->typeIndex === 78;
   }
 
   /**
@@ -1629,7 +1647,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public function isCreateLocation(): bool
   {
-    return $this->typeIndex === 78;
+    return $this->typeIndex === 79;
   }
 
   /**
@@ -1637,7 +1655,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public function isUpdateLocation(): bool
   {
-    return $this->typeIndex === 79;
+    return $this->typeIndex === 80;
   }
 
   /**
@@ -1645,7 +1663,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public function isDeleteLocation(): bool
   {
-    return $this->typeIndex === 80;
+    return $this->typeIndex === 81;
   }
 
   /**
@@ -1653,7 +1671,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public function isLeaveMessage(): bool
   {
-    return $this->typeIndex === 81;
+    return $this->typeIndex === 82;
   }
 
   /**
@@ -1661,7 +1679,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public function isCreateServiceQuoteRequest(): bool
   {
-    return $this->typeIndex === 82;
+    return $this->typeIndex === 83;
   }
 
   /**
@@ -1669,7 +1687,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public function isCreateProductQuoteRequest(): bool
   {
-    return $this->typeIndex === 83;
+    return $this->typeIndex === 84;
   }
 
   /**
@@ -1677,7 +1695,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public function isReportKnowledgeGap(): bool
   {
-    return $this->typeIndex === 84;
+    return $this->typeIndex === 85;
   }
 
   /**
@@ -1685,7 +1703,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public function isOptInSmsReminder(): bool
   {
-    return $this->typeIndex === 85;
+    return $this->typeIndex === 86;
   }
 
   /**
@@ -1693,7 +1711,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public function isOptOutSmsReminder(): bool
   {
-    return $this->typeIndex === 86;
+    return $this->typeIndex === 87;
   }
 
   /**
@@ -1701,7 +1719,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public function isTriggerUserVerification(): bool
   {
-    return $this->typeIndex === 87;
+    return $this->typeIndex === 88;
   }
 
   /**
@@ -1709,7 +1727,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public function isValidateUserVerificationCode(): bool
   {
-    return $this->typeIndex === 88;
+    return $this->typeIndex === 89;
   }
 
   /**
@@ -1717,7 +1735,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public function isOwnerListStaff(): bool
   {
-    return $this->typeIndex === 89;
+    return $this->typeIndex === 90;
   }
 
   /**
@@ -1725,7 +1743,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public function isOwnerListAssets(): bool
   {
-    return $this->typeIndex === 90;
+    return $this->typeIndex === 91;
   }
 
   /**
@@ -1733,7 +1751,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public function isOwnerListLocations(): bool
   {
-    return $this->typeIndex === 91;
+    return $this->typeIndex === 92;
   }
 
   /**
@@ -1741,7 +1759,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public function isOwnerListServices(): bool
   {
-    return $this->typeIndex === 92;
+    return $this->typeIndex === 93;
   }
 
   /**
@@ -1749,7 +1767,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public function isOwnerListProducts(): bool
   {
-    return $this->typeIndex === 93;
+    return $this->typeIndex === 94;
   }
 
   /**
@@ -1757,7 +1775,7 @@ class SmbToolConfigParams extends JsonSerializableType
    */
   public function isOwnerGetClientAppointments(): bool
   {
-    return $this->typeIndex === 94;
+    return $this->typeIndex === 95;
   }
 
   // Throwing getters (fail-fast)
@@ -2784,6 +2802,20 @@ class SmbToolConfigParams extends JsonSerializableType
   }
 
   /**
+   * Get the \ElevenLabs\Types\ConfirmChangeParams value
+   * @throws \RuntimeException if this SmbToolConfigParams does not contain a \ElevenLabs\Types\ConfirmChangeParams
+   */
+  public function asSmbConfirmChange(): \ElevenLabs\Types\ConfirmChangeParams
+  {
+    if (!$this->isSmbConfirmChange()) {
+      throw new \RuntimeException(
+        'SmbToolConfigParams does not contain \ElevenLabs\Types\ConfirmChangeParams'
+      );
+    }
+    return $this->value;
+  }
+
+  /**
    * Get the \ElevenLabs\Types\SetBookingSlugParams value
    * @throws \RuntimeException if this SmbToolConfigParams does not contain a \ElevenLabs\Types\SetBookingSlugParams
    */
@@ -3750,6 +3782,15 @@ class SmbToolConfigParams extends JsonSerializableType
   }
 
   /**
+   * Try to get the \ElevenLabs\Types\ConfirmChangeParams value
+   * @return \ElevenLabs\Types\ConfirmChangeParams|null Returns the value if this SmbToolConfigParams contains a \ElevenLabs\Types\ConfirmChangeParams, null otherwise
+   */
+  public function tryAsSmbConfirmChange(): ?\ElevenLabs\Types\ConfirmChangeParams
+  {
+    return $this->isSmbConfirmChange() ? $this->value : null;
+  }
+
+  /**
    * Try to get the \ElevenLabs\Types\SetBookingSlugParams value
    * @return \ElevenLabs\Types\SetBookingSlugParams|null Returns the value if this SmbToolConfigParams contains a \ElevenLabs\Types\SetBookingSlugParams, null otherwise
    */
@@ -4023,6 +4064,7 @@ class SmbToolConfigParams extends JsonSerializableType
    * @param callable(\ElevenLabs\Types\UpdateBookingPageSettingsParams): T $onUpdateBookingPageSettings
    * @param callable(\ElevenLabs\Types\UpdateBookingPageAppearanceParams): T $onUpdateBookingPageAppearance
    * @param callable(\ElevenLabs\Types\GetBookingSlugStatusParams): T $onGetBookingSlugStatus
+   * @param callable(\ElevenLabs\Types\ConfirmChangeParams): T $onSmbConfirmChange
    * @param callable(\ElevenLabs\Types\SetBookingSlugParams): T $onSetBookingSlug
    * @param callable(\ElevenLabs\Types\ListClientInteractionsParams): T $onListClientInteractions
    * @param callable(\ElevenLabs\Types\CreateClientInteractionParams): T $onCreateClientInteraction
@@ -4121,6 +4163,7 @@ class SmbToolConfigParams extends JsonSerializableType
     callable $onUpdateBookingPageSettings,
     callable $onUpdateBookingPageAppearance,
     callable $onGetBookingSlugStatus,
+    callable $onSmbConfirmChange,
     callable $onSetBookingSlug,
     callable $onListClientInteractions,
     callable $onCreateClientInteraction,
@@ -4218,28 +4261,29 @@ class SmbToolConfigParams extends JsonSerializableType
       70 => $onUpdateBookingPageSettings($this->value),
       71 => $onUpdateBookingPageAppearance($this->value),
       72 => $onGetBookingSlugStatus($this->value),
-      73 => $onSetBookingSlug($this->value),
-      74 => $onListClientInteractions($this->value),
-      75 => $onCreateClientInteraction($this->value),
-      76 => $onDeleteClientInteraction($this->value),
-      77 => $onListLocations($this->value),
-      78 => $onCreateLocation($this->value),
-      79 => $onUpdateLocation($this->value),
-      80 => $onDeleteLocation($this->value),
-      81 => $onLeaveMessage($this->value),
-      82 => $onCreateServiceQuoteRequest($this->value),
-      83 => $onCreateProductQuoteRequest($this->value),
-      84 => $onReportKnowledgeGap($this->value),
-      85 => $onOptInSmsReminder($this->value),
-      86 => $onOptOutSmsReminder($this->value),
-      87 => $onTriggerUserVerification($this->value),
-      88 => $onValidateUserVerificationCode($this->value),
-      89 => $onOwnerListStaff($this->value),
-      90 => $onOwnerListAssets($this->value),
-      91 => $onOwnerListLocations($this->value),
-      92 => $onOwnerListServices($this->value),
-      93 => $onOwnerListProducts($this->value),
-      94 => $onOwnerGetClientAppointments($this->value),
+      73 => $onSmbConfirmChange($this->value),
+      74 => $onSetBookingSlug($this->value),
+      75 => $onListClientInteractions($this->value),
+      76 => $onCreateClientInteraction($this->value),
+      77 => $onDeleteClientInteraction($this->value),
+      78 => $onListLocations($this->value),
+      79 => $onCreateLocation($this->value),
+      80 => $onUpdateLocation($this->value),
+      81 => $onDeleteLocation($this->value),
+      82 => $onLeaveMessage($this->value),
+      83 => $onCreateServiceQuoteRequest($this->value),
+      84 => $onCreateProductQuoteRequest($this->value),
+      85 => $onReportKnowledgeGap($this->value),
+      86 => $onOptInSmsReminder($this->value),
+      87 => $onOptOutSmsReminder($this->value),
+      88 => $onTriggerUserVerification($this->value),
+      89 => $onValidateUserVerificationCode($this->value),
+      90 => $onOwnerListStaff($this->value),
+      91 => $onOwnerListAssets($this->value),
+      92 => $onOwnerListLocations($this->value),
+      93 => $onOwnerListServices($this->value),
+      94 => $onOwnerListProducts($this->value),
+      95 => $onOwnerGetClientAppointments($this->value),
       default => throw new \UnexpectedValueException("Unknown type index: $this->typeIndex")
     };
   }
@@ -4289,21 +4333,21 @@ class SmbToolConfigParams extends JsonSerializableType
         case 'create_client_appointment':
           return new self(\ElevenLabs\Types\CreateClientAppointmentParams::fromArray($data), 24);
         case 'create_client_interaction':
-          return new self(\ElevenLabs\Types\CreateClientInteractionParams::fromArray($data), 75);
+          return new self(\ElevenLabs\Types\CreateClientInteractionParams::fromArray($data), 76);
         case 'create_holiday':
           return new self(\ElevenLabs\Types\CreateHolidayParams::fromArray($data), 60);
         case 'create_location':
-          return new self(\ElevenLabs\Types\CreateLocationParams::fromArray($data), 78);
+          return new self(\ElevenLabs\Types\CreateLocationParams::fromArray($data), 79);
         case 'create_order':
           return new self(\ElevenLabs\Types\CreateOrderParams::fromArray($data), 27);
         case 'create_product':
           return new self(\ElevenLabs\Types\CreateProductParams::fromArray($data), 20);
         case 'create_product_quote_request':
-          return new self(\ElevenLabs\Types\CreateProductQuoteRequestParams::fromArray($data), 83);
+          return new self(\ElevenLabs\Types\CreateProductQuoteRequestParams::fromArray($data), 84);
         case 'create_service':
           return new self(\ElevenLabs\Types\CreateServiceParams::fromArray($data), 16);
         case 'create_service_quote_request':
-          return new self(\ElevenLabs\Types\CreateServiceQuoteRequestParams::fromArray($data), 82);
+          return new self(\ElevenLabs\Types\CreateServiceQuoteRequestParams::fromArray($data), 83);
         case 'create_staff':
           return new self(\ElevenLabs\Types\CreateStaffParams::fromArray($data), 8);
         case 'create_transfer_rule':
@@ -4319,13 +4363,13 @@ class SmbToolConfigParams extends JsonSerializableType
         case 'delete_client':
           return new self(\ElevenLabs\Types\DeleteClientParams::fromArray($data), 6);
         case 'delete_client_interaction':
-          return new self(\ElevenLabs\Types\DeleteClientInteractionParams::fromArray($data), 76);
+          return new self(\ElevenLabs\Types\DeleteClientInteractionParams::fromArray($data), 77);
         case 'delete_group_session':
           return new self(\ElevenLabs\Types\DeleteGroupSessionParams::fromArray($data), 38);
         case 'delete_holiday':
           return new self(\ElevenLabs\Types\DeleteHolidayParams::fromArray($data), 62);
         case 'delete_location':
-          return new self(\ElevenLabs\Types\DeleteLocationParams::fromArray($data), 80);
+          return new self(\ElevenLabs\Types\DeleteLocationParams::fromArray($data), 81);
         case 'delete_product':
           return new self(\ElevenLabs\Types\DeleteProductParams::fromArray($data), 22);
         case 'delete_service':
@@ -4363,7 +4407,7 @@ class SmbToolConfigParams extends JsonSerializableType
         case 'get_workspace_plan':
           return new self(\ElevenLabs\Types\GetWorkspacePlanParams::fromArray($data), 68);
         case 'leave_message':
-          return new self(\ElevenLabs\Types\LeaveMessageParams::fromArray($data), 81);
+          return new self(\ElevenLabs\Types\LeaveMessageParams::fromArray($data), 82);
         case 'list_agent_procedures':
           return new self(\ElevenLabs\Types\ListAgentProceduresParams::fromArray($data), 54);
         case 'list_agent_references':
@@ -4375,7 +4419,7 @@ class SmbToolConfigParams extends JsonSerializableType
         case 'list_calendar_events':
           return new self(\ElevenLabs\Types\ListCalendarEventsParams::fromArray($data), 39);
         case 'list_client_interactions':
-          return new self(\ElevenLabs\Types\ListClientInteractionsParams::fromArray($data), 74);
+          return new self(\ElevenLabs\Types\ListClientInteractionsParams::fromArray($data), 75);
         case 'list_clients':
           return new self(\ElevenLabs\Types\ListClientsParams::fromArray($data), 2);
         case 'list_customer_facing_agents':
@@ -4385,7 +4429,7 @@ class SmbToolConfigParams extends JsonSerializableType
         case 'list_holidays':
           return new self(\ElevenLabs\Types\ListHolidaysParams::fromArray($data), 59);
         case 'list_locations':
-          return new self(\ElevenLabs\Types\ListLocationsParams::fromArray($data), 77);
+          return new self(\ElevenLabs\Types\ListLocationsParams::fromArray($data), 78);
         case 'list_products':
           return new self(\ElevenLabs\Types\ListProductsParams::fromArray($data), 19);
         case 'list_services':
@@ -4395,25 +4439,25 @@ class SmbToolConfigParams extends JsonSerializableType
         case 'list_transfer_rules':
           return new self(\ElevenLabs\Types\ListTransferRulesParams::fromArray($data), 50);
         case 'opt_in_sms_reminder':
-          return new self(\ElevenLabs\Types\OptInSmsReminderParams::fromArray($data), 85);
+          return new self(\ElevenLabs\Types\OptInSmsReminderParams::fromArray($data), 86);
         case 'opt_out_sms_reminder':
-          return new self(\ElevenLabs\Types\OptOutSmsReminderParams::fromArray($data), 86);
+          return new self(\ElevenLabs\Types\OptOutSmsReminderParams::fromArray($data), 87);
         case 'owner_get_client_appointments':
-          return new self(\ElevenLabs\Types\OwnerGetClientAppointmentsParams::fromArray($data), 94);
+          return new self(\ElevenLabs\Types\OwnerGetClientAppointmentsParams::fromArray($data), 95);
         case 'owner_list_assets':
-          return new self(\ElevenLabs\Types\OwnerListAssetsParams::fromArray($data), 90);
+          return new self(\ElevenLabs\Types\OwnerListAssetsParams::fromArray($data), 91);
         case 'owner_list_locations':
-          return new self(\ElevenLabs\Types\OwnerListLocationsParams::fromArray($data), 91);
+          return new self(\ElevenLabs\Types\OwnerListLocationsParams::fromArray($data), 92);
         case 'owner_list_products':
-          return new self(\ElevenLabs\Types\OwnerListProductsParams::fromArray($data), 93);
+          return new self(\ElevenLabs\Types\OwnerListProductsParams::fromArray($data), 94);
         case 'owner_list_services':
-          return new self(\ElevenLabs\Types\OwnerListServicesParams::fromArray($data), 92);
+          return new self(\ElevenLabs\Types\OwnerListServicesParams::fromArray($data), 93);
         case 'owner_list_staff':
-          return new self(\ElevenLabs\Types\OwnerListStaffParams::fromArray($data), 89);
+          return new self(\ElevenLabs\Types\OwnerListStaffParams::fromArray($data), 90);
         case 'register_for_group_session':
           return new self(\ElevenLabs\Types\RegisterForGroupSessionParams::fromArray($data), 34);
         case 'report_knowledge_gap':
-          return new self(\ElevenLabs\Types\ReportKnowledgeGapParams::fromArray($data), 84);
+          return new self(\ElevenLabs\Types\ReportKnowledgeGapParams::fromArray($data), 85);
         case 'restore_calendar_event':
           return new self(\ElevenLabs\Types\RestoreCalendarEventParams::fromArray($data), 42);
         case 'schedule_group_session':
@@ -4423,11 +4467,13 @@ class SmbToolConfigParams extends JsonSerializableType
         case 'send_custom_email':
           return new self(\ElevenLabs\Types\SendCustomEmailParams::fromArray($data), 1);
         case 'set_booking_slug':
-          return new self(\ElevenLabs\Types\SetBookingSlugParams::fromArray($data), 73);
+          return new self(\ElevenLabs\Types\SetBookingSlugParams::fromArray($data), 74);
+        case 'smb_confirm_change':
+          return new self(\ElevenLabs\Types\ConfirmChangeParams::fromArray($data), 73);
         case 'submit_business_info':
           return new self(\ElevenLabs\Types\SubmitBusinessInfoParams::fromArray($data), 64);
         case 'trigger_user_verification':
-          return new self(\ElevenLabs\Types\TriggerUserVerificationParams::fromArray($data), 87);
+          return new self(\ElevenLabs\Types\TriggerUserVerificationParams::fromArray($data), 88);
         case 'update_agent_config':
           return new self(\ElevenLabs\Types\UpdateAgentConfigParams::fromArray($data), 66);
         case 'update_agent_procedure':
@@ -4454,7 +4500,7 @@ class SmbToolConfigParams extends JsonSerializableType
         case 'update_holiday':
           return new self(\ElevenLabs\Types\UpdateHolidayParams::fromArray($data), 61);
         case 'update_location':
-          return new self(\ElevenLabs\Types\UpdateLocationParams::fromArray($data), 79);
+          return new self(\ElevenLabs\Types\UpdateLocationParams::fromArray($data), 80);
         case 'update_order':
           return new self(\ElevenLabs\Types\UpdateOrderParams::fromArray($data), 30);
         case 'update_product':
@@ -4468,7 +4514,7 @@ class SmbToolConfigParams extends JsonSerializableType
         case 'validate_user_verification_code':
           return new self(
             \ElevenLabs\Types\ValidateUserVerificationCodeParams::fromArray($data),
-            88
+            89
           );
         default:
           // A variant the API added after this SDK was generated: kept, not rejected.
@@ -5355,10 +5401,22 @@ class SmbToolConfigParams extends JsonSerializableType
     }
 
     try {
-      $candidate = \ElevenLabs\Types\SetBookingSlugParams::fromArray($data);
+      $candidate = \ElevenLabs\Types\ConfirmChangeParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
       $candidates[] = ['instance' => $candidate, 'idx' => 73, 'score' => $score];
+    } catch (\Throwable $e) {
+      // Throwable, because under fernMode "this variant does not match" arrives as whatever
+      // the shared deserializer raises — a JsonException for a missing required field, not
+      // just a TypeError. Narrowing it turns a non-matching variant into a fatal.
+      // \ElevenLabs\Types\ConfirmChangeParams didn't match, continue to next type
+    }
+
+    try {
+      $candidate = \ElevenLabs\Types\SetBookingSlugParams::fromArray($data);
+      // Keys the variant actually mapped = input keys minus the ones it could not place.
+      $score = count($data) - count($candidate->getAdditionalProperties());
+      $candidates[] = ['instance' => $candidate, 'idx' => 74, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -5370,7 +5428,7 @@ class SmbToolConfigParams extends JsonSerializableType
       $candidate = \ElevenLabs\Types\ListClientInteractionsParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 74, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 75, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -5382,7 +5440,7 @@ class SmbToolConfigParams extends JsonSerializableType
       $candidate = \ElevenLabs\Types\CreateClientInteractionParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 75, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 76, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -5394,7 +5452,7 @@ class SmbToolConfigParams extends JsonSerializableType
       $candidate = \ElevenLabs\Types\DeleteClientInteractionParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 76, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 77, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -5406,7 +5464,7 @@ class SmbToolConfigParams extends JsonSerializableType
       $candidate = \ElevenLabs\Types\ListLocationsParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 77, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 78, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -5418,7 +5476,7 @@ class SmbToolConfigParams extends JsonSerializableType
       $candidate = \ElevenLabs\Types\CreateLocationParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 78, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 79, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -5430,7 +5488,7 @@ class SmbToolConfigParams extends JsonSerializableType
       $candidate = \ElevenLabs\Types\UpdateLocationParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 79, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 80, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -5442,7 +5500,7 @@ class SmbToolConfigParams extends JsonSerializableType
       $candidate = \ElevenLabs\Types\DeleteLocationParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 80, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 81, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -5454,7 +5512,7 @@ class SmbToolConfigParams extends JsonSerializableType
       $candidate = \ElevenLabs\Types\LeaveMessageParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 81, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 82, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -5466,7 +5524,7 @@ class SmbToolConfigParams extends JsonSerializableType
       $candidate = \ElevenLabs\Types\CreateServiceQuoteRequestParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 82, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 83, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -5478,7 +5536,7 @@ class SmbToolConfigParams extends JsonSerializableType
       $candidate = \ElevenLabs\Types\CreateProductQuoteRequestParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 83, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 84, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -5490,7 +5548,7 @@ class SmbToolConfigParams extends JsonSerializableType
       $candidate = \ElevenLabs\Types\ReportKnowledgeGapParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 84, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 85, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -5502,7 +5560,7 @@ class SmbToolConfigParams extends JsonSerializableType
       $candidate = \ElevenLabs\Types\OptInSmsReminderParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 85, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 86, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -5514,7 +5572,7 @@ class SmbToolConfigParams extends JsonSerializableType
       $candidate = \ElevenLabs\Types\OptOutSmsReminderParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 86, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 87, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -5526,7 +5584,7 @@ class SmbToolConfigParams extends JsonSerializableType
       $candidate = \ElevenLabs\Types\TriggerUserVerificationParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 87, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 88, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -5538,7 +5596,7 @@ class SmbToolConfigParams extends JsonSerializableType
       $candidate = \ElevenLabs\Types\ValidateUserVerificationCodeParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 88, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 89, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -5550,7 +5608,7 @@ class SmbToolConfigParams extends JsonSerializableType
       $candidate = \ElevenLabs\Types\OwnerListStaffParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 89, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 90, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -5562,7 +5620,7 @@ class SmbToolConfigParams extends JsonSerializableType
       $candidate = \ElevenLabs\Types\OwnerListAssetsParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 90, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 91, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -5574,7 +5632,7 @@ class SmbToolConfigParams extends JsonSerializableType
       $candidate = \ElevenLabs\Types\OwnerListLocationsParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 91, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 92, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -5586,7 +5644,7 @@ class SmbToolConfigParams extends JsonSerializableType
       $candidate = \ElevenLabs\Types\OwnerListServicesParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 92, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 93, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -5598,7 +5656,7 @@ class SmbToolConfigParams extends JsonSerializableType
       $candidate = \ElevenLabs\Types\OwnerListProductsParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 93, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 94, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -5610,7 +5668,7 @@ class SmbToolConfigParams extends JsonSerializableType
       $candidate = \ElevenLabs\Types\OwnerGetClientAppointmentsParams::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 94, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 95, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not

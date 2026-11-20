@@ -26,7 +26,7 @@ class BodyMergeAMergeProposalV1ConvaiAgentsAgentIdMergeProposalsMergeProposalIdM
   public ?bool $archiveSourceBranch;
 
   /**
-   * Force source branch changes onto the target, overriding timestamp-based conflict resolution.
+   * Keep the source branch's value for every conflict.
    */
   #[JsonProperty('force')]
   public ?bool $force;

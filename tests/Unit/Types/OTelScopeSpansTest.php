@@ -1,0 +1,49 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ElevenLabs\Tests\Unit\Types;
+
+use PHPUnit\Framework\TestCase;
+
+class OTelScopeSpansTest extends TestCase
+{
+  public function testFullyPopulatedRoundTrip(): void
+  {
+    $json = <<<'JSON'
+    {
+        "scope": {
+            "name": "test-value",
+            "version": "test-value"
+        },
+        "spans": [
+            {
+                "traceId": "test-value",
+                "spanId": "test-value",
+                "parentSpanId": "test-value",
+                "name": "test-value",
+                "kind": 1,
+                "startTimeUnixNano": "test-value",
+                "endTimeUnixNano": "test-value",
+                "attributes": [
+                    {
+                        "key": "test-value",
+                        "value": {
+                            "key": "test-value"
+                        }
+                    }
+                ],
+                "status": {
+                    "code": 1,
+                    "message": "test-value"
+                }
+            }
+        ]
+    }
+    JSON;
+
+    $instance = \ElevenLabs\Types\OTelScopeSpans::fromArray(json_decode($json, true));
+
+    $this->assertJsonStringEqualsJsonString($json, json_encode($instance));
+  }
+}

@@ -5,69 +5,63 @@ declare(strict_types=1);
 namespace ElevenLabs\Agents\TriageTickets\Requests;
 
 use ElevenLabs\Core\Json\JsonSerializableType;
-use ElevenLabs\Types\AgentConversationTicketIssueType;
 use ElevenLabs\Types\AgentConversationTicketSortBy;
 use ElevenLabs\Types\AgentConversationTicketStatus;
 
 class ListTriageTicketsRequest extends JsonSerializableType
 {
   /**
-   * @var ?int $pageSize How many agent conversation tickets to return. Can not exceed 100.
+   * @var ?int $pageSize How many agent issues to return. Can not exceed 100.
    */
   public ?int $pageSize;
 
   /**
-   * @var ?string $conversationId Filter tickets by conversation id.
+   * @var ?string $conversationId Filter agent issues by conversation id.
    */
   public ?string $conversationId;
 
   /**
-   * @var ?value-of<AgentConversationTicketStatus> $status Filter tickets by status.
+   * @var ?value-of<AgentConversationTicketStatus> $status Filter agent issues by status.
    */
   public ?string $status;
 
   /**
-   * @var ?array $sources Filter tickets by how they were raised (qa, agent, manual). Repeat the parameter to filter by multiple sources.
+   * @var ?array $sources Filter agent issues by how they were raised (qa, agent, manual). Repeat the parameter to filter by multiple sources.
    */
   public ?array $sources;
 
   /**
-   * @var ?array $priorities Filter tickets by priority. Repeat the parameter to filter by multiple priorities.
+   * @var ?array $priorities Filter agent issues by priority. Repeat the parameter to filter by multiple priorities.
    */
   public ?array $priorities;
 
   /**
-   * @var ?value-of<AgentConversationTicketSortBy> $sortBy Order by most recently created, by priority (most urgent first, then most recently created), or by most recently reported (the newest report merged into the issue, else its creation).
+   * @var ?value-of<AgentConversationTicketSortBy> $sortBy Order by most recently created, by priority (most urgent first, then most recently created), by most recently reported (the newest report merged into the agent issue, else its creation), or by report count (most reports merged into the agent issue first, then most recently created).
    */
   public ?string $sortBy;
 
   /**
-   * @var ?string $ownerUserId Filter tickets by creator. Use 'agent' for agent-raised tickets.
+   * @var ?string $ownerUserId Filter agent issues by creator. Use 'agent' for agent-raised issues.
    */
   public ?string $ownerUserId;
 
   /**
-   * @var ?string $assigneeUserId Filter tickets by assignee. Use 'unassigned' for tickets with no assignee.
+   * @var ?string $assigneeUserId Filter agent issues by assignee. Use 'unassigned' for issues with no assignee.
    */
   public ?string $assigneeUserId;
 
   /**
-   * @var ?value-of<AgentConversationTicketIssueType> $issueType Filter clusters by issue type.
-   */
-  public ?string $issueType;
-
-  /**
-   * @var ?string $label Filter tickets by an exact label.
+   * @var ?string $label Filter agent issues by an exact label.
    */
   public ?string $label;
 
   /**
-   * @var ?string $mergedIntoTicketId Filter tickets merged into this ticket.
+   * @var ?string $mergedIntoTicketId Filter agent issues merged into this issue.
    */
   public ?string $mergedIntoTicketId;
 
   /**
-   * @var ?string $search Case-insensitive free-text search across the ticket's title, description, comments, and turn comments.
+   * @var ?string $search Case-insensitive free-text search across the agent issue's title, description, comments, and turn comments.
    */
   public ?string $search;
 
@@ -86,7 +80,6 @@ class ListTriageTicketsRequest extends JsonSerializableType
    *   sortBy?: ?value-of<AgentConversationTicketSortBy>,
    *   ownerUserId?: ?string,
    *   assigneeUserId?: ?string,
-   *   issueType?: ?value-of<AgentConversationTicketIssueType>,
    *   label?: ?string,
    *   mergedIntoTicketId?: ?string,
    *   search?: ?string,
@@ -103,7 +96,6 @@ class ListTriageTicketsRequest extends JsonSerializableType
     $this->sortBy = $values['sortBy'] ?? null;
     $this->ownerUserId = $values['ownerUserId'] ?? null;
     $this->assigneeUserId = $values['assigneeUserId'] ?? null;
-    $this->issueType = $values['issueType'] ?? null;
     $this->label = $values['label'] ?? null;
     $this->mergedIntoTicketId = $values['mergedIntoTicketId'] ?? null;
     $this->search = $values['search'] ?? null;
@@ -125,7 +117,6 @@ class ListTriageTicketsRequest extends JsonSerializableType
       'sortBy' => $data['sort_by'] ?? null,
       'ownerUserId' => $data['owner_user_id'] ?? null,
       'assigneeUserId' => $data['assignee_user_id'] ?? null,
-      'issueType' => $data['issue_type'] ?? null,
       'label' => $data['label'] ?? null,
       'mergedIntoTicketId' => $data['merged_into_ticket_id'] ?? null,
       'search' => $data['search'] ?? null,
@@ -162,9 +153,6 @@ class ListTriageTicketsRequest extends JsonSerializableType
     }
     if ($this->assigneeUserId !== null) {
       $result['assignee_user_id'] = $this->assigneeUserId;
-    }
-    if ($this->issueType !== null) {
-      $result['issue_type'] = $this->issueType;
     }
     if ($this->label !== null) {
       $result['label'] = $this->label;

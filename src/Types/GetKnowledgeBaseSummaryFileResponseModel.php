@@ -44,6 +44,12 @@ class GetKnowledgeBaseSummaryFileResponseModel extends JsonSerializableType
   public ?string $folderParentId;
 
   /**
+   * Per-entity RAG chunking override. Null means inherit from ancestors or the embedding model default.
+   */
+  #[JsonProperty('chunking_override')]
+  public ?\ElevenLabs\Types\ChunkingOverride $chunkingOverride;
+
+  /**
    * @var \ElevenLabs\Types\KnowledgeBaseFolderPathSegmentSummaryResponseModel[]|null
    * The folder path segments leading to this entity, from root to parent folder.
    */
@@ -55,7 +61,7 @@ class GetKnowledgeBaseSummaryFileResponseModel extends JsonSerializableType
 
   /**
    * @var \ElevenLabs\Types\GetKnowledgeBaseSummaryFileResponseModelDependentAgentsItem[]
-   * This field is deprecated and will be removed in the future, use the separate endpoint to get dependent agents instead.
+   * This field is deprecated, always empty, and will be removed in the future. Use the separate endpoint to get dependent agents instead.
    */
   #[
     JsonProperty('dependent_agents', required: true),
@@ -93,6 +99,7 @@ class GetKnowledgeBaseSummaryFileResponseModel extends JsonSerializableType
    *   dependentAgents: \ElevenLabs\Types\GetKnowledgeBaseSummaryFileResponseModelDependentAgentsItem[],
    *   type: value-of<\ElevenLabs\Types\GetKnowledgeBaseSummaryFileResponseModelType>,
    *   folderParentId?: ?string,
+   *   chunkingOverride?: ?\ElevenLabs\Types\ChunkingOverride,
    *   folderPath?: \ElevenLabs\Types\KnowledgeBaseFolderPathSegmentSummaryResponseModel[]|null,
    *   externalSyncInfo?: ?\ElevenLabs\Types\ExternalFileSyncInfo,
    *   autoSyncInfo?: ?\ElevenLabs\Types\AutoSyncInfo,
@@ -108,6 +115,7 @@ class GetKnowledgeBaseSummaryFileResponseModel extends JsonSerializableType
     $this->supportedUsages = $values['supportedUsages'];
     $this->accessInfo = $values['accessInfo'];
     $this->folderParentId = $values['folderParentId'] ?? null;
+    $this->chunkingOverride = $values['chunkingOverride'] ?? null;
     $this->folderPath = $values['folderPath'] ?? null;
     $this->dependentAgents = $values['dependentAgents'];
     $this->type = $values['type'];
@@ -127,6 +135,9 @@ class GetKnowledgeBaseSummaryFileResponseModel extends JsonSerializableType
     ];
     if (array_key_exists('folderParentId', $values)) {
       $this->_dirtyFields['folder_parent_id'] = true;
+    }
+    if (array_key_exists('chunkingOverride', $values)) {
+      $this->_dirtyFields['chunking_override'] = true;
     }
     if (array_key_exists('folderPath', $values)) {
       $this->_dirtyFields['folder_path'] = true;
@@ -181,6 +192,14 @@ class GetKnowledgeBaseSummaryFileResponseModel extends JsonSerializableType
       $parts[] = [
         'name' => 'folder_parent_id',
         'contents' => $this->folderParentId
+      ];
+    }
+
+    if ($this->chunkingOverride !== null) {
+      $parts[] = [
+        'name' => 'chunking_override',
+        'contents' => json_encode($this->chunkingOverride),
+        'headers' => ['Content-Type' => 'application/json']
       ];
     }
 
@@ -241,6 +260,7 @@ class GetKnowledgeBaseSummaryFileResponseModel extends JsonSerializableType
   {
     $this->metadata->validate();
     $this->accessInfo->validate();
+    $this->chunkingOverride?->validate();
     foreach ($this->folderPath ?? [] as $item) {
       $item->validate();
     }

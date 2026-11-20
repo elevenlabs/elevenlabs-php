@@ -22,7 +22,7 @@ class MergeAgentConversationTicketsRequestModel extends JsonSerializableType
 
   /**
    * @var string[]
-   * Open tickets of the same agent to fold into this one. They are kept with status 'merged', pointing at this ticket.
+   * Open issues of the same agent to fold into this one. They are kept with status 'merged', pointing at this issue.
    */
   #[JsonProperty('source_ticket_ids', required: true), ArrayType(['string'])]
   public array $sourceTicketIds;

@@ -36,6 +36,12 @@ class CampaignPolicySnapshot extends JsonSerializableType
   ]
   public array $callingPeriods;
 
+  /**
+   * @var \ElevenLabs\Types\DateOverridePolicy[]|null
+   */
+  #[JsonProperty('date_overrides'), ArrayType([\ElevenLabs\Types\DateOverridePolicy::class])]
+  public ?array $dateOverrides;
+
   #[JsonProperty('data_collection', required: true)]
   public \ElevenLabs\Types\DataCollectionPolicy $dataCollection;
 
@@ -52,6 +58,7 @@ class CampaignPolicySnapshot extends JsonSerializableType
    *   callingPeriods: \ElevenLabs\Types\CallingPeriodPolicy[],
    *   dataCollection: \ElevenLabs\Types\DataCollectionPolicy,
    *   followupContext: \ElevenLabs\Types\FollowupContextPolicy,
+   *   dateOverrides?: \ElevenLabs\Types\DateOverridePolicy[]|null,
    * } $values
    */
   public function __construct(array $values)
@@ -59,6 +66,7 @@ class CampaignPolicySnapshot extends JsonSerializableType
     $this->timezone = $values['timezone'];
     $this->retry = $values['retry'];
     $this->callingPeriods = $values['callingPeriods'];
+    $this->dateOverrides = $values['dateOverrides'] ?? null;
     $this->dataCollection = $values['dataCollection'];
     $this->followupContext = $values['followupContext'];
 
@@ -69,6 +77,9 @@ class CampaignPolicySnapshot extends JsonSerializableType
       'data_collection' => true,
       'followup_context' => true
     ];
+    if (array_key_exists('dateOverrides', $values)) {
+      $this->_dirtyFields['date_overrides'] = true;
+    }
   }
 
   public function toMultipart(): array
@@ -91,6 +102,14 @@ class CampaignPolicySnapshot extends JsonSerializableType
       'headers' => ['Content-Type' => 'application/json']
     ];
 
+    if ($this->dateOverrides !== null) {
+      $parts[] = [
+        'name' => 'date_overrides',
+        'contents' => json_encode($this->dateOverrides),
+        'headers' => ['Content-Type' => 'application/json']
+      ];
+    }
+
     $parts[] = [
       'name' => 'data_collection',
       'contents' => json_encode($this->dataCollection),
@@ -110,6 +129,9 @@ class CampaignPolicySnapshot extends JsonSerializableType
   {
     $this->retry->validate();
     foreach ($this->callingPeriods as $item) {
+      $item->validate();
+    }
+    foreach ($this->dateOverrides ?? [] as $item) {
       $item->validate();
     }
     $this->dataCollection->validate();

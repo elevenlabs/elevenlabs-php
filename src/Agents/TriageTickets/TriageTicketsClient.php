@@ -185,7 +185,7 @@ class TriageTicketsClient extends BaseService
   }
 
   /**
-   * List an agent's conversation triage tickets, ordered by most recently created first unless sorted by priority. These are tickets about the agent's own performance on a conversation (for triage with Architect), not tickets an agent opens for end users.
+   * List an agent's issues, ordered by most recently created first unless sorted by priority. These are issues about the agent's own performance on a conversation (to work on with Architect), not tickets an agent opens for end users.
    *
    * @param string $agentId
    * @param \ElevenLabs\Agents\TriageTickets\Requests\ListTriageTicketsRequest $request Request parameters
@@ -214,7 +214,6 @@ class TriageTicketsClient extends BaseService
     $sortBy = $request->sortBy;
     $ownerUserId = $request->ownerUserId;
     $assigneeUserId = $request->assigneeUserId;
-    $issueType = $request->issueType;
     $label = $request->label;
     $mergedIntoTicketId = $request->mergedIntoTicketId;
     $search = $request->search;
@@ -240,7 +239,6 @@ class TriageTicketsClient extends BaseService
           'sort_by' => $sortBy,
           'owner_user_id' => $ownerUserId,
           'assignee_user_id' => $assigneeUserId,
-          'issue_type' => $issueType,
           'label' => $label,
           'merged_into_ticket_id' => $mergedIntoTicketId,
           'search' => $search,
@@ -266,7 +264,7 @@ class TriageTicketsClient extends BaseService
   }
 
   /**
-   * Manually raise a follow-up ticket against an agent, not tied to any conversation (for example a task like 'add the KB about X'). Without a title, one is derived from the comment. Requires viewer access to the agent.
+   * Manually raise a follow-up issue against an agent, not tied to any conversation (for example a task like 'add the KB about X'). Without a title, one is derived from the comment. Requires viewer access to the agent.
    *
    * @param string $agentId
    * @param \ElevenLabs\Agents\TriageTickets\Requests\CreateManualTicketRequestModel $request Request body
@@ -318,7 +316,7 @@ class TriageTicketsClient extends BaseService
   }
 
   /**
-   * List conversation triage tickets across every agent in the workspace, ordered by most recently created first. Use this to build a workspace-wide view (for example, tickets assigned to the caller). Supports the same filters, sorting and search as the per-agent endpoint. Tickets for agents the caller cannot access are omitted.
+   * List agent issues across every agent in the workspace, ordered by most recently created first. Use this to build a workspace-wide view (for example, issues assigned to the caller). Supports the same filters, sorting and search as the per-agent endpoint. Issues for agents the caller cannot access are omitted.
    *
    * @param \ElevenLabs\Agents\TriageTickets\Requests\ListForWorkspaceTriageTicketsRequest $request Request parameters
    * @param ?array{
@@ -345,7 +343,6 @@ class TriageTicketsClient extends BaseService
     $sortBy = $request->sortBy;
     $ownerUserId = $request->ownerUserId;
     $assigneeUserId = $request->assigneeUserId;
-    $issueType = $request->issueType;
     $label = $request->label;
     $mergedIntoTicketId = $request->mergedIntoTicketId;
     $search = $request->search;
@@ -369,7 +366,6 @@ class TriageTicketsClient extends BaseService
           'sort_by' => $sortBy,
           'owner_user_id' => $ownerUserId,
           'assignee_user_id' => $assigneeUserId,
-          'issue_type' => $issueType,
           'label' => $label,
           'merged_into_ticket_id' => $mergedIntoTicketId,
           'search' => $search,
@@ -395,7 +391,7 @@ class TriageTicketsClient extends BaseService
   }
 
   /**
-   * Raise a ticket about an agent's performance on a conversation, for triage with Architect. Provide an overall comment and/or turn-level comments describing what went wrong.
+   * Raise an issue about an agent's performance on a conversation, to work on with Architect. Provide an overall comment and/or turn-level comments describing what went wrong.
    *
    * @param \ElevenLabs\Agents\TriageTickets\Requests\CreateAgentConversationTicketRequestModel $request Request body
    * @param ?array{
@@ -488,7 +484,7 @@ class TriageTicketsClient extends BaseService
   }
 
   /**
-   * Get an agent conversation ticket by ID.
+   * Get an agent issue by ID.
    *
    * @param string $agentqaTicketId
    * @param ?array{
@@ -534,7 +530,7 @@ class TriageTicketsClient extends BaseService
   }
 
   /**
-   * Update a ticket's title, comment, status, priority, and/or assignee. Requires viewer access to the ticket's agent.
+   * Update an agent issue's title, comment, status, priority, and/or assignee. Requires viewer access to the issue's agent.
    *
    * @param string $agentqaTicketId
    * @param \ElevenLabs\Agents\TriageTickets\Requests\PatchAgentConversationTicketRequestModel $request Request body
@@ -585,7 +581,7 @@ class TriageTicketsClient extends BaseService
   }
 
   /**
-   * Delete an agent conversation ticket. Restricted to the ticket creator or a workspace admin.
+   * Delete an agent issue. Restricted to the issue creator or a workspace admin.
    *
    * @param string $agentqaTicketId
    * @param ?array{
@@ -615,7 +611,7 @@ class TriageTicketsClient extends BaseService
   }
 
   /**
-   * Append a comment discussing how to resolve the ticket. Requires viewer access to the ticket's agent.
+   * Append a comment discussing how to resolve the agent issue. Requires viewer access to the issue's agent.
    *
    * @param string $agentqaTicketId
    * @param \ElevenLabs\Agents\TriageTickets\Requests\AddTicketCommentRequestModel $request Request body
@@ -667,7 +663,7 @@ class TriageTicketsClient extends BaseService
   }
 
   /**
-   * Merge other open tickets of the same agent into this pending, in-progress, or resolved one. Their conversations move onto this ticket, its priority is raised to the highest among them, and they are kept with status 'merged'. Requires viewer access to the ticket's agent.
+   * Merge other open issues of the same agent into this pending, in-progress, or resolved one. Their conversations move onto this issue, its priority is raised to the highest among them, and they are kept with status 'merged'. Requires viewer access to the issue's agent.
    *
    * @param string $agentqaTicketId
    * @param \ElevenLabs\Agents\TriageTickets\Requests\MergeAgentConversationTicketsRequestModel $request Request body
@@ -719,7 +715,7 @@ class TriageTicketsClient extends BaseService
   }
 
   /**
-   * Append a turn-level comment to a ticket. Requires viewer access to the ticket's agent.
+   * Append a turn-level comment to an agent issue. Requires viewer access to the issue's agent.
    *
    * @param string $agentqaTicketId
    * @param \ElevenLabs\Agents\TriageTickets\Requests\AddTurnCommentRequestModel $request Request body

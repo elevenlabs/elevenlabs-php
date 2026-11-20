@@ -84,6 +84,13 @@ class ProcedureListItemResponseModel extends JsonSerializableType
   public ?array $referencedDynamicVariables;
 
   /**
+   * @var string[]|null
+   * Dynamic variable names written by Update state steps
+   */
+  #[JsonProperty('written_dynamic_variables'), ArrayType(['string'])]
+  public ?array $writtenDynamicVariables;
+
+  /**
    * Procedure ID of the folder this procedure is placed in. None means root.
    */
   #[JsonProperty('folder_parent_id')]
@@ -101,6 +108,7 @@ class ProcedureListItemResponseModel extends JsonSerializableType
    *   referencedKbIds?: string[]|null,
    *   referencedProcedureIds?: string[]|null,
    *   referencedDynamicVariables?: string[]|null,
+   *   writtenDynamicVariables?: string[]|null,
    *   folderParentId?: ?string,
    * } $values
    */
@@ -116,6 +124,7 @@ class ProcedureListItemResponseModel extends JsonSerializableType
     $this->referencedKbIds = $values['referencedKbIds'] ?? null;
     $this->referencedProcedureIds = $values['referencedProcedureIds'] ?? null;
     $this->referencedDynamicVariables = $values['referencedDynamicVariables'] ?? null;
+    $this->writtenDynamicVariables = $values['writtenDynamicVariables'] ?? null;
     $this->folderParentId = $values['folderParentId'] ?? null;
 
     $this->_dirtyFields = [
@@ -145,6 +154,9 @@ class ProcedureListItemResponseModel extends JsonSerializableType
     }
     if (array_key_exists('referencedDynamicVariables', $values)) {
       $this->_dirtyFields['referenced_dynamic_variables'] = true;
+    }
+    if (array_key_exists('writtenDynamicVariables', $values)) {
+      $this->_dirtyFields['written_dynamic_variables'] = true;
     }
     if (array_key_exists('folderParentId', $values)) {
       $this->_dirtyFields['folder_parent_id'] = true;
@@ -223,6 +235,15 @@ class ProcedureListItemResponseModel extends JsonSerializableType
       foreach ($this->referencedDynamicVariables ?? [] as $item) {
         $parts[] = [
           'name' => 'referenced_dynamic_variables',
+          'contents' => $item
+        ];
+      }
+    }
+
+    if ($this->writtenDynamicVariables !== null) {
+      foreach ($this->writtenDynamicVariables ?? [] as $item) {
+        $parts[] = [
+          'name' => 'written_dynamic_variables',
           'contents' => $item
         ];
       }

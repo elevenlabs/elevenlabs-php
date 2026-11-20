@@ -29,6 +29,8 @@ enum Llm: string
   case Gpt6Luna = 'gpt-6-luna';
   case Gpt61Sol = 'gpt-6.1-sol';
   case Gpt61Terra = 'gpt-6.1-terra';
+  case Gpt62Astra = 'gpt-6.2-astra';
+  case Gpt62Sol = 'gpt-6.2-sol';
   case Gpt5Mini = 'gpt-5-mini';
   case Gpt5Nano = 'gpt-5-nano';
   case Gpt35Turbo = 'gpt-3.5-turbo';
@@ -49,6 +51,8 @@ enum Llm: string
   case Gemini37Flash = 'gemini-3.7-flash';
   case Gemini38Flash = 'gemini-3.8-flash';
   case Gemini4Argon = 'gemini-4-argon';
+  case Gemini4Hydrogen = 'gemini-4-hydrogen';
+  case Gemini4Neon = 'gemini-4-neon';
   case ClaudeSonnet45 = 'claude-sonnet-4-5';
   case ClaudeOpus46 = 'claude-opus-4-6';
   case ClaudeOpus47 = 'claude-opus-4-7';
@@ -65,7 +69,6 @@ enum Llm: string
   case Claude35Sonnet = 'claude-3-5-sonnet';
   case Claude35SonnetV1 = 'claude-3-5-sonnet-v1';
   case Claude3Haiku = 'claude-3-haiku';
-  case GrokBeta = 'grok-beta';
   case CustomLlm = 'custom-llm';
   case Qwen34B = 'qwen3-4b';
   case Qwen330Ba3B = 'qwen3-30b-a3b';

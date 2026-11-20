@@ -30,6 +30,12 @@ class WebhooksClient extends BaseService
   /** @var array|null Method-level configuration for delete */
   protected ?array $deleteConfig = null;
 
+  /** @var array|null Method-level configuration for test */
+  protected ?array $testConfig = null;
+
+  /** @var array|null Method-level configuration for redeliver */
+  protected ?array $redeliverConfig = null;
+
   /**
    * Set method-level configuration for list.
    *
@@ -75,6 +81,30 @@ class WebhooksClient extends BaseService
   public function setDeleteConfig(array $config): static
   {
     $this->deleteConfig = $config;
+    return $this;
+  }
+
+  /**
+   * Set method-level configuration for test.
+   *
+   * @param array $config Configuration overrides for this method
+   * @return $this
+   */
+  public function setTestConfig(array $config): static
+  {
+    $this->testConfig = $config;
+    return $this;
+  }
+
+  /**
+   * Set method-level configuration for redeliver.
+   *
+   * @param array $config Configuration overrides for this method
+   * @return $this
+   */
+  public function setRedeliverConfig(array $config): static
+  {
+    $this->redeliverConfig = $config;
     return $this;
   }
 
@@ -263,6 +293,109 @@ class WebhooksClient extends BaseService
       $result = Serializer::deserialize(
         $data,
         \ElevenLabs\Types\DeleteWorkspaceWebhookResponseModel::class
+      );
+    } catch (\JsonException | \TypeError | \InvalidArgumentException $e) {
+      throw new \ElevenLabs\Exceptions\ElevenlabsException(
+        message: "Failed to deserialize the response: {$e->getMessage()}",
+        previous: $e
+      );
+    }
+    return $result;
+  }
+
+  /**
+   * Sends a sample event of the given type to the webhook once and returns the endpoint's status code, response time, content type and response size. Test events are signed like real ones, are never retried, and share a limit of 10 per webhook per minute with redeliveries.
+   *
+   * @param string $webhookId The ID of the webhook.
+   * @param \ElevenLabs\Webhooks\Requests\BodySendTestWebhookEventV1WorkspaceWebhooksWebhookIdTestPost $request Request body
+   * @param ?array{
+   *   baseUrl?: string,
+   *   maxRetries?: int,
+   *   timeout?: float,
+   *   headers?: array<string, string>,
+   *   queryParameters?: array<string, mixed>,
+   *   bodyProperties?: array<string, mixed>,
+   * } $options
+   * @return ?\ElevenLabs\Types\WebhookSendResultResponseModel
+   * @throws \ElevenLabs\Exceptions\ElevenlabsException
+   * @throws \ElevenLabs\Exceptions\ElevenlabsApiException
+   */
+  public function test(
+    string $webhookId,
+    \ElevenLabs\Webhooks\Requests\BodySendTestWebhookEventV1WorkspaceWebhooksWebhookIdTestPost $request,
+    ?array $options = null
+  ): ?\ElevenLabs\Types\WebhookSendResultResponseModel {
+    $request->validate();
+
+    $resolvedConfig = $this->getResolvedConfig($this->testConfig, $options);
+    $response = $this->sendJsonRequest(
+      new JsonApiRequest(
+        baseUrl: $this->getBaseUrl($resolvedConfig),
+        path: '/v1/workspace/webhooks/' .
+          \ElevenLabs\Core\Client\RawClient::encodePathParam($webhookId) .
+          '/test',
+        method: HttpMethod::POST,
+        body: $request
+      ),
+      $resolvedConfig
+    );
+    $data = $response->getBody()->getContents();
+
+    try {
+      $result = Serializer::deserialize(
+        $data,
+        \ElevenLabs\Types\WebhookSendResultResponseModel::class
+      );
+    } catch (\JsonException | \TypeError | \InvalidArgumentException $e) {
+      throw new \ElevenLabs\Exceptions\ElevenlabsException(
+        message: "Failed to deserialize the response: {$e->getMessage()}",
+        previous: $e
+      );
+    }
+    return $result;
+  }
+
+  /**
+   * Sends a stored delivery again, once, with the same delivery ID, a new signature and an ElevenLabs-Webhook-Redelivery header. A retry that is already scheduled is still sent. Redelivering needs permission to manage webhooks and a web session, and the delivery's payload must be stored. Redeliveries and test events share a limit of 10 per webhook per minute.
+   *
+   * @param string $webhookId The ID of the webhook.
+   * @param string $deliveryId The ID of the delivery to send again.
+   * @param ?array{
+   *   baseUrl?: string,
+   *   maxRetries?: int,
+   *   timeout?: float,
+   *   headers?: array<string, string>,
+   *   queryParameters?: array<string, mixed>,
+   *   bodyProperties?: array<string, mixed>,
+   * } $options
+   * @return ?\ElevenLabs\Types\WebhookSendResultResponseModel
+   * @throws \ElevenLabs\Exceptions\ElevenlabsException
+   * @throws \ElevenLabs\Exceptions\ElevenlabsApiException
+   */
+  public function redeliver(
+    string $webhookId,
+    string $deliveryId,
+    ?array $options = null
+  ): ?\ElevenLabs\Types\WebhookSendResultResponseModel {
+    $resolvedConfig = $this->getResolvedConfig($this->redeliverConfig, $options);
+    $response = $this->sendJsonRequest(
+      new JsonApiRequest(
+        baseUrl: $this->getBaseUrl($resolvedConfig),
+        path: '/v1/workspace/webhooks/' .
+          \ElevenLabs\Core\Client\RawClient::encodePathParam($webhookId) .
+          '/deliveries/' .
+          \ElevenLabs\Core\Client\RawClient::encodePathParam($deliveryId) .
+          '/redeliver',
+        method: HttpMethod::POST
+      ),
+      $resolvedConfig
+    );
+    $data = $response->getBody()->getContents();
+
+    try {
+      $result = Serializer::deserialize(
+        $data,
+        \ElevenLabs\Types\WebhookSendResultResponseModel::class
       );
     } catch (\JsonException | \TypeError | \InvalidArgumentException $e) {
       throw new \ElevenLabs\Exceptions\ElevenlabsException(

@@ -12,4 +12,5 @@ enum BytedanceSeedance25RequestResolution: string
   case FourHundredEightyP = '480p';
   case SevenHundredTwentyP = '720p';
   case OneThousandEightyP = '1080p';
+  case FourK = '4k';
 }

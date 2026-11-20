@@ -8,6 +8,7 @@ use ElevenLabs\Core\Json\JsonSerializableType;
 use ElevenLabs\Core\Json\ReflectiveSerialization;
 use ElevenLabs\Core\Json\JsonProperty;
 use ElevenLabs\Core\Types\ArrayType;
+use ElevenLabs\Core\Types\Union;
 
 /**
  * The reflective deserializer reconstructs this model with `new static($values)`, so a subclass has
@@ -20,11 +21,16 @@ class QueryParamsJsonSchemaOutput extends JsonSerializableType
   use ReflectiveSerialization;
 
   /**
-   * @var array<string, \ElevenLabs\Types\LiteralJsonSchemaProperty>
+   * @var array<string, \ElevenLabs\Types\LiteralJsonSchemaProperty|\ElevenLabs\Types\QueryArrayJsonSchemaPropertyOutput>
    */
   #[
     JsonProperty('properties', required: true),
-    ArrayType(['string' => \ElevenLabs\Types\LiteralJsonSchemaProperty::class])
+    ArrayType([
+      'string' => new Union(
+        \ElevenLabs\Types\LiteralJsonSchemaProperty::class,
+        \ElevenLabs\Types\QueryArrayJsonSchemaPropertyOutput::class
+      )
+    ])
   ]
   public array $properties;
 
@@ -36,7 +42,7 @@ class QueryParamsJsonSchemaOutput extends JsonSerializableType
 
   /**
    * @param array{
-   *   properties: array<string, \ElevenLabs\Types\LiteralJsonSchemaProperty>,
+   *   properties: array<string, \ElevenLabs\Types\LiteralJsonSchemaProperty|\ElevenLabs\Types\QueryArrayJsonSchemaPropertyOutput>,
    *   required?: string[]|null,
    * } $values
    */

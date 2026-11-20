@@ -50,6 +50,18 @@ class CustomGuardrailConfig extends JsonSerializableType
   public ?string $model;
 
   /**
+   * @var ?value-of<\ElevenLabs\Types\LlmServiceTier>
+   * Request-time processing tier for a model.
+   *
+   * STANDARD: default price and throughput.
+   * FAST: pays a per-token price premium for higher throughput / lower latency.
+   *     See OpenAI's fast mode: https://openai.com/api-fast-mode/ and, for Gemini, Vertex
+   *     Priority PayGo: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/priority-paygo
+   */
+  #[JsonProperty('service_tier')]
+  public ?string $serviceTier;
+
+  /**
    * How much recent history the guardrail sees before the reply it evaluates, counted in user messages (the agent replies between them are included too). The guardrail always gets a single <conversation_history> transcript ending in the evaluated reply, marked 'AGENT [current reply]:'. 0 (default) adds no prior history (just that line); 1 adds the latest user message onward.
    */
   #[JsonProperty('history_message_count')]
@@ -71,6 +83,7 @@ class CustomGuardrailConfig extends JsonSerializableType
    *   isEnabled?: ?bool,
    *   executionMode?: ?value-of<\ElevenLabs\Types\GuardrailExecutionMode>,
    *   model?: ?value-of<\ElevenLabs\Types\CustomGuardrailConfigModel>,
+   *   serviceTier?: ?value-of<\ElevenLabs\Types\LlmServiceTier>,
    *   historyMessageCount?: ?int,
    *   triggerAction?: ?\ElevenLabs\Types\CustomGuardrailConfigTriggerAction,
    *   evaluateFullResponseOnly?: ?bool,
@@ -83,6 +96,7 @@ class CustomGuardrailConfig extends JsonSerializableType
     $this->prompt = $values['prompt'];
     $this->executionMode = $values['executionMode'] ?? null;
     $this->model = $values['model'] ?? null;
+    $this->serviceTier = $values['serviceTier'] ?? null;
     $this->historyMessageCount = $values['historyMessageCount'] ?? null;
     $this->triggerAction = $values['triggerAction'] ?? null;
     $this->evaluateFullResponseOnly = $values['evaluateFullResponseOnly'] ?? null;
@@ -99,6 +113,9 @@ class CustomGuardrailConfig extends JsonSerializableType
     }
     if (array_key_exists('model', $values)) {
       $this->_dirtyFields['model'] = true;
+    }
+    if (array_key_exists('serviceTier', $values)) {
+      $this->_dirtyFields['service_tier'] = true;
     }
     if (array_key_exists('historyMessageCount', $values)) {
       $this->_dirtyFields['history_message_count'] = true;
@@ -142,6 +159,13 @@ class CustomGuardrailConfig extends JsonSerializableType
       $parts[] = [
         'name' => 'model',
         'contents' => $this->model
+      ];
+    }
+
+    if ($this->serviceTier !== null) {
+      $parts[] = [
+        'name' => 'service_tier',
+        'contents' => $this->serviceTier
       ];
     }
 

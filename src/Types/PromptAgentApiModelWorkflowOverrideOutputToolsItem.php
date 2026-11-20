@@ -27,7 +27,7 @@ class PromptAgentApiModelWorkflowOverrideOutputToolsItem extends JsonSerializabl
   public readonly string $type;
 
   /**
-   * @var \ElevenLabs\Types\WebhookToolConfigOutput|\ElevenLabs\Types\ClientToolConfigOutput|\ElevenLabs\Types\SystemToolConfigOutput|mixed|\ElevenLabs\Types\ApiIntegrationWebhookToolConfigOutput|array<string, mixed> The value, exactly one of the variant types
+   * @var \ElevenLabs\Types\WebhookToolConfigOutput|\ElevenLabs\Types\ClientToolConfigOutput|\ElevenLabs\Types\SystemToolConfigOutput|\ElevenLabs\Types\McpToolConfigOutput|\ElevenLabs\Types\ApiIntegrationWebhookToolConfigOutput|mixed|array<string, mixed> The value, exactly one of the variant types
    */
   public readonly mixed $value;
 
@@ -72,7 +72,7 @@ class PromptAgentApiModelWorkflowOverrideOutputToolsItem extends JsonSerializabl
 
   /**
    * Private constructor - use factory methods to create instances
-   * @param \ElevenLabs\Types\WebhookToolConfigOutput|\ElevenLabs\Types\ClientToolConfigOutput|\ElevenLabs\Types\SystemToolConfigOutput|mixed|\ElevenLabs\Types\ApiIntegrationWebhookToolConfigOutput|array<string, mixed> $value
+   * @param \ElevenLabs\Types\WebhookToolConfigOutput|\ElevenLabs\Types\ClientToolConfigOutput|\ElevenLabs\Types\SystemToolConfigOutput|\ElevenLabs\Types\McpToolConfigOutput|\ElevenLabs\Types\ApiIntegrationWebhookToolConfigOutput|mixed|array<string, mixed> $value
    */
   private function __construct($value, int $typeIndex)
   {
@@ -116,9 +116,9 @@ class PromptAgentApiModelWorkflowOverrideOutputToolsItem extends JsonSerializabl
   }
 
   /**
-   * Create a PromptAgentApiModelWorkflowOverrideOutputToolsItem instance containing a mixed
+   * Create a PromptAgentApiModelWorkflowOverrideOutputToolsItem instance containing a \ElevenLabs\Types\McpToolConfigOutput
    */
-  public static function mcp(mixed $mcp): self
+  public static function mcp(\ElevenLabs\Types\McpToolConfigOutput $mcp): self
   {
     return new self($mcp, 3);
   }
@@ -166,7 +166,7 @@ class PromptAgentApiModelWorkflowOverrideOutputToolsItem extends JsonSerializabl
   }
 
   /**
-   * Check if this PromptAgentApiModelWorkflowOverrideOutputToolsItem contains a mixed
+   * Check if this PromptAgentApiModelWorkflowOverrideOutputToolsItem contains a \ElevenLabs\Types\McpToolConfigOutput
    */
   public function isMcp(): bool
   {
@@ -233,14 +233,14 @@ class PromptAgentApiModelWorkflowOverrideOutputToolsItem extends JsonSerializabl
   }
 
   /**
-   * Get the mixed value
-   * @throws \RuntimeException if this PromptAgentApiModelWorkflowOverrideOutputToolsItem does not contain a mixed
+   * Get the \ElevenLabs\Types\McpToolConfigOutput value
+   * @throws \RuntimeException if this PromptAgentApiModelWorkflowOverrideOutputToolsItem does not contain a \ElevenLabs\Types\McpToolConfigOutput
    */
-  public function asMcp(): mixed
+  public function asMcp(): \ElevenLabs\Types\McpToolConfigOutput
   {
     if (!$this->isMcp()) {
       throw new \RuntimeException(
-        'PromptAgentApiModelWorkflowOverrideOutputToolsItem does not contain mixed'
+        'PromptAgentApiModelWorkflowOverrideOutputToolsItem does not contain \ElevenLabs\Types\McpToolConfigOutput'
       );
     }
     return $this->value;
@@ -303,10 +303,10 @@ class PromptAgentApiModelWorkflowOverrideOutputToolsItem extends JsonSerializabl
   }
 
   /**
-   * Try to get the mixed value
-   * @return mixed Returns the value if this PromptAgentApiModelWorkflowOverrideOutputToolsItem contains a mixed, null otherwise
+   * Try to get the \ElevenLabs\Types\McpToolConfigOutput value
+   * @return \ElevenLabs\Types\McpToolConfigOutput|null Returns the value if this PromptAgentApiModelWorkflowOverrideOutputToolsItem contains a \ElevenLabs\Types\McpToolConfigOutput, null otherwise
    */
-  public function tryAsMcp(): mixed
+  public function tryAsMcp(): ?\ElevenLabs\Types\McpToolConfigOutput
   {
     return $this->isMcp() ? $this->value : null;
   }
@@ -335,7 +335,7 @@ class PromptAgentApiModelWorkflowOverrideOutputToolsItem extends JsonSerializabl
    * @param callable(\ElevenLabs\Types\WebhookToolConfigOutput): T $onWebhook
    * @param callable(\ElevenLabs\Types\ClientToolConfigOutput): T $onClient
    * @param callable(\ElevenLabs\Types\SystemToolConfigOutput): T $onSystem
-   * @param callable(mixed): T $onMcp
+   * @param callable(\ElevenLabs\Types\McpToolConfigOutput): T $onMcp
    * @param callable(\ElevenLabs\Types\ApiIntegrationWebhookToolConfigOutput): T $onApiIntegrationWebhook
    * @param callable(mixed): T $onSmb
    * @return T
@@ -388,7 +388,7 @@ class PromptAgentApiModelWorkflowOverrideOutputToolsItem extends JsonSerializabl
         case 'client':
           return new self(\ElevenLabs\Types\ClientToolConfigOutput::fromArray($data), 1);
         case 'mcp':
-          return new self($data, 3);
+          return new self(\ElevenLabs\Types\McpToolConfigOutput::fromArray($data), 3);
         case 'smb':
           return new self($data, 5);
         case 'system':
@@ -437,6 +437,18 @@ class PromptAgentApiModelWorkflowOverrideOutputToolsItem extends JsonSerializabl
       // the shared deserializer raises — a JsonException for a missing required field, not
       // just a TypeError. Narrowing it turns a non-matching variant into a fatal.
       // \ElevenLabs\Types\SystemToolConfigOutput didn't match, continue to next type
+    }
+
+    try {
+      $candidate = \ElevenLabs\Types\McpToolConfigOutput::fromArray($data);
+      // Keys the variant actually mapped = input keys minus the ones it could not place.
+      $score = count($data) - count($candidate->getAdditionalProperties());
+      $candidates[] = ['instance' => $candidate, 'idx' => 3, 'score' => $score];
+    } catch (\Throwable $e) {
+      // Throwable, because under fernMode "this variant does not match" arrives as whatever
+      // the shared deserializer raises — a JsonException for a missing required field, not
+      // just a TypeError. Narrowing it turns a non-matching variant into a fatal.
+      // \ElevenLabs\Types\McpToolConfigOutput didn't match, continue to next type
     }
 
     try {

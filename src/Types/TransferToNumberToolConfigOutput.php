@@ -35,6 +35,13 @@ class TransferToNumberToolConfigOutput extends JsonSerializableType
   public array $transfers;
 
   /**
+   * @var \ElevenLabs\Types\TransferRuleOutput[]|null
+   * Per-provider transfer configuration. Mutually exclusive with `transfers`: a tool sets exactly one of the two. When present, the configuration matching the call's telephony provider is offered to the agent and executed.
+   */
+  #[JsonProperty('transfer_rules'), ArrayType([\ElevenLabs\Types\TransferRuleOutput::class])]
+  public ?array $transferRules;
+
+  /**
    * Whether to play a message to the client while they wait for transfer. Defaults to true for backward compatibility.
    */
   #[JsonProperty('enable_client_message')]
@@ -44,6 +51,7 @@ class TransferToNumberToolConfigOutput extends JsonSerializableType
    * @param array{
    *   transfers: \ElevenLabs\Types\PhoneNumberTransfer[],
    *   systemToolType?: ?value-of<\ElevenLabs\Types\TransferToNumberToolConfigOutputSystemToolType>,
+   *   transferRules?: \ElevenLabs\Types\TransferRuleOutput[]|null,
    *   enableClientMessage?: ?bool,
    * } $values
    */
@@ -51,6 +59,7 @@ class TransferToNumberToolConfigOutput extends JsonSerializableType
   {
     $this->systemToolType = $values['systemToolType'] ?? 'transfer_to_number';
     $this->transfers = $values['transfers'];
+    $this->transferRules = $values['transferRules'] ?? null;
     $this->enableClientMessage = $values['enableClientMessage'] ?? null;
 
     $this->_dirtyFields = [
@@ -58,6 +67,9 @@ class TransferToNumberToolConfigOutput extends JsonSerializableType
     ];
     if (array_key_exists('systemToolType', $values)) {
       $this->_dirtyFields['system_tool_type'] = true;
+    }
+    if (array_key_exists('transferRules', $values)) {
+      $this->_dirtyFields['transfer_rules'] = true;
     }
     if (array_key_exists('enableClientMessage', $values)) {
       $this->_dirtyFields['enable_client_message'] = true;
@@ -80,6 +92,14 @@ class TransferToNumberToolConfigOutput extends JsonSerializableType
       'headers' => ['Content-Type' => 'application/json']
     ];
 
+    if ($this->transferRules !== null) {
+      $parts[] = [
+        'name' => 'transfer_rules',
+        'contents' => json_encode($this->transferRules),
+        'headers' => ['Content-Type' => 'application/json']
+      ];
+    }
+
     if ($this->enableClientMessage !== null) {
       $parts[] = [
         'name' => 'enable_client_message',
@@ -93,6 +113,9 @@ class TransferToNumberToolConfigOutput extends JsonSerializableType
   public function validate(): void
   {
     foreach ($this->transfers as $item) {
+      $item->validate();
+    }
+    foreach ($this->transferRules ?? [] as $item) {
       $item->validate();
     }
   }

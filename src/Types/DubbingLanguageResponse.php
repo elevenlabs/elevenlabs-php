@@ -56,7 +56,7 @@ class DubbingLanguageResponse extends JsonSerializableType
    * Voice settings applied to every speaker in this language, or null if the defaults apply.
    */
   #[JsonProperty('voice_settings')]
-  public ?\ElevenLabs\Types\VoiceSettings $voiceSettings;
+  public ?\ElevenLabs\Types\DubbingVoiceSettings $voiceSettings;
 
   /**
    * Signed output URLs; null until the target has produced an output (present once `completed`, and kept while `stale` — compare `output_revision` against `revision` to tell whether the output is up to date).
@@ -111,7 +111,7 @@ class DubbingLanguageResponse extends JsonSerializableType
    *   createdAt: DateTime,
    *   updatedAt: DateTime,
    *   modelId?: ?string,
-   *   voiceSettings?: ?\ElevenLabs\Types\VoiceSettings,
+   *   voiceSettings?: ?\ElevenLabs\Types\DubbingVoiceSettings,
    *   outputs?: ?\ElevenLabs\Types\DubbingLanguageOutputs,
    *   outputRevision?: ?int,
    *   error?: ?\ElevenLabs\Types\DubbingErrorResponse,
