@@ -1,6 +1,6 @@
 {
   "name": "elevenlabs/elevenlabs-php",
-  "description": "ElevenLabs PHP Library",
+  "description": "The official PHP SDK for ElevenLabs.",
   "keywords": [
     "elevenlabs",
     "api",

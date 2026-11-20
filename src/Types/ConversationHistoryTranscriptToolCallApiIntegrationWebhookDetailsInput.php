@@ -37,6 +37,9 @@ class ConversationHistoryTranscriptToolCallApiIntegrationWebhookDetailsInput ext
   #[JsonProperty('webhook_details', required: true)]
   public \ElevenLabs\Types\ConversationHistoryTranscriptToolCallWebhookDetails $webhookDetails;
 
+  #[JsonProperty('function_details')]
+  public ?\ElevenLabs\Types\ConversationHistoryTranscriptToolCallIntegrationFunctionDetails $functionDetails;
+
   /**
    * @param array{
    *   webhookDetails: \ElevenLabs\Types\ConversationHistoryTranscriptToolCallWebhookDetails,
@@ -44,6 +47,7 @@ class ConversationHistoryTranscriptToolCallApiIntegrationWebhookDetailsInput ext
    *   integrationId?: ?string,
    *   credentialId?: ?string,
    *   integrationConnectionId?: ?string,
+   *   functionDetails?: ?\ElevenLabs\Types\ConversationHistoryTranscriptToolCallIntegrationFunctionDetails,
    * } $values
    */
   public function __construct(array $values)
@@ -53,6 +57,7 @@ class ConversationHistoryTranscriptToolCallApiIntegrationWebhookDetailsInput ext
     $this->credentialId = $values['credentialId'] ?? null;
     $this->integrationConnectionId = $values['integrationConnectionId'] ?? null;
     $this->webhookDetails = $values['webhookDetails'];
+    $this->functionDetails = $values['functionDetails'] ?? null;
 
     $this->_dirtyFields = [
       'webhook_details' => true
@@ -68,6 +73,9 @@ class ConversationHistoryTranscriptToolCallApiIntegrationWebhookDetailsInput ext
     }
     if (array_key_exists('integrationConnectionId', $values)) {
       $this->_dirtyFields['integration_connection_id'] = true;
+    }
+    if (array_key_exists('functionDetails', $values)) {
+      $this->_dirtyFields['function_details'] = true;
     }
   }
 
@@ -108,11 +116,20 @@ class ConversationHistoryTranscriptToolCallApiIntegrationWebhookDetailsInput ext
       'headers' => ['Content-Type' => 'application/json']
     ];
 
+    if ($this->functionDetails !== null) {
+      $parts[] = [
+        'name' => 'function_details',
+        'contents' => json_encode($this->functionDetails),
+        'headers' => ['Content-Type' => 'application/json']
+      ];
+    }
+
     return $parts;
   }
 
   public function validate(): void
   {
     $this->webhookDetails->validate();
+    $this->functionDetails?->validate();
   }
 }

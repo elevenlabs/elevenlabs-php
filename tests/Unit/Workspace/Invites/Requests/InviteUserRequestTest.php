@@ -1,0 +1,31 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ElevenLabs\Tests\Unit\Workspace\Invites\Requests;
+
+use PHPUnit\Framework\TestCase;
+
+class InviteUserRequestTest extends TestCase
+{
+  public function testFullyPopulatedRoundTrip(): void
+  {
+    $json = <<<'JSON'
+    {
+        "email": "test-value",
+        "workspace_permission": "test-value",
+        "seat_type": "workspace_admin",
+        "group_ids": [
+            "test-value"
+        ],
+        "usage_limit": 0
+    }
+    JSON;
+
+    $instance = \ElevenLabs\Workspace\Invites\Requests\InviteUserRequest::fromArray(
+      json_decode($json, true)
+    );
+
+    $this->assertJsonStringEqualsJsonString($json, json_encode($instance));
+  }
+}

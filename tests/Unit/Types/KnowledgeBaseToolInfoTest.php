@@ -1,0 +1,25 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ElevenLabs\Tests\Unit\Types;
+
+use PHPUnit\Framework\TestCase;
+
+class KnowledgeBaseToolInfoTest extends TestCase
+{
+  public function testFullyPopulatedRoundTrip(): void
+  {
+    $json = <<<'JSON'
+    {
+        "enabled_strategies": [
+            "cat"
+        ]
+    }
+    JSON;
+
+    $instance = \ElevenLabs\Types\KnowledgeBaseToolInfo::fromArray(json_decode($json, true));
+
+    $this->assertJsonStringEqualsJsonString($json, json_encode($instance));
+  }
+}

@@ -74,6 +74,12 @@ class WorkflowOverrideAgentNodeModelOutput extends JsonSerializableType
   public string $entryBehavior;
 
   /**
+   * Lets the caller interrupt the response this node gives on entry. Ignored unless entry_behavior is "generate_immediately".
+   */
+  #[JsonProperty('allow_interruptions_on_entry', required: true)]
+  public bool $allowInterruptionsOnEntry;
+
+  /**
    * @param array{
    *   type: value-of<\ElevenLabs\Types\WorkflowOverrideAgentNodeModelOutputType>,
    *   position: \ElevenLabs\Types\PositionOutput,
@@ -84,6 +90,7 @@ class WorkflowOverrideAgentNodeModelOutput extends JsonSerializableType
    *   additionalToolIds: string[],
    *   label: string,
    *   entryBehavior: value-of<\ElevenLabs\Types\EntryBehavior>,
+   *   allowInterruptionsOnEntry: bool,
    * } $values
    */
   public function __construct(array $values)
@@ -97,6 +104,7 @@ class WorkflowOverrideAgentNodeModelOutput extends JsonSerializableType
     $this->additionalToolIds = $values['additionalToolIds'];
     $this->label = $values['label'];
     $this->entryBehavior = $values['entryBehavior'];
+    $this->allowInterruptionsOnEntry = $values['allowInterruptionsOnEntry'];
 
     $this->_dirtyFields = [
       'type' => true,
@@ -107,7 +115,8 @@ class WorkflowOverrideAgentNodeModelOutput extends JsonSerializableType
       'additional_knowledge_base' => true,
       'additional_tool_ids' => true,
       'label' => true,
-      'entry_behavior' => true
+      'entry_behavior' => true,
+      'allow_interruptions_on_entry' => true
     ];
   }
 
@@ -164,6 +173,11 @@ class WorkflowOverrideAgentNodeModelOutput extends JsonSerializableType
     $parts[] = [
       'name' => 'entry_behavior',
       'contents' => $this->entryBehavior
+    ];
+
+    $parts[] = [
+      'name' => 'allow_interruptions_on_entry',
+      'contents' => $this->allowInterruptionsOnEntry ? 'true' : 'false'
     ];
 
     return $parts;

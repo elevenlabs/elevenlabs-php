@@ -20,20 +20,20 @@ class CreateManualTicketRequestModel extends JsonSerializableType
   use ReflectiveSerialization;
 
   /**
-   * One-line headline shown in the triage list. Defaults to one derived from qa_comment.
+   * One-line headline shown in the issues list. Defaults to one derived from qa_comment.
    */
   #[JsonProperty('title')]
   public ?string $title;
 
   /**
-   * What the ticket is about, e.g. a follow-up task for the agent.
+   * What the agent issue is about, e.g. a follow-up task for the agent.
    */
   #[JsonProperty('qa_comment', required: true)]
   public string $qaComment;
 
   /**
    * @var ?value-of<\ElevenLabs\Types\AgentConversationTicketPriority>
-   * How urgently the ticket needs attention.
+   * How urgently the agent issue needs attention.
    */
   #[JsonProperty('priority')]
   public ?string $priority;

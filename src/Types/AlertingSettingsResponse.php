@@ -36,6 +36,12 @@ class AlertingSettingsResponse extends JsonSerializableType
   public ?int $autoResolveAfterInactiveMinutes;
 
   /**
+   * @var string[]|null
+   */
+  #[JsonProperty('environments'), ArrayType(['string'])]
+  public ?array $environments;
+
+  /**
    * @var \ElevenLabs\Types\AlertingSettingsResponseNotifiersItem[]|null
    */
   #[
@@ -48,6 +54,7 @@ class AlertingSettingsResponse extends JsonSerializableType
    * @param array{
    *   monitorConfigs?: array<string, \ElevenLabs\Types\AlertingMonitorConfig>|null,
    *   autoResolveAfterInactiveMinutes?: ?int,
+   *   environments?: string[]|null,
    *   notifiers?: \ElevenLabs\Types\AlertingSettingsResponseNotifiersItem[]|null,
    * } $values
    */
@@ -55,6 +62,7 @@ class AlertingSettingsResponse extends JsonSerializableType
   {
     $this->monitorConfigs = $values['monitorConfigs'] ?? null;
     $this->autoResolveAfterInactiveMinutes = $values['autoResolveAfterInactiveMinutes'] ?? null;
+    $this->environments = $values['environments'] ?? null;
     $this->notifiers = $values['notifiers'] ?? null;
 
     if (array_key_exists('monitorConfigs', $values)) {
@@ -62,6 +70,9 @@ class AlertingSettingsResponse extends JsonSerializableType
     }
     if (array_key_exists('autoResolveAfterInactiveMinutes', $values)) {
       $this->_dirtyFields['auto_resolve_after_inactive_minutes'] = true;
+    }
+    if (array_key_exists('environments', $values)) {
+      $this->_dirtyFields['environments'] = true;
     }
     if (array_key_exists('notifiers', $values)) {
       $this->_dirtyFields['notifiers'] = true;
@@ -84,6 +95,15 @@ class AlertingSettingsResponse extends JsonSerializableType
         'name' => 'auto_resolve_after_inactive_minutes',
         'contents' => (string) $this->autoResolveAfterInactiveMinutes
       ];
+    }
+
+    if ($this->environments !== null) {
+      foreach ($this->environments ?? [] as $item) {
+        $parts[] = [
+          'name' => 'environments',
+          'contents' => $item
+        ];
+      }
     }
 
     if ($this->notifiers !== null) {

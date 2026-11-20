@@ -6,5 +6,6 @@ namespace ElevenLabs\Types;
 
 enum AgentResponseType: string
 {
-  case AgentResponse = 'agent_response';
+  case Text = 'text';
+  case Voice = 'voice';
 }

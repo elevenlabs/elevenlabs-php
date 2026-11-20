@@ -40,12 +40,26 @@ class FieldConflict extends JsonSerializableType
   public mixed $targetValue;
 
   /**
+   * Stable identifier of this conflict within a merge.
+   */
+  #[JsonProperty('id')]
+  public ?string $id;
+
+  /**
+   * Whether a resolution of this conflict may use `custom` with a `custom_value` instead of keeping a side.
+   */
+  #[JsonProperty('accepts_custom_value')]
+  public ?bool $acceptsCustomValue;
+
+  /**
    * @param array{
    *   path: string,
    *   section: value-of<\ElevenLabs\Types\ConflictSection>,
    *   baseValue?: mixed,
    *   sourceValue?: mixed,
    *   targetValue?: mixed,
+   *   id?: ?string,
+   *   acceptsCustomValue?: ?bool,
    * } $values
    */
   public function __construct(array $values)
@@ -55,6 +69,8 @@ class FieldConflict extends JsonSerializableType
     $this->baseValue = $values['baseValue'] ?? null;
     $this->sourceValue = $values['sourceValue'] ?? null;
     $this->targetValue = $values['targetValue'] ?? null;
+    $this->id = $values['id'] ?? null;
+    $this->acceptsCustomValue = $values['acceptsCustomValue'] ?? null;
 
     $this->_dirtyFields = [
       'path' => true,
@@ -68,6 +84,12 @@ class FieldConflict extends JsonSerializableType
     }
     if (array_key_exists('targetValue', $values)) {
       $this->_dirtyFields['target_value'] = true;
+    }
+    if (array_key_exists('id', $values)) {
+      $this->_dirtyFields['id'] = true;
+    }
+    if (array_key_exists('acceptsCustomValue', $values)) {
+      $this->_dirtyFields['accepts_custom_value'] = true;
     }
   }
 
@@ -105,6 +127,20 @@ class FieldConflict extends JsonSerializableType
         'name' => 'target_value',
         'contents' => json_encode($this->targetValue),
         'headers' => ['Content-Type' => 'application/json']
+      ];
+    }
+
+    if ($this->id !== null) {
+      $parts[] = [
+        'name' => 'id',
+        'contents' => $this->id
+      ];
+    }
+
+    if ($this->acceptsCustomValue !== null) {
+      $parts[] = [
+        'name' => 'accepts_custom_value',
+        'contents' => $this->acceptsCustomValue ? 'true' : 'false'
       ];
     }
 

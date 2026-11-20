@@ -56,6 +56,12 @@ class DocumentsClient extends BaseService
   /** @var array|null Method-level configuration for delete */
   protected ?array $deleteConfig = null;
 
+  /** @var array|null Method-level configuration for getChunkingOverride */
+  protected ?array $getChunkingOverrideConfig = null;
+
+  /** @var array|null Method-level configuration for updateChunkingOverride */
+  protected ?array $updateChunkingOverrideConfig = null;
+
   /** @var array|null Method-level configuration for getAgents */
   protected ?array $getAgentsConfig = null;
 
@@ -158,6 +164,30 @@ class DocumentsClient extends BaseService
   public function setDeleteConfig(array $config): static
   {
     $this->deleteConfig = $config;
+    return $this;
+  }
+
+  /**
+   * Set method-level configuration for getChunkingOverride.
+   *
+   * @param array $config Configuration overrides for this method
+   * @return $this
+   */
+  public function setGetChunkingOverrideConfig(array $config): static
+  {
+    $this->getChunkingOverrideConfig = $config;
+    return $this;
+  }
+
+  /**
+   * Set method-level configuration for updateChunkingOverride.
+   *
+   * @param array $config Configuration overrides for this method
+   * @return $this
+   */
+  public function setUpdateChunkingOverrideConfig(array $config): static
+  {
+    $this->updateChunkingOverrideConfig = $config;
     return $this;
   }
 
@@ -577,6 +607,105 @@ class DocumentsClient extends BaseService
 
     try {
       $result = $this->decodeJson($data);
+    } catch (\JsonException | \TypeError | \InvalidArgumentException $e) {
+      throw new \ElevenLabs\Exceptions\ElevenlabsException(
+        message: "Failed to deserialize the response: {$e->getMessage()}",
+        previous: $e
+      );
+    }
+    return $result;
+  }
+
+  /**
+   * Get the stored and effective RAG chunking overrides for a document or folder.
+   *
+   * @param string $documentationId The id of a document from the knowledge base. This is returned on document addition.
+   * @param ?array{
+   *   baseUrl?: string,
+   *   maxRetries?: int,
+   *   timeout?: float,
+   *   headers?: array<string, string>,
+   *   queryParameters?: array<string, mixed>,
+   *   bodyProperties?: array<string, mixed>,
+   * } $options
+   * @return ?\ElevenLabs\Types\GetDocumentChunkingOverrideResponseModel
+   * @throws \ElevenLabs\Exceptions\ElevenlabsException
+   * @throws \ElevenLabs\Exceptions\ElevenlabsApiException
+   */
+  public function getChunkingOverride(
+    string $documentationId,
+    ?array $options = null
+  ): ?\ElevenLabs\Types\GetDocumentChunkingOverrideResponseModel {
+    $resolvedConfig = $this->getResolvedConfig($this->getChunkingOverrideConfig, $options);
+    $response = $this->sendJsonRequest(
+      new JsonApiRequest(
+        baseUrl: $this->getBaseUrl($resolvedConfig),
+        path: '/v1/convai/knowledge-base/' .
+          \ElevenLabs\Core\Client\RawClient::encodePathParam($documentationId) .
+          '/chunking-override',
+        method: HttpMethod::GET
+      ),
+      $resolvedConfig
+    );
+    $data = $response->getBody()->getContents();
+
+    try {
+      $result = Serializer::deserialize(
+        $data,
+        \ElevenLabs\Types\GetDocumentChunkingOverrideResponseModel::class
+      );
+    } catch (\JsonException | \TypeError | \InvalidArgumentException $e) {
+      throw new \ElevenLabs\Exceptions\ElevenlabsException(
+        message: "Failed to deserialize the response: {$e->getMessage()}",
+        previous: $e
+      );
+    }
+    return $result;
+  }
+
+  /**
+   * Set or clear the RAG chunking override for a document or folder.
+   *
+   * @param string $documentationId The id of a document from the knowledge base. This is returned on document addition.
+   * @param \ElevenLabs\Agents\KnowledgeBase\Documents\Requests\UpdateDocumentChunkingOverrideRequestModel $request Request body
+   * @param ?array{
+   *   baseUrl?: string,
+   *   maxRetries?: int,
+   *   timeout?: float,
+   *   headers?: array<string, string>,
+   *   queryParameters?: array<string, mixed>,
+   *   bodyProperties?: array<string, mixed>,
+   * } $options
+   * @return ?\ElevenLabs\Types\UpdateDocumentChunkingOverrideResponseModel
+   * @throws \ElevenLabs\Exceptions\ElevenlabsException
+   * @throws \ElevenLabs\Exceptions\ElevenlabsApiException
+   */
+  public function updateChunkingOverride(
+    string $documentationId,
+    \ElevenLabs\Agents\KnowledgeBase\Documents\Requests\UpdateDocumentChunkingOverrideRequestModel $request = new \ElevenLabs\Agents\KnowledgeBase\Documents\Requests\UpdateDocumentChunkingOverrideRequestModel(),
+    ?array $options = null
+  ): ?\ElevenLabs\Types\UpdateDocumentChunkingOverrideResponseModel {
+    $request->validate();
+
+    $resolvedConfig = $this->getResolvedConfig($this->updateChunkingOverrideConfig, $options);
+    $response = $this->sendJsonRequest(
+      new JsonApiRequest(
+        baseUrl: $this->getBaseUrl($resolvedConfig),
+        path: '/v1/convai/knowledge-base/' .
+          \ElevenLabs\Core\Client\RawClient::encodePathParam($documentationId) .
+          '/chunking-override',
+        method: HttpMethod::PATCH,
+        body: $request
+      ),
+      $resolvedConfig
+    );
+    $data = $response->getBody()->getContents();
+
+    try {
+      $result = Serializer::deserialize(
+        $data,
+        \ElevenLabs\Types\UpdateDocumentChunkingOverrideResponseModel::class
+      );
     } catch (\JsonException | \TypeError | \InvalidArgumentException $e) {
       throw new \ElevenLabs\Exceptions\ElevenlabsException(
         message: "Failed to deserialize the response: {$e->getMessage()}",

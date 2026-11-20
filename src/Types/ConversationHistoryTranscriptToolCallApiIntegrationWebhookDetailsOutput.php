@@ -37,6 +37,9 @@ class ConversationHistoryTranscriptToolCallApiIntegrationWebhookDetailsOutput ex
   #[JsonProperty('webhook_details', required: true)]
   public \ElevenLabs\Types\ConversationHistoryTranscriptToolCallWebhookDetails $webhookDetails;
 
+  #[JsonProperty('function_details', required: true)]
+  public ?\ElevenLabs\Types\ConversationHistoryTranscriptToolCallIntegrationFunctionDetails $functionDetails;
+
   /**
    * @param array{
    *   type: value-of<\ElevenLabs\Types\ConversationHistoryTranscriptToolCallApiIntegrationWebhookDetailsOutputType>,
@@ -44,6 +47,7 @@ class ConversationHistoryTranscriptToolCallApiIntegrationWebhookDetailsOutput ex
    *   credentialId: string,
    *   integrationConnectionId: string,
    *   webhookDetails: \ElevenLabs\Types\ConversationHistoryTranscriptToolCallWebhookDetails,
+   *   functionDetails: ?\ElevenLabs\Types\ConversationHistoryTranscriptToolCallIntegrationFunctionDetails,
    * } $values
    */
   public function __construct(array $values)
@@ -53,13 +57,15 @@ class ConversationHistoryTranscriptToolCallApiIntegrationWebhookDetailsOutput ex
     $this->credentialId = $values['credentialId'];
     $this->integrationConnectionId = $values['integrationConnectionId'];
     $this->webhookDetails = $values['webhookDetails'];
+    $this->functionDetails = $values['functionDetails'];
 
     $this->_dirtyFields = [
       'type' => true,
       'integration_id' => true,
       'credential_id' => true,
       'integration_connection_id' => true,
-      'webhook_details' => true
+      'webhook_details' => true,
+      'function_details' => true
     ];
   }
 
@@ -92,11 +98,18 @@ class ConversationHistoryTranscriptToolCallApiIntegrationWebhookDetailsOutput ex
       'headers' => ['Content-Type' => 'application/json']
     ];
 
+    $parts[] = [
+      'name' => 'function_details',
+      'contents' => json_encode($this->functionDetails),
+      'headers' => ['Content-Type' => 'application/json']
+    ];
+
     return $parts;
   }
 
   public function validate(): void
   {
     $this->webhookDetails->validate();
+    $this->functionDetails?->validate();
   }
 }

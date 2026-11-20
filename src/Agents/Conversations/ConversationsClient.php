@@ -10,6 +10,8 @@ use ElevenLabs\Core\Client\HttpMethod;
 use ElevenLabs\Utils\Serializer;
 use ElevenLabs\Utils\Validator;
 
+use ElevenLabs\Core\Client\SseStream;
+
 use ElevenLabs\Agents\Conversations\Audio\AudioClient;
 use ElevenLabs\Agents\Conversations\Files\FilesClient;
 use ElevenLabs\Agents\Conversations\Feedback\FeedbackClient;
@@ -56,6 +58,9 @@ class ConversationsClient extends BaseService
   /** @var array|null Method-level configuration for list */
   protected ?array $listConfig = null;
 
+  /** @var array|null Method-level configuration for create */
+  protected ?array $createConfig = null;
+
   /** @var array|null Method-level configuration for resolve */
   protected ?array $resolveConfig = null;
 
@@ -70,6 +75,18 @@ class ConversationsClient extends BaseService
 
   /** @var array|null Method-level configuration for getSipMessages */
   protected ?array $getSipMessagesConfig = null;
+
+  /** @var array|null Method-level configuration for sendMessage */
+  protected ?array $sendMessageConfig = null;
+
+  /** @var array|null Method-level configuration for sendMessageStream */
+  protected ?array $sendMessageStreamConfig = null;
+
+  /** @var array|null Method-level configuration for getTurn */
+  protected ?array $getTurnConfig = null;
+
+  /** @var array|null Method-level configuration for streamTurnEvents */
+  protected ?array $streamTurnEventsConfig = null;
 
   /**
    * Set method-level configuration for getSignedUrl.
@@ -104,6 +121,18 @@ class ConversationsClient extends BaseService
   public function setListConfig(array $config): static
   {
     $this->listConfig = $config;
+    return $this;
+  }
+
+  /**
+   * Set method-level configuration for create.
+   *
+   * @param array $config Configuration overrides for this method
+   * @return $this
+   */
+  public function setCreateConfig(array $config): static
+  {
+    $this->createConfig = $config;
     return $this;
   }
 
@@ -164,6 +193,54 @@ class ConversationsClient extends BaseService
   public function setGetSipMessagesConfig(array $config): static
   {
     $this->getSipMessagesConfig = $config;
+    return $this;
+  }
+
+  /**
+   * Set method-level configuration for sendMessage.
+   *
+   * @param array $config Configuration overrides for this method
+   * @return $this
+   */
+  public function setSendMessageConfig(array $config): static
+  {
+    $this->sendMessageConfig = $config;
+    return $this;
+  }
+
+  /**
+   * Set method-level configuration for sendMessageStream.
+   *
+   * @param array $config Configuration overrides for this method
+   * @return $this
+   */
+  public function setSendMessageStreamConfig(array $config): static
+  {
+    $this->sendMessageStreamConfig = $config;
+    return $this;
+  }
+
+  /**
+   * Set method-level configuration for getTurn.
+   *
+   * @param array $config Configuration overrides for this method
+   * @return $this
+   */
+  public function setGetTurnConfig(array $config): static
+  {
+    $this->getTurnConfig = $config;
+    return $this;
+  }
+
+  /**
+   * Set method-level configuration for streamTurnEvents.
+   *
+   * @param array $config Configuration overrides for this method
+   * @return $this
+   */
+  public function setStreamTurnEventsConfig(array $config): static
+  {
+    $this->streamTurnEventsConfig = $config;
     return $this;
   }
 
@@ -436,6 +513,54 @@ class ConversationsClient extends BaseService
   }
 
   /**
+   * Create a text conversation with an agent. This does not run the agent, and the agent sends no first message. This endpoint is in alpha and may change.
+   *
+   * @param \ElevenLabs\Agents\Conversations\Requests\CreateAgentConversationRequest $request Request body
+   * @param ?array{
+   *   baseUrl?: string,
+   *   maxRetries?: int,
+   *   timeout?: float,
+   *   headers?: array<string, string>,
+   *   queryParameters?: array<string, mixed>,
+   *   bodyProperties?: array<string, mixed>,
+   * } $options
+   * @return ?\ElevenLabs\Types\CreateAgentConversationResponse
+   * @throws \ElevenLabs\Exceptions\ElevenlabsException
+   * @throws \ElevenLabs\Exceptions\ElevenlabsApiException
+   */
+  public function create(
+    \ElevenLabs\Agents\Conversations\Requests\CreateAgentConversationRequest $request,
+    ?array $options = null
+  ): ?\ElevenLabs\Types\CreateAgentConversationResponse {
+    $request->validate();
+
+    $resolvedConfig = $this->getResolvedConfig($this->createConfig, $options);
+    $response = $this->sendJsonRequest(
+      new JsonApiRequest(
+        baseUrl: $this->getBaseUrl($resolvedConfig),
+        path: '/v1/convai/conversations',
+        method: HttpMethod::POST,
+        body: $request
+      ),
+      $resolvedConfig
+    );
+    $data = $response->getBody()->getContents();
+
+    try {
+      $result = Serializer::deserialize(
+        $data,
+        \ElevenLabs\Types\CreateAgentConversationResponse::class
+      );
+    } catch (\JsonException | \TypeError | \InvalidArgumentException $e) {
+      throw new \ElevenLabs\Exceptions\ElevenlabsException(
+        message: "Failed to deserialize the response: {$e->getMessage()}",
+        previous: $e
+      );
+    }
+    return $result;
+  }
+
+  /**
    * Resolve a conversation URL (a Slack message URL or a Zendesk ticket URL) to the deterministic conversation ID for the given agent, then confirm the conversation exists.
    *
    * @param \ElevenLabs\Agents\Conversations\Requests\ResolveConversationsRequest $request Request parameters
@@ -690,5 +815,177 @@ class ConversationsClient extends BaseService
       );
     }
     return $result;
+  }
+
+  /**
+   * Send input to a conversation, and wait until the agent finishes or waits on client tool results. With `background` set to true, the endpoint returns 202 when the server admits the turn. Then stream the turn's events with `Last-Event-ID` set to the `stream_cursor`. This endpoint is in alpha and may change.
+   *
+   * @param string $conversationId The Conversation ID
+   * @param \ElevenLabs\Agents\Conversations\Requests\SendConversationMessageRequest $request Request body
+   * @param ?array{
+   *   baseUrl?: string,
+   *   maxRetries?: int,
+   *   timeout?: float,
+   *   headers?: array<string, string>,
+   *   queryParameters?: array<string, mixed>,
+   *   bodyProperties?: array<string, mixed>,
+   * } $options
+   * @return ?\ElevenLabs\Types\ConversationTurn
+   * @throws \ElevenLabs\Exceptions\ElevenlabsException
+   * @throws \ElevenLabs\Exceptions\ElevenlabsApiException
+   */
+  public function sendMessage(
+    string $conversationId,
+    \ElevenLabs\Agents\Conversations\Requests\SendConversationMessageRequest $request,
+    ?array $options = null
+  ): ?\ElevenLabs\Types\ConversationTurn {
+    $request->validate();
+
+    $resolvedConfig = $this->getResolvedConfig($this->sendMessageConfig, $options);
+    $response = $this->sendJsonRequest(
+      new JsonApiRequest(
+        baseUrl: $this->getBaseUrl($resolvedConfig),
+        path: '/v1/convai/conversations/' .
+          \ElevenLabs\Core\Client\RawClient::encodePathParam($conversationId) .
+          '/messages',
+        method: HttpMethod::POST,
+        body: $request
+      ),
+      $resolvedConfig
+    );
+    $data = $response->getBody()->getContents();
+
+    try {
+      $result = Serializer::deserialize($data, \ElevenLabs\Types\ConversationTurn::class);
+    } catch (\JsonException | \TypeError | \InvalidArgumentException $e) {
+      throw new \ElevenLabs\Exceptions\ElevenlabsException(
+        message: "Failed to deserialize the response: {$e->getMessage()}",
+        previous: $e
+      );
+    }
+    return $result;
+  }
+
+  /**
+   * Send input to a conversation, and stream the events of the request as server-sent events. The last event is `stream_ended`, which has the outcome of the turn. This endpoint is in alpha and may change.
+   *
+   * @param string $conversationId The Conversation ID
+   * @param \ElevenLabs\Agents\Conversations\Requests\SendConversationMessageStreamRequest $request Request body
+   * @param ?array $options Per-call options. 'abortSignal' => callable(): bool ends a dropped stream's reconnection wait early when it returns true, checked before each reconnect attempt and between short slices of the wait.
+   * @return SseStream<\ElevenLabs\Types\StreamEnvelope>
+   */
+  public function sendMessageStream(
+    string $conversationId,
+    \ElevenLabs\Agents\Conversations\Requests\SendConversationMessageStreamRequest $request,
+    ?array $options = null
+  ): SseStream {
+    $request->validate();
+
+    $resolvedConfig = $this->getResolvedConfig($this->sendMessageStreamConfig, $options);
+    return new SseStream(
+      $this->streamSseFrames(
+        'post',
+        '/v1/convai/conversations/' .
+          \ElevenLabs\Core\Client\RawClient::encodePathParam($conversationId) .
+          '/messages/stream',
+        ['json' => $request],
+        $resolvedConfig,
+        true
+      ),
+      function (string $data) {
+        return Serializer::deserialize($data, \ElevenLabs\Types\StreamEnvelope::class);
+      }
+    );
+  }
+
+  /**
+   * Get the status and output of a turn. The status comes from the stored transcript, so a turn that failed after the agent started can show as completed. Only the `stream_ended` event has the real outcome. This endpoint is in alpha and may change.
+   *
+   * @param string $conversationId The Conversation ID
+   * @param string $turnId The Turn ID
+   * @param ?array{
+   *   baseUrl?: string,
+   *   maxRetries?: int,
+   *   timeout?: float,
+   *   headers?: array<string, string>,
+   *   queryParameters?: array<string, mixed>,
+   *   bodyProperties?: array<string, mixed>,
+   * } $options
+   * @return ?\ElevenLabs\Types\ConversationTurn
+   * @throws \ElevenLabs\Exceptions\ElevenlabsException
+   * @throws \ElevenLabs\Exceptions\ElevenlabsApiException
+   */
+  public function getTurn(
+    string $conversationId,
+    string $turnId,
+    ?array $options = null
+  ): ?\ElevenLabs\Types\ConversationTurn {
+    Validator::validateString($turnId, 'turn_id', maxLength: 20, pattern: '^[1-9][0-9]*$');
+
+    $resolvedConfig = $this->getResolvedConfig($this->getTurnConfig, $options);
+    $response = $this->sendJsonRequest(
+      new JsonApiRequest(
+        baseUrl: $this->getBaseUrl($resolvedConfig),
+        path: '/v1/convai/conversations/' .
+          \ElevenLabs\Core\Client\RawClient::encodePathParam($conversationId) .
+          '/turns/' .
+          \ElevenLabs\Core\Client\RawClient::encodePathParam($turnId),
+        method: HttpMethod::GET
+      ),
+      $resolvedConfig
+    );
+    $data = $response->getBody()->getContents();
+
+    try {
+      $result = Serializer::deserialize($data, \ElevenLabs\Types\ConversationTurn::class);
+    } catch (\JsonException | \TypeError | \InvalidArgumentException $e) {
+      throw new \ElevenLabs\Exceptions\ElevenlabsException(
+        message: "Failed to deserialize the response: {$e->getMessage()}",
+        previous: $e
+      );
+    }
+    return $result;
+  }
+
+  /**
+   * Stream the events of a turn as server-sent events. Send `Last-Event-ID` to resume after an event. The server keeps events for about an hour. This endpoint is in alpha and may change.
+   *
+   * @param string $conversationId The Conversation ID
+   * @param string $turnId The Turn ID
+   * @param \ElevenLabs\Agents\Conversations\Requests\StreamTurnEventsConversationsRequest $request Request parameters
+   * @param ?array $options Per-call options. 'abortSignal' => callable(): bool ends a dropped stream's reconnection wait early when it returns true, checked before each reconnect attempt and between short slices of the wait.
+   * @return SseStream<\ElevenLabs\Types\StreamEnvelope>
+   */
+  public function streamTurnEvents(
+    string $conversationId,
+    string $turnId,
+    \ElevenLabs\Agents\Conversations\Requests\StreamTurnEventsConversationsRequest $request = new \ElevenLabs\Agents\Conversations\Requests\StreamTurnEventsConversationsRequest(),
+    ?array $options = null
+  ): SseStream {
+    $lastEventId = $request->lastEventId;
+
+    Validator::validateString($turnId, 'turn_id', maxLength: 20, pattern: '^[1-9][0-9]*$');
+
+    $resolvedConfig = $this->getResolvedConfig($this->streamTurnEventsConfig, $options);
+    return new SseStream(
+      $this->streamSseFrames(
+        'get',
+        '/v1/convai/conversations/' .
+          \ElevenLabs\Core\Client\RawClient::encodePathParam($conversationId) .
+          '/turns/' .
+          \ElevenLabs\Core\Client\RawClient::encodePathParam($turnId) .
+          '/events',
+        [
+          'headers' => [
+            'Last-Event-ID' => $lastEventId
+          ]
+        ],
+        $resolvedConfig,
+        true
+      ),
+      function (string $data) {
+        return Serializer::deserialize($data, \ElevenLabs\Types\StreamEnvelope::class);
+      }
+    );
   }
 }

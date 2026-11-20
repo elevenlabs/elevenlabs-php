@@ -4804,7 +4804,7 @@ $client->dubbing->project->language->create(
 <dl>
 <dd>
 
-**$voiceSettings:** `?VoiceSettings` — Voice settings applied to every speaker in this language. Omit to use the defaults.
+**$voiceSettings:** `?DubbingVoiceSettings` — Voice settings applied to every speaker in this language. Omit to use the defaults.
     
 </dd>
 </dl>
@@ -7305,6 +7305,91 @@ $client->agents->conversations->list(
 </dl>
 </details>
 
+<details><summary><code>$client-&gt;agents-&gt;conversations-&gt;create($request) -> ?CreateAgentConversationResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create a text conversation with an agent. This does not run the agent, and the agent sends no first message. This endpoint is in alpha and may change.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->agents->conversations->create(
+    new CreateAgentConversationRequest([
+        'agent' => new AgentMessagesPersistedAgent([
+            'type' => AgentMessagesPersistedAgentType::Persisted->value,
+            'agentId' => 'agent_id',
+        ]),
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$agent:** `AgentMessagesPersistedAgent` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$environment:** `?string` — The environment to use for resolving environment variables (e.g. 'production', 'staging'). Defaults to the branch's environment, then 'production'.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$userId:** `?string` — ID of the end user participating in this conversation (for agent owner's user identification)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$dynamicVariables:** `?array` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>$client-&gt;agents-&gt;conversations-&gt;resolve($request) -> ?GetConversationResponseModel</code></summary>
 <dl>
 <dd>
@@ -7627,6 +7712,307 @@ $client->agents->conversations->getSipMessages(
 <dd>
 
 **$cursor:** `?string` — Used for fetching next page. Cursor is returned in the response.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;agents-&gt;conversations-&gt;sendMessage($conversationId, $request) -> ?ConversationTurn</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Send input to a conversation, and wait until the agent finishes or waits on client tool results. With `background` set to true, the endpoint returns 202 when the server admits the turn. Then stream the turn's events with `Last-Event-ID` set to the `stream_cursor`. This endpoint is in alpha and may change.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->agents->conversations->sendMessage(
+    'conversation_id',
+    new SendConversationMessageRequest([
+        'input' => [
+            SendConversationMessageRequestInputItem::userMessage(new UserMessageInputItem([
+                'type' => UserMessageInputItemType::UserMessage->value,
+                'content' => [
+                    UserMessageInputItemContentItem::text(new TextContentPart([
+                        'type' => TextContentPartType::Text->value,
+                        'text' => 'text',
+                    ])),
+                ],
+            ])),
+        ],
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$conversationId:** `string` — The Conversation ID
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$input:** `array` — Either one `user_message`, which starts a new turn, or `client_tool_result` items, which answer the `required_actions` of the waiting turn and continue it. Calls that they leave out stay pending. Client tools wait with no timeout. While calls are pending, a `user_message` is rejected. A `user_message` can come with `contextual_update` items, at most one per `context_id`. `client_tool_result` items that answer every pending call can come with `end` updates.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$background:** `?bool` — If true, return a 202 handle after the turn is admitted instead of waiting for generation to finish.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;agents-&gt;conversations-&gt;sendMessageStream($conversationId, $request) -> StreamEnvelope</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Send input to a conversation, and stream the events of the request as server-sent events. The last event is `stream_ended`, which has the outcome of the turn. This endpoint is in alpha and may change.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->agents->conversations->sendMessageStream(
+    'conversation_id',
+    new SendConversationMessageStreamRequest([
+        'input' => [
+            SendConversationMessageStreamRequestInputItem::userMessage(new UserMessageInputItem([
+                'type' => UserMessageInputItemType::UserMessage->value,
+                'content' => [
+                    UserMessageInputItemContentItem::text(new TextContentPart([
+                        'type' => TextContentPartType::Text->value,
+                        'text' => 'text',
+                    ])),
+                ],
+            ])),
+        ],
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$conversationId:** `string` — The Conversation ID
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$input:** `array` — Either one `user_message`, which starts a new turn, or `client_tool_result` items, which answer the `required_actions` of the waiting turn and continue it. Calls that they leave out stay pending. Client tools wait with no timeout. While calls are pending, a `user_message` is rejected. A `user_message` can come with `contextual_update` items, at most one per `context_id`. `client_tool_result` items that answer every pending call can come with `end` updates.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;agents-&gt;conversations-&gt;getTurn($conversationId, $turnId) -> ?ConversationTurn</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get the status and output of a turn. The status comes from the stored transcript, so a turn that failed after the agent started can show as completed. Only the `stream_ended` event has the real outcome. This endpoint is in alpha and may change.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->agents->conversations->getTurn(
+    'conversation_id',
+    'turn_id',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$conversationId:** `string` — The Conversation ID
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$turnId:** `string` — The Turn ID
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;agents-&gt;conversations-&gt;streamTurnEvents($conversationId, $turnId, $request) -> StreamEnvelope</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Stream the events of a turn as server-sent events. Send `Last-Event-ID` to resume after an event. The server keeps events for about an hour. This endpoint is in alpha and may change.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->agents->conversations->streamTurnEvents(
+    'conversation_id',
+    'turn_id',
+    new StreamTurnEventsConversationsRequest([]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$conversationId:** `string` — The Conversation ID
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$turnId:** `string` — The Turn ID
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$lastEventId:** `?string` 
     
 </dd>
 </dl>
@@ -10986,6 +11372,127 @@ $client->agents->knowledgeBase->documents->delete(
 </dl>
 </details>
 
+<details><summary><code>$client-&gt;agents-&gt;knowledgeBase-&gt;documents-&gt;getChunkingOverride($documentationId) -> ?GetDocumentChunkingOverrideResponseModel</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get the stored and effective RAG chunking overrides for a document or folder.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->agents->knowledgeBase->documents->getChunkingOverride(
+    '21m00Tcm4TlvDq8ikWAM',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$documentationId:** `string` — The id of a document from the knowledge base. This is returned on document addition.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;agents-&gt;knowledgeBase-&gt;documents-&gt;updateChunkingOverride($documentationId, $request) -> ?UpdateDocumentChunkingOverrideResponseModel</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Set or clear the RAG chunking override for a document or folder.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->agents->knowledgeBase->documents->updateChunkingOverride(
+    '21m00Tcm4TlvDq8ikWAM',
+    new UpdateDocumentChunkingOverrideRequestModel([]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$documentationId:** `string` — The id of a document from the knowledge base. This is returned on document addition.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$chunkingOverride:** `ChunkingOverrideRequestModel` — RAG chunking override for a document or folder. Null clears the override so ancestors and embedding model defaults apply.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>$client-&gt;agents-&gt;knowledgeBase-&gt;documents-&gt;getAgents($documentationId, $request) -> ?GetKnowledgeBaseDependentAgentsResponseModel</code></summary>
 <dl>
 <dd>
@@ -12208,6 +12715,83 @@ $client->agents->knowledgeBase->document->computeRagIndex(
 <dd>
 
 **$model:** `EmbeddingModelEnum` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Subagents
+<details><summary><code>$client-&gt;agents-&gt;subagents-&gt;getDependents($agentId, $request) -> ?GetAgentSubagentDependentsResponseModel</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get a list of agents that use this agent as a subagent.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->agents->subagents->getDependents(
+    'agent_3701k3ttaq12ewp8b7qv5rfyszkz',
+    new GetDependentsSubagentsRequest([
+        'pageSize' => 1,
+        'cursor' => 'cursor',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$agentId:** `string` — The id of an agent. This is returned on agent creation.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$pageSize:** `?int` — How many Agents to return at maximum. Can not exceed 100, defaults to 30.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$cursor:** `?string` — Used for fetching next page. Cursor is returned in the response.
     
 </dd>
 </dl>
@@ -14021,7 +14605,7 @@ $client->agents->users->list(
 <dl>
 <dd>
 
-List an agent's conversation triage tickets, ordered by most recently created first unless sorted by priority. These are tickets about the agent's own performance on a conversation (for triage with Architect), not tickets an agent opens for end users.
+List an agent's issues, ordered by most recently created first unless sorted by priority. These are issues about the agent's own performance on a conversation (to work on with Architect), not tickets an agent opens for end users.
 </dd>
 </dl>
 </dd>
@@ -14051,7 +14635,6 @@ $client->agents->triageTickets->list(
         'sortBy' => AgentConversationTicketSortBy::CreatedAt->value,
         'ownerUserId' => 'owner_user_id',
         'assigneeUserId' => 'assignee_user_id',
-        'issueType' => AgentConversationTicketIssueType::KnowledgeGap->value,
         'label' => 'label',
         'mergedIntoTicketId' => 'merged_into_ticket_id',
         'search' => 'search',
@@ -14080,7 +14663,7 @@ $client->agents->triageTickets->list(
 <dl>
 <dd>
 
-**$pageSize:** `?int` — How many agent conversation tickets to return. Can not exceed 100.
+**$pageSize:** `?int` — How many agent issues to return. Can not exceed 100.
     
 </dd>
 </dl>
@@ -14088,7 +14671,7 @@ $client->agents->triageTickets->list(
 <dl>
 <dd>
 
-**$conversationId:** `?string` — Filter tickets by conversation id.
+**$conversationId:** `?string` — Filter agent issues by conversation id.
     
 </dd>
 </dl>
@@ -14096,7 +14679,7 @@ $client->agents->triageTickets->list(
 <dl>
 <dd>
 
-**$status:** `?AgentConversationTicketStatus` — Filter tickets by status.
+**$status:** `?AgentConversationTicketStatus` — Filter agent issues by status.
     
 </dd>
 </dl>
@@ -14104,7 +14687,7 @@ $client->agents->triageTickets->list(
 <dl>
 <dd>
 
-**$sources:** `?array` — Filter tickets by how they were raised (qa, agent, manual). Repeat the parameter to filter by multiple sources.
+**$sources:** `?array` — Filter agent issues by how they were raised (qa, agent, manual). Repeat the parameter to filter by multiple sources.
     
 </dd>
 </dl>
@@ -14112,7 +14695,7 @@ $client->agents->triageTickets->list(
 <dl>
 <dd>
 
-**$priorities:** `?array` — Filter tickets by priority. Repeat the parameter to filter by multiple priorities.
+**$priorities:** `?array` — Filter agent issues by priority. Repeat the parameter to filter by multiple priorities.
     
 </dd>
 </dl>
@@ -14120,7 +14703,7 @@ $client->agents->triageTickets->list(
 <dl>
 <dd>
 
-**$sortBy:** `?AgentConversationTicketSortBy` — Order by most recently created, by priority (most urgent first, then most recently created), or by most recently reported (the newest report merged into the issue, else its creation).
+**$sortBy:** `?AgentConversationTicketSortBy` — Order by most recently created, by priority (most urgent first, then most recently created), by most recently reported (the newest report merged into the agent issue, else its creation), or by report count (most reports merged into the agent issue first, then most recently created).
     
 </dd>
 </dl>
@@ -14128,7 +14711,7 @@ $client->agents->triageTickets->list(
 <dl>
 <dd>
 
-**$ownerUserId:** `?string` — Filter tickets by creator. Use 'agent' for agent-raised tickets.
+**$ownerUserId:** `?string` — Filter agent issues by creator. Use 'agent' for agent-raised issues.
     
 </dd>
 </dl>
@@ -14136,7 +14719,7 @@ $client->agents->triageTickets->list(
 <dl>
 <dd>
 
-**$assigneeUserId:** `?string` — Filter tickets by assignee. Use 'unassigned' for tickets with no assignee.
+**$assigneeUserId:** `?string` — Filter agent issues by assignee. Use 'unassigned' for issues with no assignee.
     
 </dd>
 </dl>
@@ -14144,7 +14727,7 @@ $client->agents->triageTickets->list(
 <dl>
 <dd>
 
-**$issueType:** `?AgentConversationTicketIssueType` — Filter clusters by issue type.
+**$label:** `?string` — Filter agent issues by an exact label.
     
 </dd>
 </dl>
@@ -14152,7 +14735,7 @@ $client->agents->triageTickets->list(
 <dl>
 <dd>
 
-**$label:** `?string` — Filter tickets by an exact label.
+**$mergedIntoTicketId:** `?string` — Filter agent issues merged into this issue.
     
 </dd>
 </dl>
@@ -14160,15 +14743,7 @@ $client->agents->triageTickets->list(
 <dl>
 <dd>
 
-**$mergedIntoTicketId:** `?string` — Filter tickets merged into this ticket.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$search:** `?string` — Case-insensitive free-text search across the ticket's title, description, comments, and turn comments.
+**$search:** `?string` — Case-insensitive free-text search across the agent issue's title, description, comments, and turn comments.
     
 </dd>
 </dl>
@@ -14200,7 +14775,7 @@ $client->agents->triageTickets->list(
 <dl>
 <dd>
 
-Manually raise a follow-up ticket against an agent, not tied to any conversation (for example a task like 'add the KB about X'). Without a title, one is derived from the comment. Requires viewer access to the agent.
+Manually raise a follow-up issue against an agent, not tied to any conversation (for example a task like 'add the KB about X'). Without a title, one is derived from the comment. Requires viewer access to the agent.
 </dd>
 </dl>
 </dd>
@@ -14243,7 +14818,7 @@ $client->agents->triageTickets->createManual(
 <dl>
 <dd>
 
-**$title:** `?string` — One-line headline shown in the triage list. Defaults to one derived from qa_comment.
+**$title:** `?string` — One-line headline shown in the issues list. Defaults to one derived from qa_comment.
     
 </dd>
 </dl>
@@ -14251,7 +14826,7 @@ $client->agents->triageTickets->createManual(
 <dl>
 <dd>
 
-**$qaComment:** `string` — What the ticket is about, e.g. a follow-up task for the agent.
+**$qaComment:** `string` — What the agent issue is about, e.g. a follow-up task for the agent.
     
 </dd>
 </dl>
@@ -14259,7 +14834,7 @@ $client->agents->triageTickets->createManual(
 <dl>
 <dd>
 
-**$priority:** `?AgentConversationTicketPriority` — How urgently the ticket needs attention.
+**$priority:** `?AgentConversationTicketPriority` — How urgently the agent issue needs attention.
     
 </dd>
 </dl>
@@ -14283,7 +14858,7 @@ $client->agents->triageTickets->createManual(
 <dl>
 <dd>
 
-List conversation triage tickets across every agent in the workspace, ordered by most recently created first. Use this to build a workspace-wide view (for example, tickets assigned to the caller). Supports the same filters, sorting and search as the per-agent endpoint. Tickets for agents the caller cannot access are omitted.
+List agent issues across every agent in the workspace, ordered by most recently created first. Use this to build a workspace-wide view (for example, issues assigned to the caller). Supports the same filters, sorting and search as the per-agent endpoint. Issues for agents the caller cannot access are omitted.
 </dd>
 </dl>
 </dd>
@@ -14312,7 +14887,6 @@ $client->agents->triageTickets->listForWorkspace(
         'sortBy' => AgentConversationTicketSortBy::CreatedAt->value,
         'ownerUserId' => 'owner_user_id',
         'assigneeUserId' => 'assignee_user_id',
-        'issueType' => AgentConversationTicketIssueType::KnowledgeGap->value,
         'label' => 'label',
         'mergedIntoTicketId' => 'merged_into_ticket_id',
         'search' => 'search',
@@ -14333,7 +14907,7 @@ $client->agents->triageTickets->listForWorkspace(
 <dl>
 <dd>
 
-**$pageSize:** `?int` — How many agent conversation tickets to return. Can not exceed 100.
+**$pageSize:** `?int` — How many agent issues to return. Can not exceed 100.
     
 </dd>
 </dl>
@@ -14341,7 +14915,7 @@ $client->agents->triageTickets->listForWorkspace(
 <dl>
 <dd>
 
-**$agentId:** `?string` — Only tickets for this agent.
+**$agentId:** `?string` — Only issues for this agent.
     
 </dd>
 </dl>
@@ -14349,7 +14923,7 @@ $client->agents->triageTickets->listForWorkspace(
 <dl>
 <dd>
 
-**$status:** `?AgentConversationTicketStatus` — Filter tickets by status.
+**$status:** `?AgentConversationTicketStatus` — Filter agent issues by status.
     
 </dd>
 </dl>
@@ -14357,7 +14931,7 @@ $client->agents->triageTickets->listForWorkspace(
 <dl>
 <dd>
 
-**$sources:** `?array` — Filter tickets by how they were raised (qa, agent, manual). Repeat the parameter to filter by multiple sources.
+**$sources:** `?array` — Filter agent issues by how they were raised (qa, agent, manual). Repeat the parameter to filter by multiple sources.
     
 </dd>
 </dl>
@@ -14365,7 +14939,7 @@ $client->agents->triageTickets->listForWorkspace(
 <dl>
 <dd>
 
-**$priorities:** `?array` — Filter tickets by priority. Repeat the parameter to filter by multiple priorities.
+**$priorities:** `?array` — Filter agent issues by priority. Repeat the parameter to filter by multiple priorities.
     
 </dd>
 </dl>
@@ -14373,7 +14947,7 @@ $client->agents->triageTickets->listForWorkspace(
 <dl>
 <dd>
 
-**$sortBy:** `?AgentConversationTicketSortBy` — Order by most recently created, by priority (most urgent first, then most recently created), or by most recently reported (the newest report merged into the issue, else its creation).
+**$sortBy:** `?AgentConversationTicketSortBy` — Order by most recently created, by priority (most urgent first, then most recently created), by most recently reported (the newest report merged into the agent issue, else its creation), or by report count (most reports merged into the agent issue first, then most recently created).
     
 </dd>
 </dl>
@@ -14381,7 +14955,7 @@ $client->agents->triageTickets->listForWorkspace(
 <dl>
 <dd>
 
-**$ownerUserId:** `?string` — Filter tickets by creator. Use 'agent' for agent-raised tickets.
+**$ownerUserId:** `?string` — Filter agent issues by creator. Use 'agent' for agent-raised issues.
     
 </dd>
 </dl>
@@ -14389,7 +14963,7 @@ $client->agents->triageTickets->listForWorkspace(
 <dl>
 <dd>
 
-**$assigneeUserId:** `?string` — Filter tickets by assignee. Use 'unassigned' for tickets with no assignee.
+**$assigneeUserId:** `?string` — Filter agent issues by assignee. Use 'unassigned' for issues with no assignee.
     
 </dd>
 </dl>
@@ -14397,7 +14971,7 @@ $client->agents->triageTickets->listForWorkspace(
 <dl>
 <dd>
 
-**$issueType:** `?AgentConversationTicketIssueType` — Filter clusters by issue type.
+**$label:** `?string` — Filter agent issues by an exact label.
     
 </dd>
 </dl>
@@ -14405,7 +14979,7 @@ $client->agents->triageTickets->listForWorkspace(
 <dl>
 <dd>
 
-**$label:** `?string` — Filter tickets by an exact label.
+**$mergedIntoTicketId:** `?string` — Filter agent issues merged into this issue.
     
 </dd>
 </dl>
@@ -14413,15 +14987,7 @@ $client->agents->triageTickets->listForWorkspace(
 <dl>
 <dd>
 
-**$mergedIntoTicketId:** `?string` — Filter tickets merged into this ticket.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$search:** `?string` — Case-insensitive free-text search across the ticket's title, description, comments, and turn comments.
+**$search:** `?string` — Case-insensitive free-text search across the agent issue's title, description, comments, and turn comments.
     
 </dd>
 </dl>
@@ -14453,7 +15019,7 @@ $client->agents->triageTickets->listForWorkspace(
 <dl>
 <dd>
 
-Raise a ticket about an agent's performance on a conversation, for triage with Architect. Provide an overall comment and/or turn-level comments describing what went wrong.
+Raise an issue about an agent's performance on a conversation, to work on with Architect. Provide an overall comment and/or turn-level comments describing what went wrong.
 </dd>
 </dl>
 </dd>
@@ -14487,7 +15053,7 @@ $client->agents->triageTickets->create(
 <dl>
 <dd>
 
-**$conversationId:** `string` — Conversation this ticket is about.
+**$conversationId:** `string` — Conversation this agent issue is about.
     
 </dd>
 </dl>
@@ -14495,7 +15061,7 @@ $client->agents->triageTickets->create(
 <dl>
 <dd>
 
-**$title:** `?string` — One-line headline shown in the triage list. Defaults to one derived from the comments, falling back to the conversation's summary title. Ignored when the comment is added to the conversation's open ticket.
+**$title:** `?string` — One-line headline shown in the issues list. Defaults to one derived from the comments, falling back to the conversation's summary title. Ignored when the comment is added to the conversation's open issue.
     
 </dd>
 </dl>
@@ -14503,7 +15069,7 @@ $client->agents->triageTickets->create(
 <dl>
 <dd>
 
-**$qaComment:** `?string` — The issue this ticket is about, covering the whole conversation rather than a single turn.
+**$qaComment:** `?string` — The problem this agent issue is about, covering the whole conversation rather than a single turn.
     
 </dd>
 </dl>
@@ -14519,7 +15085,7 @@ $client->agents->triageTickets->create(
 <dl>
 <dd>
 
-**$priority:** `?AgentConversationTicketPriority` — How urgently the ticket needs attention. If the conversation already has an open ticket, it is raised to this priority when lower.
+**$priority:** `?AgentConversationTicketPriority` — How urgently the agent issue needs attention. If the conversation already has an open issue, it is raised to this priority when lower.
     
 </dd>
 </dl>
@@ -14599,7 +15165,7 @@ $client->agents->triageTickets->listAssignableUsers(
 <dl>
 <dd>
 
-Get an agent conversation ticket by ID.
+Get an agent issue by ID.
 </dd>
 </dl>
 </dd>
@@ -14655,7 +15221,7 @@ $client->agents->triageTickets->get(
 <dl>
 <dd>
 
-Update a ticket's title, comment, status, priority, and/or assignee. Requires viewer access to the ticket's agent.
+Update an agent issue's title, comment, status, priority, and/or assignee. Requires viewer access to the issue's agent.
 </dd>
 </dl>
 </dd>
@@ -14696,7 +15262,7 @@ $client->agents->triageTickets->update(
 <dl>
 <dd>
 
-**$title:** `?string` — If provided, updates the ticket title. Omit to leave unchanged.
+**$title:** `?string` — If provided, updates the agent issue's title. Omit to leave unchanged.
     
 </dd>
 </dl>
@@ -14704,7 +15270,7 @@ $client->agents->triageTickets->update(
 <dl>
 <dd>
 
-**$qaComment:** `?string` — If provided, updates the ticket description. Omit to leave unchanged.
+**$qaComment:** `?string` — If provided, updates the agent issue's description. Omit to leave unchanged.
     
 </dd>
 </dl>
@@ -14712,7 +15278,7 @@ $client->agents->triageTickets->update(
 <dl>
 <dd>
 
-**$status:** `?AgentConversationTicketStatus` — If provided, updates the ticket status. Omit to leave unchanged.
+**$status:** `?AgentConversationTicketStatus` — If provided, updates the agent issue's status. Omit to leave unchanged.
     
 </dd>
 </dl>
@@ -14720,7 +15286,7 @@ $client->agents->triageTickets->update(
 <dl>
 <dd>
 
-**$assigneeUserId:** `?string` — If provided, updates who is responsible for resolving this ticket. Must be a workspace member with at least viewer access to the agent. Pass null to unassign. Omit to leave unchanged.
+**$assigneeUserId:** `?string` — If provided, updates who is responsible for resolving this agent issue. Must be a workspace member with at least viewer access to the agent. Pass null to unassign. Omit to leave unchanged.
     
 </dd>
 </dl>
@@ -14728,7 +15294,7 @@ $client->agents->triageTickets->update(
 <dl>
 <dd>
 
-**$priority:** `?AgentConversationTicketPriority` — If provided, updates how urgently the ticket needs attention. Pass null to clear it. Omit to leave unchanged.
+**$priority:** `?AgentConversationTicketPriority` — If provided, updates how urgently the agent issue needs attention. Pass null to clear it. Omit to leave unchanged.
     
 </dd>
 </dl>
@@ -14752,7 +15318,7 @@ $client->agents->triageTickets->update(
 <dl>
 <dd>
 
-Delete an agent conversation ticket. Restricted to the ticket creator or a workspace admin.
+Delete an agent issue. Restricted to the issue creator or a workspace admin.
 </dd>
 </dl>
 </dd>
@@ -14808,7 +15374,7 @@ $client->agents->triageTickets->delete(
 <dl>
 <dd>
 
-Append a comment discussing how to resolve the ticket. Requires viewer access to the ticket's agent.
+Append a comment discussing how to resolve the agent issue. Requires viewer access to the issue's agent.
 </dd>
 </dl>
 </dd>
@@ -14851,7 +15417,7 @@ $client->agents->triageTickets->addComment(
 <dl>
 <dd>
 
-**$comment:** `string` — A comment discussing how to resolve the ticket.
+**$comment:** `string` — A comment discussing how to resolve the agent issue.
     
 </dd>
 </dl>
@@ -14875,7 +15441,7 @@ $client->agents->triageTickets->addComment(
 <dl>
 <dd>
 
-Merge other open tickets of the same agent into this pending, in-progress, or resolved one. Their conversations move onto this ticket, its priority is raised to the highest among them, and they are kept with status 'merged'. Requires viewer access to the ticket's agent.
+Merge other open issues of the same agent into this pending, in-progress, or resolved one. Their conversations move onto this issue, its priority is raised to the highest among them, and they are kept with status 'merged'. Requires viewer access to the issue's agent.
 </dd>
 </dl>
 </dd>
@@ -14920,7 +15486,7 @@ $client->agents->triageTickets->merge(
 <dl>
 <dd>
 
-**$sourceTicketIds:** `array` — Open tickets of the same agent to fold into this one. They are kept with status 'merged', pointing at this ticket.
+**$sourceTicketIds:** `array` — Open issues of the same agent to fold into this one. They are kept with status 'merged', pointing at this issue.
     
 </dd>
 </dl>
@@ -14944,7 +15510,7 @@ $client->agents->triageTickets->merge(
 <dl>
 <dd>
 
-Append a turn-level comment to a ticket. Requires viewer access to the ticket's agent.
+Append a turn-level comment to an agent issue. Requires viewer access to the issue's agent.
 </dd>
 </dl>
 </dd>
@@ -15897,9 +16463,10 @@ $client->agents->tools->create(
                 ],
                 'queryParamsSchema' => new QueryParamsJsonSchemaInput([
                     'properties' => [
-                        'key' => new LiteralJsonSchemaProperty([
-                            'type' => Type11::String->value,
-                            'description' => 'A user-provided message',
+                        'key' => QueryParamsJsonSchemaInputPropertiesValue::fromMultiple([
+                            new LiteralJsonSchemaProperty([
+                                'type' => Type11::Boolean->value,
+                            ]),
                         ]),
                     ],
                 ]),
@@ -16060,9 +16627,10 @@ $client->agents->tools->update(
                 ],
                 'queryParamsSchema' => new QueryParamsJsonSchemaInput([
                     'properties' => [
-                        'key' => new LiteralJsonSchemaProperty([
-                            'type' => Type11::String->value,
-                            'description' => 'A user-provided message',
+                        'key' => QueryParamsJsonSchemaInputPropertiesValue::fromMultiple([
+                            new LiteralJsonSchemaProperty([
+                                'type' => Type11::Boolean->value,
+                            ]),
                         ]),
                     ],
                 ]),
@@ -19812,7 +20380,7 @@ $client->agents->branches->update(
 <dl>
 <dd>
 
-Returns the result of merging the source branch into the target branch without performing the merge. Useful for showing an accurate diff before confirming.
+Returns the result of merging the source branch into the target branch without performing the merge. When `conflicts` is not empty, the merge itself is rejected unless `conflict_resolutions` settles every conflict or `force` is set; until then the returned configuration shows one side of each conflict only as a placeholder.
 </dd>
 </dl>
 </dd>
@@ -19874,7 +20442,7 @@ $client->agents->branches->previewMerge(
 <dl>
 <dd>
 
-**$force:** `?bool` — When true, source branch changes always win conflicts regardless of timestamps
+**$force:** `?bool` — When true, the preview keeps the source branch's value for every conflict, as a merge with `force` does. Without it, a merge with conflicts needs `conflict_resolutions`.
     
 </dd>
 </dl>
@@ -19906,7 +20474,7 @@ $client->agents->branches->previewMerge(
 <dl>
 <dd>
 
-Merge a branch into a target branch
+Merge a branch into a target branch. If both branches changed the same field, the merge returns 409 unless `conflict_resolutions` settles every conflict the merge preview reports, or `force` is set.
 </dd>
 </dl>
 </dd>
@@ -19974,7 +20542,31 @@ $client->agents->branches->merge(
 <dl>
 <dd>
 
-**$force:** `?bool` — Force source branch changes onto the target, overriding timestamp-based conflict resolution
+**$force:** `?bool` — Keep the source branch's value for every conflict instead of sending `conflict_resolutions`
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$conflictResolutions:** `?array` — Side to keep, or custom text where the conflict accepts it, for each conflict the preview reported. A merge or rebase with conflicts is rejected unless there is one for every conflict, sent with both tip ids. On a merge it can't be combined with `force`, which lets the source win every conflict instead.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$sourceTipId:** `?string` — Source branch tip version the conflicts were resolved against (`source_tip_version_id` of the preview). The request fails with 409 if the branch moved since.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$targetTipId:** `?string` — Target branch tip version the conflicts were resolved against (`target_tip_version_id` of the preview). The request fails with 409 if the branch moved since.
     
 </dd>
 </dl>
@@ -19998,7 +20590,7 @@ $client->agents->branches->merge(
 <dl>
 <dd>
 
-Returns the result of pulling changes from a source branch (defaults to main) into the given branch without performing it, preserving the given branch's own changes. Useful for showing an accurate diff before confirming.
+Returns the result of pulling changes from a source branch (defaults to main) into the given branch without performing it. When `conflicts` is not empty, the rebase itself is rejected unless `conflict_resolutions` settles every conflict; until then the returned configuration keeps the given branch's side of each conflict.
 </dd>
 </dl>
 </dd>
@@ -20083,7 +20675,7 @@ $client->agents->branches->previewRebase(
 <dl>
 <dd>
 
-Pull changes from a source branch (defaults to main) into this branch as a new version, preserving this branch's own changes on conflicts.
+Pull changes from a source branch (defaults to main) into this branch as a new version. If both branches changed the same field, the rebase returns 409 unless `conflict_resolutions` settles every conflict the rebase preview reports.
 </dd>
 </dl>
 </dd>
@@ -20136,6 +20728,30 @@ $client->agents->branches->rebase(
 <dd>
 
 **$sourceBranchId:** `?string` — The ID of the branch to pull changes from. Defaults to the agent's main branch.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$conflictResolutions:** `?array` — Side to keep, or custom text where the conflict accepts it, for each conflict the preview reported. A merge or rebase with conflicts is rejected unless there is one for every conflict, sent with both tip ids. On a merge it can't be combined with `force`, which lets the source win every conflict instead.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$branchTipId:** `?string` — Tip version of the branch being rebased (`source_tip_version_id` of the rebase preview) the conflicts were resolved against. The request fails with 409 if it moved since.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$sourceTipId:** `?string` — Tip version of the branch the changes are pulled from (`source_branch_id`, the main branch by default; `target_tip_version_id` of the rebase preview) the conflicts were resolved against. The request fails with 409 if it moved since.
     
 </dd>
 </dl>
@@ -21512,7 +22128,7 @@ $client->agents->mergeProposals->create(
 <dl>
 <dd>
 
-**$triageTicketId:** `?string` — Triage ticket of this agent that the merge_proposal resolves. Merging it resolves the ticket if still open.
+**$triageTicketId:** `?string` — Issue of this agent that the merge_proposal resolves. Merging it resolves the issue if still open.
     
 </dd>
 </dl>
@@ -21917,7 +22533,7 @@ $client->agents->mergeProposals->merge(
 <dl>
 <dd>
 
-**$force:** `?bool` — Force source branch changes onto the target, overriding timestamp-based conflict resolution.
+**$force:** `?bool` — Keep the source branch's value for every conflict.
     
 </dd>
 </dl>
@@ -31059,6 +31675,6904 @@ $client->audioNative->updateContentFromUrl(
 </dl>
 </details>
 
+## ContentProvenance
+<details><summary><code>$client-&gt;contentProvenance-&gt;watermark($request) -> ?WatermarkCheck</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Check an audio file for an embedded ElevenLabs watermark. This endpoint is in beta and may change.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->contentProvenance->watermark(
+    new BodyCheckWatermarkV1ContentProvenanceWatermarkPost([
+        'file' => File::createFromString("example_file", "example_file"),
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$file:** `mixed` — Audio file to check for an embedded watermark.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$version:** `?string` — Watermark decoder version. Defaults to latest.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Receptionists
+<details><summary><code>$client-&gt;reception-&gt;receptionists-&gt;list($request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List every customer-facing receptionist for the workspace.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->receptionists->list(
+    new ListReceptionistsRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;receptionists-&gt;update($agentId, $request) -> ?ReceptionCustomerFacingAgentResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update a receptionist's display name, config and/or widget appearance.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->receptionists->update(
+    'agent_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new ReceptionUpdateCustomerFacingAgentRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$agentId:** `string` — ID of the receptionist. List them with `GET /v1/reception/customer-facing-agents`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$config:** `?ReceptionCustomerFacingConfigPatch` — Receptionist settings to change; omitted settings keep their value.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `?string` — New display name for the receptionist.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$widget:** `?ReceptionWidgetAppearance` — New website widget appearance.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;receptionists-&gt;activate($agentId, $request) -> ?ReceptionCustomerFacingAgentResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Re-activate a deactivated receptionist. Fails with `quota_exceeded` when the plan has no free receptionist slot.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->receptionists->activate(
+    'agent_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new ActivateReceptionistsRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$agentId:** `string` — ID of the receptionist. List them with `GET /v1/reception/customer-facing-agents`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Rules
+<details><summary><code>$client-&gt;reception-&gt;receptionists-&gt;rules-&gt;create($agentId, $request) -> ?AgentRule</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Add a behavioral rule to the named receptionist.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->receptionists->rules->create(
+    'agent_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new ReceptionCreateAgentRuleRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+        'title' => 'title',
+        'description' => 'description',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$agentId:** `string` — ID of the receptionist. List them with `GET /v1/reception/customer-facing-agents`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$title:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$description:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$priority:** `?RulePriority` — How strictly the receptionist follows a rule.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;receptionists-&gt;rules-&gt;update($agentId, $ruleId, $request) -> ?AgentRule</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Replace an existing rule on the named receptionist. Send every field: an omitted `priority` resets to `strict`.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->receptionists->rules->update(
+    'agent_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    'rule_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new ReceptionUpdateAgentRuleRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+        'title' => 'title',
+        'description' => 'description',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$agentId:** `string` — ID of the receptionist. List them with `GET /v1/reception/customer-facing-agents`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$ruleId:** `string` — ID of the rule. Returned when you add one, and listed in the receptionist's `config.agent_rules`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$title:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$description:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$priority:** `?RulePriority` — How strictly the receptionist follows a rule.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;receptionists-&gt;rules-&gt;delete($agentId, $ruleId, $request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete a rule from the named receptionist.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->receptionists->rules->delete(
+    'agent_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    'rule_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new DeleteRulesRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$agentId:** `string` — ID of the receptionist. List them with `GET /v1/reception/customer-facing-agents`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$ruleId:** `string` — ID of the rule. Returned when you add one, and listed in the receptionist's `config.agent_rules`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Procedures
+<details><summary><code>$client-&gt;reception-&gt;receptionists-&gt;procedures-&gt;list($agentId, $request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List the procedures (SOPs) on the named receptionist, with the tools each one is missing.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->receptionists->procedures->list(
+    'agent_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new ListProceduresRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$agentId:** `string` — ID of the receptionist. List them with `GET /v1/reception/customer-facing-agents`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;receptionists-&gt;procedures-&gt;create($agentId, $request) -> ?ReceptionProcedure</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Add a procedure (SOP) to the named receptionist.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->receptionists->procedures->create(
+    'agent_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new ReceptionCreateProcedureRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+        'name' => 'name',
+        'trigger' => 'trigger',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$agentId:** `string` — ID of the receptionist. List them with `GET /v1/reception/customer-facing-agents`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$trigger:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$body:** `?string` — Step-by-step instructions, as markdown.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;receptionists-&gt;procedures-&gt;update($agentId, $procedureId, $request) -> ?ReceptionProcedure</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Replace an existing procedure on the named receptionist. Send every field: an omitted `body` resets to empty.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->receptionists->procedures->update(
+    'agent_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    'agtprc_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new ReceptionUpdateProcedureRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+        'name' => 'name',
+        'trigger' => 'trigger',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$agentId:** `string` — ID of the receptionist. List them with `GET /v1/reception/customer-facing-agents`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$procedureId:** `string` — ID of the procedure. Returned when you add one; list them with `GET /v1/reception/customer-facing-agents/{agent_id}/procedures`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$trigger:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$body:** `?string` — Step-by-step instructions, as markdown.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;receptionists-&gt;procedures-&gt;delete($agentId, $procedureId, $request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete a procedure from the named receptionist.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->receptionists->procedures->delete(
+    'agent_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    'agtprc_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new DeleteProceduresRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$agentId:** `string` — ID of the receptionist. List them with `GET /v1/reception/customer-facing-agents`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$procedureId:** `string` — ID of the procedure. Returned when you add one; list them with `GET /v1/reception/customer-facing-agents/{agent_id}/procedures`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## TransferRules
+<details><summary><code>$client-&gt;reception-&gt;receptionists-&gt;transferRules-&gt;create($agentId, $request) -> ?ReceptionTransferRule</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Add a phone forwarding rule to the named receptionist.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->receptionists->transferRules->create(
+    'agent_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new ReceptionCreateTransferRuleRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+        'label' => 'label',
+        'phoneNumber' => 'phone_number',
+        'condition' => 'condition',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$agentId:** `string` — ID of the receptionist. List them with `GET /v1/reception/customer-facing-agents`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$label:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$phoneNumber:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$condition:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$postDialDigits:** `?string` — DTMF digits automatically played after the transfer destination picks up (e.g. '1' to answer a 'press 1 to accept' screen, or 'www1234' to key an extension after a pause). Valid characters are 0-9, *, #, w (0.5s pause) and W (1s pause). Twilio transfers only.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;receptionists-&gt;transferRules-&gt;update($agentId, $ruleId, $request) -> ?ReceptionTransferRule</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Replace an existing transfer rule on the named receptionist. Send every field: an omitted `post_dial_digits` clears it.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->receptionists->transferRules->update(
+    'agent_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    'transferrule_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new ReceptionUpdateTransferRuleRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+        'label' => 'label',
+        'phoneNumber' => 'phone_number',
+        'condition' => 'condition',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$agentId:** `string` — ID of the receptionist. List them with `GET /v1/reception/customer-facing-agents`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$ruleId:** `string` — ID of the transfer rule. Returned when you add one, and listed in the receptionist's `config.transfer_rules`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$label:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$phoneNumber:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$condition:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$postDialDigits:** `?string` — DTMF digits automatically played after the transfer destination picks up (e.g. '1' to answer a 'press 1 to accept' screen, or 'www1234' to key an extension after a pause). Valid characters are 0-9, *, #, w (0.5s pause) and W (1s pause). Twilio transfers only.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;receptionists-&gt;transferRules-&gt;delete($agentId, $ruleId, $request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete a transfer rule from the named receptionist.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->receptionists->transferRules->delete(
+    'agent_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    'transferrule_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new DeleteTransferRulesRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$agentId:** `string` — ID of the receptionist. List them with `GET /v1/reception/customer-facing-agents`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$ruleId:** `string` — ID of the transfer rule. Returned when you add one, and listed in the receptionist's `config.transfer_rules`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Members
+<details><summary><code>$client-&gt;reception-&gt;team-&gt;members-&gt;list($request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List the workspace's members, suspended members last.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->team->members->list(
+    new ListMembersRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;team-&gt;members-&gt;updateRole($userId, $request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Promote a member to admin or demote an admin to member.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->team->members->updateRole(
+    'user_id',
+    new BodySmbUpdateTeamMemberRole([
+        'xiWorkspaceId' => 'xi-workspace-id',
+        'role' => BodySmbUpdateTeamMemberRoleRole::WorkspaceAdmin->value,
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$userId:** `string` — User ID of the member to update
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$role:** `BodySmbUpdateTeamMemberRoleRole` — The member's new role.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;team-&gt;members-&gt;remove($userId, $request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Remove a member from the workspace. Their seat goes to a suspended member, if any.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->team->members->remove(
+    'user_id',
+    new RemoveMembersRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$userId:** `string` — User ID of the member to remove
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Invites
+<details><summary><code>$client-&gt;reception-&gt;team-&gt;invites-&gt;list($request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List the workspace's pending invites.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->team->invites->list(
+    new ListInvitesRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;team-&gt;invites-&gt;create($request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Email an invite to join the workspace. A pending invite takes a seat, so this is refused once members and invites reach the plan's team limit.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->team->invites->create(
+    new CreateTeamInviteRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+        'email' => 'sam@example.com',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$email:** `string` — The email address to invite.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$role:** `?CreateTeamInviteRequestRole` — The role the invitee joins with: 'workspace_admin' or 'workspace_member'.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;team-&gt;invites-&gt;cancel($request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Cancel a pending invite, freeing its seat.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->team->invites->cancel(
+    new BodySmbCancelTeamInvite([
+        'xiWorkspaceId' => 'xi-workspace-id',
+        'email' => 'jane@example.com',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$email:** `string` — Email address the pending invite was sent to.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## PhoneNumbers
+<details><summary><code>$client-&gt;reception-&gt;phoneNumbers-&gt;list($request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List the workspace's phone numbers and the receptionist each one rings. A number with no `customer_facing_agent_id` is held by the workspace but not attached to a receptionist yet.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->phoneNumbers->list(
+    new ListPhoneNumbersRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;phoneNumbers-&gt;create($request) -> ?ReceptionPhoneAssignment</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Give a receptionist a phone number. A number the workspace already holds but has not attached is used first. Otherwise, in the US and Canada, a number with one of the requested `area_codes` is taken from the pool or bought, falling back to any number in the business's country. In countries that require paperwork, the number is issued right away but takes public calls only once the workspace's own registration is approved (see `accepts_public_calls`). Counts toward the plan's phone number limit, and free plans can take only a few new numbers a day. Returns 404 when no number is available and 403 `telephony_managed_by_reseller` when the reseller supplies the workspace's numbers from its own Twilio account or SIP trunk and none is free.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->phoneNumbers->create(
+    new CreatePhoneAssignmentRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+        'customerFacingAgentId' => 'agent_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$customerFacingAgentId:** `string` — The receptionist that answers calls to the number.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$areaCodes:** `?array` — Preferred US or Canadian area codes, e.g. `["415", "628"]`. Codes outside the business's country are ignored, and any number is given when none of these is available.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$numberType:** `?ApplicationNumberType` — Local or mobile, in a country that requires paperwork before a number takes calls. Leave unset to try mobile first. Ignored in the US and Canada.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$idempotencyKey:** `?string` — Client-generated key that makes a retry safe. The same key and body within 24 hours returns the first result without running again. While that first request is still running, a retry gets 409 `idempotency_key_in_progress`; a different body with the same key gets 400 `idempotency_key_reused`. A request that fails is not saved, so it can be retried with the same key.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;phoneNumbers-&gt;update($phoneAssignmentId, $request) -> ?ReceptionPhoneAssignment</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Move a phone number to a different receptionist in the same workspace, which answers its calls from then on. Returns 409 `phone_number_not_attached` for a number no receptionist answers yet (attach it with `POST /v1/reception/phone-numbers/assignments`).
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->phoneNumbers->update(
+    'phone_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new ReassignPhoneRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+        'customerFacingAgentId' => 'agent_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$phoneAssignmentId:** `string` — ID of the phone number assignment. Returned when you assign a number; list them with `GET /v1/reception/phone-numbers/assignments`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$customerFacingAgentId:** `string` — The receptionist that answers calls to the number from now on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;phoneNumbers-&gt;delete($phoneAssignmentId, $request)</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Remove a phone number from the workspace. A pool number goes back to the pool it came from. A number the business brought from its own Twilio account, or one issued in a country that requires paperwork, is released at Twilio and cannot be recovered. Returns 403 `telephony_managed_by_reseller` when the reseller supplies the workspace's numbers from its own Twilio account or SIP trunk.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->phoneNumbers->delete(
+    'phone_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new DeletePhoneNumbersRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$phoneAssignmentId:** `string` — ID of the phone number assignment. Returned when you assign a number; list them with `GET /v1/reception/phone-numbers/assignments`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Assets
+<details><summary><code>$client-&gt;reception-&gt;assets-&gt;list($request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List the workspace's bookable assets, such as rooms or equipment.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->assets->list(
+    new ListAssetsRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;assets-&gt;create($request) -> ?ReceptionAssetResource</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create a bookable asset, such as a room or a piece of equipment.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->assets->create(
+    new ReceptionCreateAssetRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+        'name' => 'name',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$groups:** `?array` — Group memberships for this item. Each entry carries the group label and the item's 0-based rank within that group.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$ungroupedRank:** `?int` — Display position among items with no group; `null` sorts last. Change it with the reorder endpoint.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$description:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$isActive:** `?bool` — Whether the asset can be booked. Inactive assets keep their booking history.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$availableHours:** `?WorkingHours` — Custom availability hours for this asset. Null means follow the assigned location's operating_hours (requires location_id).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$photoUrl:** `?string` — URL of a photo of the asset.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$locationId:** `?string` — Location this asset belongs to; empty means available at all locations.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$customerFacingName:** `?string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;assets-&gt;get($assetId, $request) -> ?ReceptionAssetResource</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get an asset by ID.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->assets->get(
+    'asset_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new GetAssetsRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$assetId:** `string` — ID of the asset. Returned when you create one; list them with `GET /v1/reception/assets`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;assets-&gt;update($assetId, $request) -> ?ReceptionAssetResource</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update an asset. Only the fields sent are changed.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->assets->update(
+    'asset_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new ReceptionUpdateAssetRequestPatch([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$assetId:** `string` — ID of the asset. Returned when you create one; list them with `GET /v1/reception/assets`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$groups:** `?array` — Group memberships for this item. Each entry carries the group label and the item's 0-based rank within that group.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$ungroupedRank:** `?int` — Display position among items with no group; `null` sorts last. Change it with the reorder endpoint.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$description:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$isActive:** `?bool` — Whether the asset can be booked. Inactive assets keep their booking history.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$availableHours:** `?WorkingHours` — Custom availability hours for this asset. Null means follow the assigned location's operating_hours (requires location_id).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$photoUrl:** `?string` — URL of a photo of the asset.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$locationId:** `?string` — Location this asset belongs to; empty means available at all locations.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$customerFacingName:** `?string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;assets-&gt;delete($assetId, $request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete an asset.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->assets->delete(
+    'asset_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new DeleteAssetsRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$assetId:** `string` — ID of the asset. Returned when you create one; list them with `GET /v1/reception/assets`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Services
+<details><summary><code>$client-&gt;reception-&gt;services-&gt;list($request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get all services for the current workspace with optional filters
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->services->list(
+    new ListServicesRequest([
+        'staffId' => 'staff_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+        'assetId' => 'asset_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+        'isActive' => true,
+        'kind' => ReceptionServiceKind::Classic->value,
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$staffId:** `?string` — Only services this staff member performs.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$assetId:** `?string` — Only services that book this asset.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$isActive:** `?bool` — Only active (`true`) or inactive (`false`) services.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$kind:** `?ReceptionServiceKind` — Only services of this kind.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;services-&gt;create($request) -> ?ReceptionService</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create a new service
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->services->create(
+    new ReceptionCreateServiceRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+        'name' => 'name',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$pricingMode:** `?PricingMode` 
+
+Whether a catalog item's price and duration are known up front.
+
+- `fixed`: the catalog price and duration apply (the default).
+- `quote`: neither is known until the owner has seen the job. The
+  receptionist collects intake answers and files a quote request instead
+  of booking a slot or taking an order.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$intakeQuestions:** `?array` — Questions the agent asks before booking or ordering this item. Required for a useful `pricing_mode='quote'` item -- without them a quote request arrives with nothing to price -- but also valid on fixed-price items that need extra detail (current hair color before a dye job, allergies before a treatment).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$groups:** `?array` — Group memberships for this item. Each entry carries the group label and the item's 0-based rank within that group.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$ungroupedRank:** `?int` — Display position among items with no group; `null` sorts last. Change it with the reorder endpoint.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$description:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$variants:** `?array` — Bookable options for this service. Always non-empty; `variants[0]` is the default option shown when callers don't pick a specific variant. Each entry has its own duration and (optional) price, and uniqueness is keyed by duration.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$kind:** `?ReceptionServiceKind` 
+
+What a service books.
+
+- `classic`: a staff-delivered service (haircut, consultation, massage, ...).
+- `rental`: an asset reservation (court, room, equipment).
+- `group`: seats in a multi-participant session (class, workshop, tour).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$bufferMinutes:** `?int` — Turnover/cleanup time reserved after each booking. Applies to every service kind; default 0 means no buffer.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$serviceLocation:** `?ServiceLocationType` — Where a classic service is delivered.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$addOns:** `?array` — Optional extras that can be added to a booking of this service.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$maxParticipants:** `?int` — Capacity for `kind='group'`: how many seats a single session can sell across all registrations. Must be null for classic and rental services (those are always exclusive to one client per booking).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$capacity:** `?int` — Not used to limit bookings; set `max_participants` on group services instead.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$isActive:** `?bool` — Whether the service is offered; inactive services can't be booked.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$anyStaffMember:** `?bool` — Whether any staff member can deliver the service. When false, only the staff in `staff_ids` can. Ignored for rentals.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$staffIds:** `?array` — Staff assigned to this service; must be empty for kind='rental'.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$assetIds:** `?array` — Assets, such as rooms or equipment, this service can be booked on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$advanceBookingMinutes:** `?int` — How far into the future customer-facing channels (public booking page, voice agent) may book this service. Applies to every kind.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$locationIds:** `?array` — Locations where this service is offered; empty list means all locations.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$displayOnBookingPage:** `?bool` — Whether the service is listed on the public booking page.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$travelMinutes:** `?int` — Travel time in minutes added before/after appointments for customer-location services. Blocks the staff member's calendar but is not visible to the customer. Ignored when `service_location='business'`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$travelBefore:** `?bool` — Add travel time before the appointment (outbound trip).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$travelAfter:** `?bool` — Add travel time after the appointment (return trip).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$promotions:** `?array` — Time-bound discounts applicable to this service or specific variants.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;services-&gt;get($serviceId, $request) -> ?ReceptionService</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get a specific service by ID
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->services->get(
+    'service_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new GetServicesRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$serviceId:** `string` — ID of the service. Returned when you create one; list them with `GET /v1/reception/services`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;services-&gt;update($serviceId, $request) -> ?ReceptionServiceUpdateResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update an existing service. Only the fields sent are changed.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->services->update(
+    'service_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new ReceptionUpdateServiceRequestPatch([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$serviceId:** `string` — ID of the service. Returned when you create one; list them with `GET /v1/reception/services`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$pricingMode:** `?PricingMode` 
+
+Whether a catalog item's price and duration are known up front.
+
+- `fixed`: the catalog price and duration apply (the default).
+- `quote`: neither is known until the owner has seen the job. The
+  receptionist collects intake answers and files a quote request instead
+  of booking a slot or taking an order.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$intakeQuestions:** `?array` — Questions the agent asks before booking or ordering this item. Required for a useful `pricing_mode='quote'` item -- without them a quote request arrives with nothing to price -- but also valid on fixed-price items that need extra detail (current hair color before a dye job, allergies before a treatment).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$groups:** `?array` — Group memberships for this item. Each entry carries the group label and the item's 0-based rank within that group.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$ungroupedRank:** `?int` — Display position among items with no group; `null` sorts last. Change it with the reorder endpoint.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$description:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$variants:** `?array` — Bookable options for this service. Always non-empty; `variants[0]` is the default option shown when callers don't pick a specific variant. Each entry has its own duration and (optional) price, and uniqueness is keyed by duration.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$kind:** `?ReceptionServiceKind` 
+
+What a service books.
+
+- `classic`: a staff-delivered service (haircut, consultation, massage, ...).
+- `rental`: an asset reservation (court, room, equipment).
+- `group`: seats in a multi-participant session (class, workshop, tour).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$bufferMinutes:** `?int` — Turnover/cleanup time reserved after each booking. Applies to every service kind; default 0 means no buffer.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$serviceLocation:** `?ServiceLocationType` — Where a classic service is delivered.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$addOns:** `?array` — Optional extras that can be added to a booking of this service.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$maxParticipants:** `?int` — Capacity for `kind='group'`: how many seats a single session can sell across all registrations. Must be null for classic and rental services (those are always exclusive to one client per booking).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$capacity:** `?int` — Not used to limit bookings; set `max_participants` on group services instead.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$isActive:** `?bool` — Whether the service is offered; inactive services can't be booked.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$anyStaffMember:** `?bool` — Whether any staff member can deliver the service. When false, only the staff in `staff_ids` can. Ignored for rentals.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$staffIds:** `?array` — Staff assigned to this service; must be empty for kind='rental'.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$assetIds:** `?array` — Assets, such as rooms or equipment, this service can be booked on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$advanceBookingMinutes:** `?int` — How far into the future customer-facing channels (public booking page, voice agent) may book this service. Applies to every kind.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$locationIds:** `?array` — Locations where this service is offered; empty list means all locations.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$displayOnBookingPage:** `?bool` — Whether the service is listed on the public booking page.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$travelMinutes:** `?int` — Travel time in minutes added before/after appointments for customer-location services. Blocks the staff member's calendar but is not visible to the customer. Ignored when `service_location='business'`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$travelBefore:** `?bool` — Add travel time before the appointment (outbound trip).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$travelAfter:** `?bool` — Add travel time after the appointment (return trip).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$promotions:** `?array` — Time-bound discounts applicable to this service or specific variants.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$durationMinutes:** `?int` — Sets the first variant's duration. Ignored when `variants` is sent.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$price:** `?float` — Sets the first variant's price. Ignored when `variants` is sent.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;services-&gt;delete($serviceId, $request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete a service
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->services->delete(
+    'service_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new DeleteServicesRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$serviceId:** `string` — ID of the service. Returned when you create one; list them with `GET /v1/reception/services`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;services-&gt;confirmUpdate($serviceId, $request) -> ?ReceptionServiceUpdateResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Save a service update that changes the price of existing bookings. Optionally reprice future bookings.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->services->confirmUpdate(
+    'service_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new ReceptionConfirmServiceUpdateRequest([
+        'reprice' => true,
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$serviceId:** `string` — ID of the service. Returned when you create one; list them with `GET /v1/reception/services`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$reprice:** `?bool` — Also update the price on the service's future bookings.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$pricingMode:** `?PricingMode` 
+
+Whether a catalog item's price and duration are known up front.
+
+- `fixed`: the catalog price and duration apply (the default).
+- `quote`: neither is known until the owner has seen the job. The
+  receptionist collects intake answers and files a quote request instead
+  of booking a slot or taking an order.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$intakeQuestions:** `?array` — Questions the agent asks before booking or ordering this item. Required for a useful `pricing_mode='quote'` item -- without them a quote request arrives with nothing to price -- but also valid on fixed-price items that need extra detail (current hair color before a dye job, allergies before a treatment).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$groups:** `?array` — Group memberships for this item. Each entry carries the group label and the item's 0-based rank within that group.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$ungroupedRank:** `?int` — Display position among items with no group; `null` sorts last. Change it with the reorder endpoint.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$description:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$variants:** `?array` — Bookable options for this service. Always non-empty; `variants[0]` is the default option shown when callers don't pick a specific variant. Each entry has its own duration and (optional) price, and uniqueness is keyed by duration.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$kind:** `?ReceptionServiceKind` 
+
+What a service books.
+
+- `classic`: a staff-delivered service (haircut, consultation, massage, ...).
+- `rental`: an asset reservation (court, room, equipment).
+- `group`: seats in a multi-participant session (class, workshop, tour).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$bufferMinutes:** `?int` — Turnover/cleanup time reserved after each booking. Applies to every service kind; default 0 means no buffer.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$serviceLocation:** `?ServiceLocationType` — Where a classic service is delivered.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$addOns:** `?array` — Optional extras that can be added to a booking of this service.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$maxParticipants:** `?int` — Capacity for `kind='group'`: how many seats a single session can sell across all registrations. Must be null for classic and rental services (those are always exclusive to one client per booking).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$capacity:** `?int` — Not used to limit bookings; set `max_participants` on group services instead.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$isActive:** `?bool` — Whether the service is offered; inactive services can't be booked.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$anyStaffMember:** `?bool` — Whether any staff member can deliver the service. When false, only the staff in `staff_ids` can. Ignored for rentals.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$staffIds:** `?array` — Staff assigned to this service; must be empty for kind='rental'.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$assetIds:** `?array` — Assets, such as rooms or equipment, this service can be booked on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$advanceBookingMinutes:** `?int` — How far into the future customer-facing channels (public booking page, voice agent) may book this service. Applies to every kind.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$locationIds:** `?array` — Locations where this service is offered; empty list means all locations.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$displayOnBookingPage:** `?bool` — Whether the service is listed on the public booking page.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$travelMinutes:** `?int` — Travel time in minutes added before/after appointments for customer-location services. Blocks the staff member's calendar but is not visible to the customer. Ignored when `service_location='business'`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$travelBefore:** `?bool` — Add travel time before the appointment (outbound trip).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$travelAfter:** `?bool` — Add travel time after the appointment (return trip).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$promotions:** `?array` — Time-bound discounts applicable to this service or specific variants.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$durationMinutes:** `?int` — Sets the first variant's duration. Ignored when `variants` is sent.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$price:** `?float` — Sets the first variant's price. Ignored when `variants` is sent.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Products
+<details><summary><code>$client-&gt;reception-&gt;products-&gt;list($request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List the workspace's products, optionally filtered by group or active state.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->products->list(
+    new ListProductsRequest([
+        'group' => 'Drinks',
+        'isActive' => true,
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$group:** `?string` — Only products filed under the group with this label.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$isActive:** `?bool` — Only active (`true`) or inactive (`false`) products.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;products-&gt;create($request) -> ?ReceptionProduct</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create a product the receptionist can quote and take orders for. A product created with `track_quantity` starts with nothing on hand; add stock with the stock endpoints.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->products->create(
+    new ReceptionCreateProductRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+        'name' => 'name',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$pricingMode:** `?PricingMode` 
+
+Whether a catalog item's price and duration are known up front.
+
+- `fixed`: the catalog price and duration apply (the default).
+- `quote`: neither is known until the owner has seen the job. The
+  receptionist collects intake answers and files a quote request instead
+  of booking a slot or taking an order.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$intakeQuestions:** `?array` — Questions the agent asks before booking or ordering this item. Required for a useful `pricing_mode='quote'` item -- without them a quote request arrives with nothing to price -- but also valid on fixed-price items that need extra detail (current hair color before a dye job, allergies before a treatment).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$groups:** `?array` — Group memberships for this item. Each entry carries the group label and the item's 0-based rank within that group.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$ungroupedRank:** `?int` — Display position among items with no group; `null` sorts last. Change it with the reorder endpoint.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$description:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$price:** `?float` — Price of the product; null for no listed price.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$isActive:** `?bool` — False hides the product without deleting it.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$orderable:** `?bool` — False keeps the product listed (callers can ask about it) but not orderable.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$allowedFulfillmentTypes:** `?array` — Fulfillment options customers may choose when ordering this product.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$locationIds:** `?array` — Locations where this product is sold; empty list means all locations.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$trackQuantity:** `?bool` — Whether this product is counted. A counted product starts with nothing on hand at every location.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;products-&gt;get($productId, $request) -> ?ReceptionProduct</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get a product by ID.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->products->get(
+    'product_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new GetProductsRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$productId:** `string` — ID of the product. Returned when you create one; list them with `GET /v1/reception/products`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;products-&gt;update($productId, $request) -> ?ReceptionProduct</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update a product's catalog fields. Only the fields sent are changed. On-hand quantities are not part of this call; use the stock endpoints.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->products->update(
+    'product_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new ReceptionUpdateProductRequestPatch([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$productId:** `string` — ID of the product. Returned when you create one; list them with `GET /v1/reception/products`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$pricingMode:** `?PricingMode` 
+
+Whether a catalog item's price and duration are known up front.
+
+- `fixed`: the catalog price and duration apply (the default).
+- `quote`: neither is known until the owner has seen the job. The
+  receptionist collects intake answers and files a quote request instead
+  of booking a slot or taking an order.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$intakeQuestions:** `?array` — Questions the agent asks before booking or ordering this item. Required for a useful `pricing_mode='quote'` item -- without them a quote request arrives with nothing to price -- but also valid on fixed-price items that need extra detail (current hair color before a dye job, allergies before a treatment).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$groups:** `?array` — Group memberships for this item. Each entry carries the group label and the item's 0-based rank within that group.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$ungroupedRank:** `?int` — Display position among items with no group; `null` sorts last. Change it with the reorder endpoint.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$description:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$price:** `?float` — Price of the product; null for no listed price.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$isActive:** `?bool` — False hides the product without deleting it.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$orderable:** `?bool` — False keeps the product listed (callers can ask about it) but not orderable.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$allowedFulfillmentTypes:** `?array` — Fulfillment options customers may choose when ordering this product.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$locationIds:** `?array` — Locations where this product is sold; empty list means all locations.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$trackQuantity:** `?bool` — Whether this product is counted. Switching it only changes the mode: turning it on keeps whatever is already on hand, turning it off drops the counts. Use the stock endpoints to change the amounts themselves.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;products-&gt;delete($productId, $request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete a product.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->products->delete(
+    'product_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new DeleteProductsRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$productId:** `string` — ID of the product. Returned when you create one; list them with `GET /v1/reception/products`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Stock
+<details><summary><code>$client-&gt;reception-&gt;products-&gt;stock-&gt;set($productId, $request) -> ?ReceptionProduct</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Set the on-hand quantity of a counted product at one location. Rejected with a 409 if it changed since `expected_on_hand` was read.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->products->stock->set(
+    'product_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new ReceptionUpdateProductStockRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+        'locationId' => 'location_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+        'onHand' => 24,
+        'expectedOnHand' => 25,
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$productId:** `string` — ID of the product. Returned when you create one; list them with `GET /v1/reception/products`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$locationId:** `string` — Location whose count is set.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$onHand:** `int` — The new on-hand quantity.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$expectedOnHand:** `int` — On-hand value the caller last saw. The write is rejected with a 409 if it no longer matches, so a sale made while the caller was editing is never overwritten.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;products-&gt;stock-&gt;adjust($productId, $request) -> ?ReceptionProduct</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Add to or subtract from the on-hand quantity of a counted product at one location, without overwriting orders taken at the same time.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->products->stock->adjust(
+    'product_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new ReceptionAdjustProductStockRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+        'locationId' => 'location_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+        'delta' => -2,
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$productId:** `string` — ID of the product. Returned when you create one; list them with `GET /v1/reception/products`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$locationId:** `string` — Location whose count changes.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$delta:** `int` — Signed change to apply to on-hand. Prefer this over an absolute write whenever the intent is 'a few more/fewer'.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Staff
+<details><summary><code>$client-&gt;reception-&gt;staff-&gt;list($request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get all staff for the current workspace
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->staff->list(
+    new ListStaffRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;staff-&gt;create($request) -> ?ReceptionStaffResource</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create a new staff member
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->staff->create(
+    new ReceptionCreateStaffRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+        'name' => 'name',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$groups:** `?array` — Group memberships for this item. Each entry carries the group label and the item's 0-based rank within that group.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$ungroupedRank:** `?int` — Display position among items with no group; `null` sorts last. Change it with the reorder endpoint.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$description:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$isActive:** `?bool` — Whether the staff member can be booked. Inactive staff keep their booking history.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$email:** `?string` — Email address of the staff member.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$phone:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$smsNotificationsOptedIn:** `?bool` — Whether this staff member currently receives SMS booking notifications. Defaults to opted out — a staff member must be explicitly opted in; flipped to False automatically when they reply STOP to the workspace number.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$photoUrl:** `?string` — URL of a photo of the staff member.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$locationId:** `?string` — Location this staff member is assigned to; empty means available at all locations.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$workingHours:** `?WorkingHours` — Custom working hours for this staff member. Null means follow the assigned location's operating_hours (requires location_id).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$displayOnBookingPage:** `?bool` — Whether customers can see and pick this staff member by name on the booking page. False keeps them bookable, just not shown by name.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$customerFacingName:** `?string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;staff-&gt;get($staffId, $request) -> ?ReceptionStaffResource</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get a specific staff member by ID
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->staff->get(
+    'staff_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new GetStaffRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$staffId:** `string` — ID of the staff member. Returned when you create one; list them with `GET /v1/reception/staff`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;staff-&gt;update($staffId, $request) -> ?ReceptionStaffResource</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update an existing staff member. Only the fields sent are changed.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->staff->update(
+    'staff_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new ReceptionUpdateStaffRequestPatch([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$staffId:** `string` — ID of the staff member. Returned when you create one; list them with `GET /v1/reception/staff`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$groups:** `?array` — Group memberships for this item. Each entry carries the group label and the item's 0-based rank within that group.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$ungroupedRank:** `?int` — Display position among items with no group; `null` sorts last. Change it with the reorder endpoint.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$description:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$isActive:** `?bool` — Whether the staff member can be booked. Inactive staff keep their booking history.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$email:** `?string` — Email address of the staff member.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$phone:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$smsNotificationsOptedIn:** `?bool` — Whether this staff member currently receives SMS booking notifications. Defaults to opted out — a staff member must be explicitly opted in; flipped to False automatically when they reply STOP to the workspace number.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$photoUrl:** `?string` — URL of a photo of the staff member.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$locationId:** `?string` — Location this staff member is assigned to; empty means available at all locations.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$workingHours:** `?WorkingHours` — Custom working hours for this staff member. Null means follow the assigned location's operating_hours (requires location_id).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$displayOnBookingPage:** `?bool` — Whether customers can see and pick this staff member by name on the booking page. False keeps them bookable, just not shown by name.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$customerFacingName:** `?string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;staff-&gt;delete($staffId, $request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete a staff member
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->staff->delete(
+    'staff_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new DeleteStaffRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$staffId:** `string` — ID of the staff member. Returned when you create one; list them with `GET /v1/reception/staff`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Holidays
+<details><summary><code>$client-&gt;reception-&gt;holidays-&gt;list($request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get all holidays/time-off entries for the current workspace with optional filters
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->holidays->list(
+    new ListHolidaysRequest([
+        'startUnix' => 1,
+        'endUnix' => 1,
+        'timeOffType' => TimeOffType::Staff->value,
+        'resourceId' => 'resource_id',
+        'locationId' => 'location_id',
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$startUnix:** `?int` — Filter entries overlapping from this timestamp
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$endUnix:** `?int` — Filter entries overlapping before this timestamp
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$timeOffType:** `?TimeOffType` — Filter by type: location, staff, or asset
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$resourceId:** `?string` — Filter by associated resource ID (staff/asset)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$locationId:** `?string` — Filter by location ID
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;holidays-&gt;create($request) -> ?HolidayResponseModel</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create a new holiday
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->holidays->create(
+    new ReceptionCreateHolidayRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+        'name' => 'Christmas Eve',
+        'startDate' => new DateModel([
+            'year' => 2026,
+            'month' => 12,
+            'day' => 25,
+        ]),
+        'endDate' => new DateModel([
+            'year' => 2026,
+            'month' => 12,
+            'day' => 25,
+        ]),
+        'timeOffType' => TimeOffType::Staff->value,
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `string` — Display name of the closure or time off.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$startDate:** `DateModel` — Represents a calendar date as individual numeric components.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$endDate:** `DateModel` — Represents a calendar date as individual numeric components.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$holidayType:** `?HolidayType` — Whether the entry closes the target for the whole range or replaces its working hours.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$overrideHours:** `?array` — Replacement working hours when holiday_type is 'override'.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$timeOffType:** `TimeOffType` — What a time-off entry blocks: a staff member, an asset, or a location.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$resourceId:** `?string` — The staff member or asset ID; required when time_off_type is 'staff' or 'asset'.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$locationId:** `?string` — For LOCATION type: the location this closure applies to.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$reason:** `?string` — Optional note on why the closure or time off happens, up to 500 characters.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;holidays-&gt;get($holidayId, $request) -> ?HolidayResponseModel</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get a specific holiday by ID
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->holidays->get(
+    'holiday_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new GetHolidaysRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$holidayId:** `string` — ID of the holiday or time-off entry. Returned when you create one; list them with `GET /v1/reception/holidays`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;holidays-&gt;update($holidayId, $request) -> ?HolidayResponseModel</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update an existing holiday. Only the fields sent are changed.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->holidays->update(
+    'holiday_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new ReceptionUpdateHolidayRequestPatch([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$holidayId:** `string` — ID of the holiday or time-off entry. Returned when you create one; list them with `GET /v1/reception/holidays`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `?string` — Display name of the closure or time off.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$startDate:** `?DateModel` — Represents a calendar date as individual numeric components.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$endDate:** `?DateModel` — Represents a calendar date as individual numeric components.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$holidayType:** `?HolidayType` — Whether the entry closes the target for the whole range or replaces its working hours.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$overrideHours:** `?array` — Replacement working hours when holiday_type is 'override'.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$timeOffType:** `?TimeOffType` — What a time-off entry blocks: a staff member, an asset, or a location.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$resourceId:** `?string` — The staff member or asset ID; required when time_off_type is 'staff' or 'asset'.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$locationId:** `?string` — For LOCATION type: the location this closure applies to.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$reason:** `?string` — Optional note on why the closure or time off happens, up to 500 characters.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;holidays-&gt;delete($holidayId, $request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete a holiday
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->holidays->delete(
+    'holiday_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new DeleteHolidaysRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$holidayId:** `string` — ID of the holiday or time-off entry. Returned when you create one; list them with `GET /v1/reception/holidays`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Locations
+<details><summary><code>$client-&gt;reception-&gt;locations-&gt;list($request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List all business locations.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->locations->list(
+    new ListLocationsRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;locations-&gt;create($request) -> ?ReceptionLocationResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Add a new business location.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->locations->create(
+    new ReceptionLocationRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+        'name' => 'name',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$address:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$notes:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$operatingHours:** `?WorkingHours` — Per-location operating hours. On create, omit to have the server prefill from the most recently added active location.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$customerFacingName:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$maxConcurrentAppointments:** `?int` — Maximum number of appointments that may overlap at this location at a single instant. Only enforced while the booking page setting concurrent_limit_enabled is on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$isActive:** `?bool` — Whether the location is active. Inactive locations take no bookings.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;locations-&gt;get($locationId, $request) -> ?ReceptionLocationResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get a single location by ID.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->locations->get(
+    'location_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new GetLocationsRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$locationId:** `string` — ID of the location. Returned when you create one; list them with `GET /v1/reception/locations`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;locations-&gt;update($locationId, $request) -> ?ReceptionLocationResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update an existing location. Only the fields sent are changed.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->locations->update(
+    'location_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new ReceptionLocationRequestPatch([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$locationId:** `string` — ID of the location. Returned when you create one; list them with `GET /v1/reception/locations`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$address:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$notes:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$operatingHours:** `?WorkingHours` — Per-location operating hours. On create, omit to have the server prefill from the most recently added active location.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$customerFacingName:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$maxConcurrentAppointments:** `?int` — Maximum number of appointments that may overlap at this location at a single instant. Only enforced while the booking page setting concurrent_limit_enabled is on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$isActive:** `?bool` — Whether the location is active. Inactive locations take no bookings.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;locations-&gt;delete($locationId, $request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete a location.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->locations->delete(
+    'location_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new DeleteLocationsRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$locationId:** `string` — ID of the location. Returned when you create one; list them with `GET /v1/reception/locations`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## BusinessProfile
+<details><summary><code>$client-&gt;reception-&gt;businessProfile-&gt;get($request) -> ?ReceptionAgentInfoResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get the business profile the receptionists answer from, with the current time in the business's timezone.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->businessProfile->get(
+    new GetBusinessProfileRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;businessProfile-&gt;update($request) -> ?ReceptionAgentInfoResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update the business profile. Every receptionist is updated to match.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->businessProfile->update(
+    new ReceptionUpdateAgentInfoRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$businessName:** `?string` — Name of the business.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$businessCountry:** `?string` — ISO 3166-1 alpha-2 country code where the business is based (e.g. 'US', 'PL', 'DE').
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$businessDescription:** `?string` — What the business does, given to the receptionist.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$timezone:** `?string` — IANA timezone of the business.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$currency:** `?ReceptionUpdateAgentInfoRequestCurrency` — Currency code for all prices (ISO 4217)
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$operatingHours:** `?WorkingHours` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$toolCallSound:** `?ToolCallSoundType` — Ambient sound played while any receptionist runs a tool (e.g. checking availability or looking up a client), filling the silence callers would otherwise hear. One sound for the whole workspace, because custom webhook and MCP tools are shared by every receptionist. Off when null.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## KnowledgeSources
+<details><summary><code>$client-&gt;reception-&gt;knowledgeSources-&gt;list($request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List all knowledge sources for the current workspace
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->knowledgeSources->list(
+    new ListKnowledgeSourcesRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;knowledgeSources-&gt;upload($request) -> ?ReceptionKnowledgeSource</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Upload a file as a knowledge source
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->knowledgeSources->upload(
+    new BodySmbUploadKnowledgeSource([
+        'xiWorkspaceId' => 'xi-workspace-id',
+        'file' => File::createFromString("example_file", "example_file"),
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$file:** `mixed` — The document the receptionist should learn from.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;knowledgeSources-&gt;get($sourceId, $request) -> ?ReceptionKnowledgeSource</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get a specific knowledge source by ID
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->knowledgeSources->get(
+    'ksource_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new GetKnowledgeSourcesRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$sourceId:** `string` — ID of the knowledge source. Returned when you add one; list them with `GET /v1/reception/knowledge-sources`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;knowledgeSources-&gt;delete($sourceId, $request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete a knowledge source
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->knowledgeSources->delete(
+    'ksource_4801jx8k3m5n7p9q2r4s6t8v0w2y',
+    new DeleteKnowledgeSourcesRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$sourceId:** `string` — ID of the knowledge source. Returned when you add one; list them with `GET /v1/reception/knowledge-sources`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;knowledgeSources-&gt;addUrl($request) -> ?ReceptionKnowledgeSource</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Add a URL as a knowledge source
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->knowledgeSources->addUrl(
+    new AddUrlRequest([
+        'xiWorkspaceId' => 'xi-workspace-id',
+        'url' => 'https://example.com',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$xiWorkspaceId:** `string` — The customer workspace a reseller's API key acts on.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$url:** `string` — The HTTPS page or site to read.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$crawlEntireSite:** `?bool` — Crawl the whole site instead of only the page at url.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Workspaces
+<details><summary><code>$client-&gt;reception-&gt;workspaces-&gt;list($request) -> ?ResellerWorkspacesResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List workspaces attributed to the caller's reseller, with cursor-based pagination
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->workspaces->list(
+    new ListWorkspacesRequest([
+        'cursor' => 'cursor',
+        'pageSize' => 1,
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$cursor:** `?string` — Pagination cursor from previous response
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$pageSize:** `?int` — Number of workspaces per page
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;workspaces-&gt;create($request) -> ?ProvisionResellerWorkspaceResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create a workspace for one of your customers, optionally with a tier, a phone number and team invites.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->workspaces->create(
+    new ReceptionProvisionResellerWorkspaceRequest([
+        'businessName' => 'business_name',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$businessName:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$vertical:** `?ReceptionVertical` — The business's vertical, used with `complete_onboarding`. Without it, onboarding picks the vertical as usual.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$subscription:** `?ProvisionResellerWorkspaceSubscription` — Paid tier to subscribe to. Omitted leaves the workspace with no subscription.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$phoneNumber:** `?string` — A free number from the reseller's phone pool, reserved for the workspace until onboarding binds it to the receptionist.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$members:** `?array` — People to invite once the workspace exists, capped by the tier's team size. Best-effort: each outcome is in `member_results`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$completeOnboarding:** `?bool` — Finish setup right away, as `POST /v1/reception/reseller/workspaces/{workspace_id}/complete-onboarding` does. Best-effort: `onboarding_completed_at_unix` stays null on failure, and that call can be retried.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$idempotencyKey:** `?string` — Client-generated key that makes a retry safe. The same key and body within 24 hours returns the first result without running again. While that first request is still running, a retry gets 409 `idempotency_key_in_progress`; a different body with the same key gets 400 `idempotency_key_reused`. A request that fails is not saved, so it can be retried with the same key.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;workspaces-&gt;completeOnboarding($workspaceId) -> ?ResellerWorkspaceOnboardingResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Finish setting up the workspace: create its receptionist and assistant from the business profile, reusing a receptionist from a setup already started, and connect your phone number, if you supply one. Safe to retry.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->workspaces->completeOnboarding(
+    '3f2c9a7e1b4d4c8e9a6f0b2d5e7c1a93',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$workspaceId:** `string` — ID of the customer workspace. Returned when you provision one; list them with `GET /v1/reception/reseller/workspaces`.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Subscriptions
+<details><summary><code>$client-&gt;reception-&gt;subscriptions-&gt;assign($workspaceId, $request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Subscribe a reseller-attributed workspace to one of the reseller's tiers
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->subscriptions->assign(
+    '3f2c9a7e1b4d4c8e9a6f0b2d5e7c1a93',
+    new AssignResellerTierRequest([
+        'tierId' => 'tier_id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$workspaceId:** `string` — ID of the customer workspace. Returned when you provision one; list them with `GET /v1/reception/reseller/workspaces`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$tierId:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$billingPeriod:** `?AssignResellerTierRequestBillingPeriod` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$idempotencyKey:** `?string` — Client-generated key that makes a retry safe. The same key and body within 24 hours returns the first result without running again. While that first request is still running, a retry gets 409 `idempotency_key_in_progress`; a different body with the same key gets 400 `idempotency_key_reused`. A request that fails is not saved, so it can be retried with the same key.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;subscriptions-&gt;change($workspaceId, $request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Move a reseller-attributed workspace between the reseller's tiers. Upgrades apply immediately; downgrades and lateral moves take effect at the end of the billing period.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->subscriptions->change(
+    '3f2c9a7e1b4d4c8e9a6f0b2d5e7c1a93',
+    new ChangeResellerTierRequest([
+        'tierId' => 'tier_id',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$workspaceId:** `string` — ID of the customer workspace. Returned when you provision one; list them with `GET /v1/reception/reseller/workspaces`.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$tierId:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$billingPeriod:** `?ChangeResellerTierRequestBillingPeriod` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$idempotencyKey:** `?string` — Client-generated key that makes a retry safe. The same key and body within 24 hours returns the first result without running again. While that first request is still running, a retry gets 409 `idempotency_key_in_progress`; a different body with the same key gets 400 `idempotency_key_reused`. A request that fails is not saved, so it can be retried with the same key.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;subscriptions-&gt;unassign($workspaceId) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+End a reseller-attributed workspace's subscription at the end of the current billing period
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->subscriptions->unassign(
+    '3f2c9a7e1b4d4c8e9a6f0b2d5e7c1a93',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$workspaceId:** `string` — ID of the customer workspace. Returned when you provision one; list them with `GET /v1/reception/reseller/workspaces`.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;subscriptions-&gt;restore($workspaceId) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Undo a pending unassignment so the subscription renews normally
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->subscriptions->restore(
+    '3f2c9a7e1b4d4c8e9a6f0b2d5e7c1a93',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$workspaceId:** `string` — ID of the customer workspace. Returned when you provision one; list them with `GET /v1/reception/reseller/workspaces`.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;subscriptions-&gt;cancelPendingDowngrade($workspaceId) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Drop a scheduled downgrade, leaving the workspace on its current tier
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->subscriptions->cancelPendingDowngrade(
+    '3f2c9a7e1b4d4c8e9a6f0b2d5e7c1a93',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$workspaceId:** `string` — ID of the customer workspace. Returned when you provision one; list them with `GET /v1/reception/reseller/workspaces`.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Tiers
+<details><summary><code>$client-&gt;reception-&gt;tiers-&gt;list() -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+The tiers you can sell, cheapest first. The first is the trial. Retired tiers are left out.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->tiers->list();
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Billing
+<details><summary><code>$client-&gt;reception-&gt;billing-&gt;listInvoices($request) -> ?ResellerInvoicesResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List the invoices charged to the reseller's card, newest first, one per workspace invoice
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->billing->listInvoices(
+    new ListInvoicesBillingRequest([
+        'cursor' => 'cursor',
+        'pageSize' => 1,
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$cursor:** `?string` — Pagination cursor from previous response
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$pageSize:** `?int` — Number of invoices per page
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;billing-&gt;getInvoice($invoiceId) -> ?ResellerInvoiceDetail</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get one invoice charged to the reseller's card, broken down into the workspace invoice's lines
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->billing->getInvoice(
+    'in_1QzX8vLkdIwHu7ix3Bv0Wy2d',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$invoiceId:** `string` — ID of the invoice. List them with `GET /v1/reception/reseller/billing/invoices`.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;reception-&gt;billing-&gt;listUpcomingPayments() -> ?ResellerUpcomingPaymentsResponse</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List the next workspace renewals the reseller's card will be charged for, soonest first
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->reception->billing->listUpcomingPayments();
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## ApiKeys
 <details><summary><code>$client-&gt;workspaces-&gt;apiKeys-&gt;disable($request) -> mixed</code></summary>
 <dl>
@@ -33504,6 +41018,14 @@ $client->webhooks->update(
     
 </dd>
 </dl>
+
+<dl>
+<dd>
+
+**$logRedactedFields:** `?array` — Field names whose values the delivery log hides when it shows the request payload, matched at any depth, ignoring case and punctuation such as _ or -. Fields with secret-looking names, such as tokens and passwords, are always hidden. The stored log and redeliveries keep the original values. At most 50 names, each 1 to 128 characters, with no whitespace, dots or wildcards.
+    
+</dd>
+</dl>
 </dd>
 </dl>
 
@@ -33557,6 +41079,138 @@ $client->webhooks->delete(
 <dd>
 
 **$webhookId:** `string` — The unique ID for the webhook
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;webhooks-&gt;test($webhookId, $request) -> ?WebhookSendResultResponseModel</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Sends a sample event of the given type to the webhook once and returns the endpoint's status code, response time, content type and response size. Test events are signed like real ones, are never retried, and share a limit of 10 per webhook per minute with redeliveries.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->webhooks->test(
+    'webhook_id',
+    new BodySendTestWebhookEventV1WorkspaceWebhooksWebhookIdTestPost([
+        'webhookType' => WebhookTypes::ProjectConversionStatus->value,
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$webhookId:** `string` — The ID of the webhook.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$webhookType:** `WebhookTypes` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;webhooks-&gt;redeliver($webhookId, $deliveryId) -> ?WebhookSendResultResponseModel</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Sends a stored delivery again, once, with the same delivery ID, a new signature and an ElevenLabs-Webhook-Redelivery header. A retry that is already scheduled is still sent. Redelivering needs permission to manage webhooks and a web session, and the delivery's payload must be stored. Redeliveries and test events share a limit of 10 per webhook per minute.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->webhooks->redeliver(
+    'webhook_id',
+    'delivery_id',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$webhookId:** `string` — The ID of the webhook.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$deliveryId:** `string` — The ID of the delivery to send again.
     
 </dd>
 </dl>
@@ -35058,7 +42712,7 @@ $client->music->finetunes->delete(
 </details>
 
 ## SingleUse
-<details><summary><code>$client-&gt;tokens-&gt;singleUse-&gt;create($tokenType) -> ?SingleUseTokenResponseModel</code></summary>
+<details><summary><code>$client-&gt;tokens-&gt;singleUse-&gt;create($tokenType, $request) -> ?SingleUseTokenResponseModel</code></summary>
 <dl>
 <dd>
 
@@ -35087,6 +42741,9 @@ Generate a time limited single-use token with embedded authentication for fronte
 ```php
 $client->tokens->singleUse->create(
     SingleUseTokenType::RealtimeScribe->value,
+    new CreateSingleUseRequest([
+        'maxSessionDurationSeconds' => 1,
+    ]),
 );
 ```
 </dd>
@@ -35103,6 +42760,14 @@ $client->tokens->singleUse->create(
 <dd>
 
 **$tokenType:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$maxSessionDurationSeconds:** `?int` — Closes the realtime transcription session opened with this token after this many seconds. Only for realtime_scribe tokens.
     
 </dd>
 </dl>
@@ -36079,7 +43744,7 @@ $client->environmentVariables->update(
 <dl>
 <dd>
 
-Delete an environment variable and its values in all environments. WARNING: Agents are not checked. A variable that an agent still uses (custom LLM, webhooks or cloud storage export, on any branch or version) is deleted anyway, and that agent's conversations then fail. The delete is only rejected while tools, MCP servers or the workspace conversation initiation webhook use the variable.
+Delete an environment variable and its values in all environments. The delete is rejected while the latest version of an unarchived agent branch, a tool, an MCP server or the workspace conversation initiation webhook uses the variable. Archived branches and earlier versions are not checked.
 </dd>
 </dl>
 </dd>

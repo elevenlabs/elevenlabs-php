@@ -27,7 +27,7 @@ class ToolRequestModelToolConfig extends JsonSerializableType
   public readonly string $type;
 
   /**
-   * @var \ElevenLabs\Types\WebhookToolConfigInput|\ElevenLabs\Types\ClientToolConfigInput|\ElevenLabs\Types\SystemToolConfigInput|mixed|array<string, mixed> The value, exactly one of the variant types
+   * @var \ElevenLabs\Types\WebhookToolConfigInput|\ElevenLabs\Types\ClientToolConfigInput|\ElevenLabs\Types\SystemToolConfigInput|array<string, mixed> The value, exactly one of the variant types
    */
   public readonly mixed $value;
 
@@ -70,7 +70,7 @@ class ToolRequestModelToolConfig extends JsonSerializableType
 
   /**
    * Private constructor - use factory methods to create instances
-   * @param \ElevenLabs\Types\WebhookToolConfigInput|\ElevenLabs\Types\ClientToolConfigInput|\ElevenLabs\Types\SystemToolConfigInput|mixed|array<string, mixed> $value
+   * @param \ElevenLabs\Types\WebhookToolConfigInput|\ElevenLabs\Types\ClientToolConfigInput|\ElevenLabs\Types\SystemToolConfigInput|array<string, mixed> $value
    */
   private function __construct($value, int $typeIndex)
   {
@@ -80,7 +80,6 @@ class ToolRequestModelToolConfig extends JsonSerializableType
       0 => 'webhook',
       1 => 'client',
       2 => 'system',
-      3 => 'mcp',
       self::UNKNOWN => '_unknown',
       default => throw new \UnexpectedValueException("Unknown type index: $typeIndex")
     };
@@ -111,14 +110,6 @@ class ToolRequestModelToolConfig extends JsonSerializableType
     return new self($system, 2);
   }
 
-  /**
-   * Create a ToolRequestModelToolConfig instance containing a mixed
-   */
-  public static function mcp(mixed $mcp): self
-  {
-    return new self($mcp, 3);
-  }
-
   // Type checking methods
   /**
    * Check if this ToolRequestModelToolConfig contains a \ElevenLabs\Types\WebhookToolConfigInput
@@ -142,14 +133,6 @@ class ToolRequestModelToolConfig extends JsonSerializableType
   public function isSystem(): bool
   {
     return $this->typeIndex === 2;
-  }
-
-  /**
-   * Check if this ToolRequestModelToolConfig contains a mixed
-   */
-  public function isMcp(): bool
-  {
-    return $this->typeIndex === 3;
   }
 
   // Throwing getters (fail-fast)
@@ -195,18 +178,6 @@ class ToolRequestModelToolConfig extends JsonSerializableType
     return $this->value;
   }
 
-  /**
-   * Get the mixed value
-   * @throws \RuntimeException if this ToolRequestModelToolConfig does not contain a mixed
-   */
-  public function asMcp(): mixed
-  {
-    if (!$this->isMcp()) {
-      throw new \RuntimeException('ToolRequestModelToolConfig does not contain mixed');
-    }
-    return $this->value;
-  }
-
   // Safe getters (return null)
   /**
    * Try to get the \ElevenLabs\Types\WebhookToolConfigInput value
@@ -236,34 +207,19 @@ class ToolRequestModelToolConfig extends JsonSerializableType
   }
 
   /**
-   * Try to get the mixed value
-   * @return mixed Returns the value if this ToolRequestModelToolConfig contains a mixed, null otherwise
-   */
-  public function tryAsMcp(): mixed
-  {
-    return $this->isMcp() ? $this->value : null;
-  }
-
-  /**
    * Pattern matching for exhaustive type handling
    * @template T
    * @param callable(\ElevenLabs\Types\WebhookToolConfigInput): T $onWebhook
    * @param callable(\ElevenLabs\Types\ClientToolConfigInput): T $onClient
    * @param callable(\ElevenLabs\Types\SystemToolConfigInput): T $onSystem
-   * @param callable(mixed): T $onMcp
    * @return T
    */
-  public function match(
-    callable $onWebhook,
-    callable $onClient,
-    callable $onSystem,
-    callable $onMcp
-  ): mixed {
+  public function match(callable $onWebhook, callable $onClient, callable $onSystem): mixed
+  {
     return match ($this->typeIndex) {
       0 => $onWebhook($this->value),
       1 => $onClient($this->value),
       2 => $onSystem($this->value),
-      3 => $onMcp($this->value),
       default => throw new \UnexpectedValueException("Unknown type index: $this->typeIndex")
     };
   }
@@ -291,8 +247,6 @@ class ToolRequestModelToolConfig extends JsonSerializableType
       switch ($data['type']) {
         case 'client':
           return new self(\ElevenLabs\Types\ClientToolConfigInput::fromArray($data), 1);
-        case 'mcp':
-          return new self($data, 3);
         case 'system':
           return new self(\ElevenLabs\Types\SystemToolConfigInput::fromArray($data), 2);
         case 'webhook':
@@ -364,9 +318,6 @@ class ToolRequestModelToolConfig extends JsonSerializableType
   {
     if ($this->_isUnknown()) {
       return $this->_asUnknown();
-    }
-    if (!($this->value instanceof \JsonSerializable)) {
-      return $this->value;
     }
     return $this->value->jsonSerialize();
   }

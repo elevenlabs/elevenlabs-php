@@ -36,6 +36,7 @@ enum PermissionType: string
   case ConvaiRead = 'convai_read';
   case ConvaiWrite = 'convai_write';
   case AgentsArchitect = 'agents_architect';
+  case AgentsEnvironmentVariablesWrite = 'agents_environment_variables_write';
   case MusicGeneration = 'music_generation';
   case ImageVideoGeneration = 'image_video_generation';
   case Flows = 'flows';
@@ -58,4 +59,5 @@ enum PermissionType: string
   case ConversationPrivacyManage = 'conversation_privacy_manage';
   case CopyResourcesCrossWorkspace = 'copy_resources_cross_workspace';
   case SynthidDetector = 'synthid_detector';
+  case Watermark = 'watermark';
 }

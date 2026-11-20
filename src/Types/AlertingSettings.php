@@ -41,6 +41,13 @@ class AlertingSettings extends JsonSerializableType
   public ?int $autoResolveAfterInactiveMinutes;
 
   /**
+   * @var string[]|null
+   * Environments whose conversations are monitored, e.g. ``['production']``. The list must include ``production``. Unset values fall through to the next layer; when no layer sets it, every environment is monitored.
+   */
+  #[JsonProperty('environments'), ArrayType(['string'])]
+  public ?array $environments;
+
+  /**
    * @var \ElevenLabs\Types\AlertingSettingsNotifiersItem[]|null
    * Delivery channels for alert lifecycle notifications. Stacked with other layers and deduped by ``webhook_id``, PagerDuty ``connection_id``, or Slack ``(connection_id, channel_id)``.
    */
@@ -51,6 +58,7 @@ class AlertingSettings extends JsonSerializableType
    * @param array{
    *   monitorConfigs?: array<string, \ElevenLabs\Types\AlertingMonitorConfig>|null,
    *   autoResolveAfterInactiveMinutes?: ?int,
+   *   environments?: string[]|null,
    *   notifiers?: \ElevenLabs\Types\AlertingSettingsNotifiersItem[]|null,
    * } $values
    */
@@ -58,6 +66,7 @@ class AlertingSettings extends JsonSerializableType
   {
     $this->monitorConfigs = $values['monitorConfigs'] ?? null;
     $this->autoResolveAfterInactiveMinutes = $values['autoResolveAfterInactiveMinutes'] ?? null;
+    $this->environments = $values['environments'] ?? null;
     $this->notifiers = $values['notifiers'] ?? null;
 
     if (array_key_exists('monitorConfigs', $values)) {
@@ -65,6 +74,9 @@ class AlertingSettings extends JsonSerializableType
     }
     if (array_key_exists('autoResolveAfterInactiveMinutes', $values)) {
       $this->_dirtyFields['auto_resolve_after_inactive_minutes'] = true;
+    }
+    if (array_key_exists('environments', $values)) {
+      $this->_dirtyFields['environments'] = true;
     }
     if (array_key_exists('notifiers', $values)) {
       $this->_dirtyFields['notifiers'] = true;
@@ -89,6 +101,15 @@ class AlertingSettings extends JsonSerializableType
       ];
     }
 
+    if ($this->environments !== null) {
+      foreach ($this->environments ?? [] as $item) {
+        $parts[] = [
+          'name' => 'environments',
+          'contents' => $item
+        ];
+      }
+    }
+
     if ($this->notifiers !== null) {
       $parts[] = [
         'name' => 'notifiers',
@@ -107,6 +128,7 @@ class AlertingSettings extends JsonSerializableType
       'auto_resolve_after_inactive_minutes',
       min: 1
     );
+    Validator::validateArray($this->environments, 'environments', minItems: 1, maxItems: 20);
     Validator::validateArray($this->notifiers, 'notifiers', maxItems: 10);
   }
 }

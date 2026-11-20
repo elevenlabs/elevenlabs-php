@@ -18,9 +18,11 @@ enum WorkspaceGroupPermission: string
   case ConversationalAi = 'conversational_ai';
   case ConversationalAiRead = 'conversational_ai_read';
   case Architect = 'architect';
+  case AgentsEnvironmentVariablesWrite = 'agents_environment_variables_write';
   case VoiceIsolator = 'voice_isolator';
   case AiSpeechClassifier = 'ai_speech_classifier';
   case SynthidDetector = 'synthid_detector';
+  case Watermark = 'watermark';
   case AddVoiceFromVoiceLibrary = 'add_voice_from_voice_library';
   case CreateInstantVoiceClone = 'create_instant_voice_clone';
   case CreateProfessionalVoiceClone = 'create_professional_voice_clone';

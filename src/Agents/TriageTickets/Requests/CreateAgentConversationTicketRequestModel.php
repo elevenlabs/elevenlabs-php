@@ -21,19 +21,19 @@ class CreateAgentConversationTicketRequestModel extends JsonSerializableType
   use ReflectiveSerialization;
 
   /**
-   * Conversation this ticket is about.
+   * Conversation this agent issue is about.
    */
   #[JsonProperty('conversation_id', required: true)]
   public string $conversationId;
 
   /**
-   * One-line headline shown in the triage list. Defaults to one derived from the comments, falling back to the conversation's summary title. Ignored when the comment is added to the conversation's open ticket.
+   * One-line headline shown in the issues list. Defaults to one derived from the comments, falling back to the conversation's summary title. Ignored when the comment is added to the conversation's open issue.
    */
   #[JsonProperty('title')]
   public ?string $title;
 
   /**
-   * The issue this ticket is about, covering the whole conversation rather than a single turn.
+   * The problem this agent issue is about, covering the whole conversation rather than a single turn.
    */
   #[JsonProperty('qa_comment')]
   public ?string $qaComment;
@@ -47,7 +47,7 @@ class CreateAgentConversationTicketRequestModel extends JsonSerializableType
 
   /**
    * @var ?value-of<\ElevenLabs\Types\AgentConversationTicketPriority>
-   * How urgently the ticket needs attention. If the conversation already has an open ticket, it is raised to this priority when lower.
+   * How urgently the agent issue needs attention. If the conversation already has an open issue, it is raised to this priority when lower.
    */
   #[JsonProperty('priority')]
   public ?string $priority;

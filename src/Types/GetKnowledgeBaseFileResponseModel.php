@@ -44,6 +44,12 @@ class GetKnowledgeBaseFileResponseModel extends JsonSerializableType
   public ?string $folderParentId;
 
   /**
+   * Per-entity RAG chunking override. Null means inherit from ancestors or the embedding model default.
+   */
+  #[JsonProperty('chunking_override')]
+  public ?\ElevenLabs\Types\ChunkingOverride $chunkingOverride;
+
+  /**
    * @var \ElevenLabs\Types\KnowledgeBaseFolderPathSegmentResponseModel[]|null
    * The folder path segments leading to this entity, from root to parent folder.
    */
@@ -101,6 +107,7 @@ class GetKnowledgeBaseFileResponseModel extends JsonSerializableType
    *   extractedInnerHtml: string,
    *   filename: string,
    *   folderParentId?: ?string,
+   *   chunkingOverride?: ?\ElevenLabs\Types\ChunkingOverride,
    *   folderPath?: \ElevenLabs\Types\KnowledgeBaseFolderPathSegmentResponseModel[]|null,
    *   contentFormat?: ?value-of<\ElevenLabs\Types\ContentFormat>,
    *   externalSyncInfo?: ?\ElevenLabs\Types\ExternalFileSyncInfo,
@@ -117,6 +124,7 @@ class GetKnowledgeBaseFileResponseModel extends JsonSerializableType
     $this->supportedUsages = $values['supportedUsages'];
     $this->accessInfo = $values['accessInfo'];
     $this->folderParentId = $values['folderParentId'] ?? null;
+    $this->chunkingOverride = $values['chunkingOverride'] ?? null;
     $this->folderPath = $values['folderPath'] ?? null;
     $this->type = $values['type'];
     $this->extractedInnerHtml = $values['extractedInnerHtml'];
@@ -139,6 +147,9 @@ class GetKnowledgeBaseFileResponseModel extends JsonSerializableType
     ];
     if (array_key_exists('folderParentId', $values)) {
       $this->_dirtyFields['folder_parent_id'] = true;
+    }
+    if (array_key_exists('chunkingOverride', $values)) {
+      $this->_dirtyFields['chunking_override'] = true;
     }
     if (array_key_exists('folderPath', $values)) {
       $this->_dirtyFields['folder_path'] = true;
@@ -196,6 +207,14 @@ class GetKnowledgeBaseFileResponseModel extends JsonSerializableType
       $parts[] = [
         'name' => 'folder_parent_id',
         'contents' => $this->folderParentId
+      ];
+    }
+
+    if ($this->chunkingOverride !== null) {
+      $parts[] = [
+        'name' => 'chunking_override',
+        'contents' => json_encode($this->chunkingOverride),
+        'headers' => ['Content-Type' => 'application/json']
       ];
     }
 
@@ -267,6 +286,7 @@ class GetKnowledgeBaseFileResponseModel extends JsonSerializableType
   {
     $this->metadata->validate();
     $this->accessInfo->validate();
+    $this->chunkingOverride?->validate();
     foreach ($this->folderPath ?? [] as $item) {
       $item->validate();
     }

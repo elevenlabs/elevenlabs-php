@@ -1,0 +1,36 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ElevenLabs\Tests\Unit\Types;
+
+use PHPUnit\Framework\TestCase;
+
+class PhoneVoiceConfigOutputTest extends TestCase
+{
+  public function testFullyPopulatedRoundTrip(): void
+  {
+    $json = <<<'JSON'
+    {
+        "ringing_timeout_secs": 1,
+        "twilio_call_recording_enabled": true,
+        "twilio_machine_detection": {
+            "mode": "enable",
+            "actions": [
+                {
+                    "action": "hang_up",
+                    "answered_by": [
+                        "human"
+                    ]
+                }
+            ]
+        },
+        "mode": "voice"
+    }
+    JSON;
+
+    $instance = \ElevenLabs\Types\PhoneVoiceConfigOutput::fromArray(json_decode($json, true));
+
+    $this->assertJsonStringEqualsJsonString($json, json_encode($instance));
+  }
+}

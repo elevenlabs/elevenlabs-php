@@ -20,7 +20,7 @@ class AddTicketCommentRequestModel extends JsonSerializableType
   use ReflectiveSerialization;
 
   /**
-   * A comment discussing how to resolve the ticket.
+   * A comment discussing how to resolve the agent issue.
    */
   #[JsonProperty('comment', required: true)]
   public string $comment;

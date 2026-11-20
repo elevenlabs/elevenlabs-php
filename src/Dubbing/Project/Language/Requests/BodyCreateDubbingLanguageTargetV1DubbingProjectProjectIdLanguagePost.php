@@ -30,7 +30,7 @@ class BodyCreateDubbingLanguageTargetV1DubbingProjectProjectIdLanguagePost exten
    * Voice settings applied to every speaker in this language. Omit to use the defaults.
    */
   #[JsonProperty('voice_settings')]
-  public ?\ElevenLabs\Types\VoiceSettings $voiceSettings;
+  public ?\ElevenLabs\Types\DubbingVoiceSettings $voiceSettings;
 
   /**
    * @var array<string, string>|null
@@ -42,7 +42,7 @@ class BodyCreateDubbingLanguageTargetV1DubbingProjectProjectIdLanguagePost exten
   /**
    * @param array{
    *   targetLanguage: string,
-   *   voiceSettings?: ?\ElevenLabs\Types\VoiceSettings,
+   *   voiceSettings?: ?\ElevenLabs\Types\DubbingVoiceSettings,
    *   translations?: array<string, string>|null,
    * } $values
    */

@@ -74,6 +74,16 @@ class WorkflowPhoneNumberNodeModelInput extends JsonSerializableType
   public ?array $edgeOrder;
 
   /**
+   * @var \ElevenLabs\Types\WorkflowPhoneNumberNodeModelInputProviderConfigsItem[]|null
+   * Per-provider transfer configuration. Mutually exclusive with a non-empty `transfer_destination`: when present, the configuration matching the call's telephony provider is executed and the legacy transfer fields are ignored.
+   */
+  #[
+    JsonProperty('provider_configs'),
+    ArrayType([\ElevenLabs\Types\WorkflowPhoneNumberNodeModelInputProviderConfigsItem::class])
+  ]
+  public ?array $providerConfigs;
+
+  /**
    * @param array{
    *   transferDestination: \ElevenLabs\Types\WorkflowPhoneNumberNodeModelInputTransferDestination,
    *   customSipHeaders?: \ElevenLabs\Types\WorkflowPhoneNumberNodeModelInputCustomSipHeadersItem[]|null,
@@ -84,6 +94,7 @@ class WorkflowPhoneNumberNodeModelInput extends JsonSerializableType
    *   type?: ?value-of<\ElevenLabs\Types\WorkflowPhoneNumberNodeModelInputType>,
    *   position?: ?\ElevenLabs\Types\PositionInput,
    *   edgeOrder?: string[]|null,
+   *   providerConfigs?: \ElevenLabs\Types\WorkflowPhoneNumberNodeModelInputProviderConfigsItem[]|null,
    * } $values
    */
   public function __construct(array $values)
@@ -97,6 +108,7 @@ class WorkflowPhoneNumberNodeModelInput extends JsonSerializableType
     $this->type = $values['type'] ?? 'phone_number';
     $this->position = $values['position'] ?? null;
     $this->edgeOrder = $values['edgeOrder'] ?? null;
+    $this->providerConfigs = $values['providerConfigs'] ?? null;
 
     $this->_dirtyFields = [
       'transfer_destination' => true
@@ -124,6 +136,9 @@ class WorkflowPhoneNumberNodeModelInput extends JsonSerializableType
     }
     if (array_key_exists('edgeOrder', $values)) {
       $this->_dirtyFields['edge_order'] = true;
+    }
+    if (array_key_exists('providerConfigs', $values)) {
+      $this->_dirtyFields['provider_configs'] = true;
     }
   }
 
@@ -196,6 +211,14 @@ class WorkflowPhoneNumberNodeModelInput extends JsonSerializableType
           'contents' => $item
         ];
       }
+    }
+
+    if ($this->providerConfigs !== null) {
+      $parts[] = [
+        'name' => 'provider_configs',
+        'contents' => json_encode($this->providerConfigs),
+        'headers' => ['Content-Type' => 'application/json']
+      ];
     }
 
     return $parts;

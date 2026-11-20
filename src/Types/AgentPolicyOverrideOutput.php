@@ -34,6 +34,13 @@ class AgentPolicyOverrideOutput extends JsonSerializableType
   #[JsonProperty('calling_periods'), ArrayType([\ElevenLabs\Types\CallingPeriod::class])]
   public ?array $callingPeriods;
 
+  /**
+   * @var \ElevenLabs\Types\DateOverride[]|null
+   * Replaces the inherited date overrides; unset inherits them and an empty list clears them.
+   */
+  #[JsonProperty('date_overrides'), ArrayType([\ElevenLabs\Types\DateOverride::class])]
+  public ?array $dateOverrides;
+
   #[JsonProperty('data_collection')]
   public ?\ElevenLabs\Types\DataCollectionConfig $dataCollection;
 
@@ -45,6 +52,7 @@ class AgentPolicyOverrideOutput extends JsonSerializableType
    *   timezone?: ?string,
    *   retry?: ?\ElevenLabs\Types\RetryPolicy,
    *   callingPeriods?: \ElevenLabs\Types\CallingPeriod[]|null,
+   *   dateOverrides?: \ElevenLabs\Types\DateOverride[]|null,
    *   dataCollection?: ?\ElevenLabs\Types\DataCollectionConfig,
    *   followupContext?: ?\ElevenLabs\Types\FollowupContextPolicy,
    * } $values
@@ -54,6 +62,7 @@ class AgentPolicyOverrideOutput extends JsonSerializableType
     $this->timezone = $values['timezone'] ?? null;
     $this->retry = $values['retry'] ?? null;
     $this->callingPeriods = $values['callingPeriods'] ?? null;
+    $this->dateOverrides = $values['dateOverrides'] ?? null;
     $this->dataCollection = $values['dataCollection'] ?? null;
     $this->followupContext = $values['followupContext'] ?? null;
 
@@ -65,6 +74,9 @@ class AgentPolicyOverrideOutput extends JsonSerializableType
     }
     if (array_key_exists('callingPeriods', $values)) {
       $this->_dirtyFields['calling_periods'] = true;
+    }
+    if (array_key_exists('dateOverrides', $values)) {
+      $this->_dirtyFields['date_overrides'] = true;
     }
     if (array_key_exists('dataCollection', $values)) {
       $this->_dirtyFields['data_collection'] = true;
@@ -100,6 +112,14 @@ class AgentPolicyOverrideOutput extends JsonSerializableType
       ];
     }
 
+    if ($this->dateOverrides !== null) {
+      $parts[] = [
+        'name' => 'date_overrides',
+        'contents' => json_encode($this->dateOverrides),
+        'headers' => ['Content-Type' => 'application/json']
+      ];
+    }
+
     if ($this->dataCollection !== null) {
       $parts[] = [
         'name' => 'data_collection',
@@ -126,6 +146,10 @@ class AgentPolicyOverrideOutput extends JsonSerializableType
       $item->validate();
     }
     Validator::validateArray($this->callingPeriods, 'calling_periods', minItems: 1);
+    foreach ($this->dateOverrides ?? [] as $item) {
+      $item->validate();
+    }
+    Validator::validateArray($this->dateOverrides, 'date_overrides', maxItems: 100);
     $this->dataCollection?->validate();
     $this->followupContext?->validate();
   }

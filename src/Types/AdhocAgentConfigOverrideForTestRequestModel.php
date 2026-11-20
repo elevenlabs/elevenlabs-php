@@ -18,32 +18,37 @@ class AdhocAgentConfigOverrideForTestRequestModel extends JsonSerializableType
 {
   use ReflectiveSerialization;
 
-  #[JsonProperty('conversation_config', required: true)]
-  public \ElevenLabs\Types\ConversationalConfig $conversationConfig;
+  #[JsonProperty('conversation_config')]
+  public ?\ElevenLabs\Types\ConversationalConfig $conversationConfig;
 
-  #[JsonProperty('platform_settings', required: true)]
-  public \ElevenLabs\Types\AgentPlatformSettingsRequestModel $platformSettings;
+  #[JsonProperty('platform_settings')]
+  public ?\ElevenLabs\Types\AgentPlatformSettingsRequestModel $platformSettings;
 
+  /**
+   * A workflow to run instead of the agent's. It replaces the agent's workflow whole.
+   */
   #[JsonProperty('workflow')]
   public ?\ElevenLabs\Types\AgentWorkflowRequestModel $workflow;
 
   /**
    * @param array{
-   *   conversationConfig: \ElevenLabs\Types\ConversationalConfig,
-   *   platformSettings: \ElevenLabs\Types\AgentPlatformSettingsRequestModel,
+   *   conversationConfig?: ?\ElevenLabs\Types\ConversationalConfig,
+   *   platformSettings?: ?\ElevenLabs\Types\AgentPlatformSettingsRequestModel,
    *   workflow?: ?\ElevenLabs\Types\AgentWorkflowRequestModel,
    * } $values
    */
-  public function __construct(array $values)
+  public function __construct(array $values = [])
   {
-    $this->conversationConfig = $values['conversationConfig'];
-    $this->platformSettings = $values['platformSettings'];
+    $this->conversationConfig = $values['conversationConfig'] ?? null;
+    $this->platformSettings = $values['platformSettings'] ?? null;
     $this->workflow = $values['workflow'] ?? null;
 
-    $this->_dirtyFields = [
-      'conversation_config' => true,
-      'platform_settings' => true
-    ];
+    if (array_key_exists('conversationConfig', $values)) {
+      $this->_dirtyFields['conversation_config'] = true;
+    }
+    if (array_key_exists('platformSettings', $values)) {
+      $this->_dirtyFields['platform_settings'] = true;
+    }
     if (array_key_exists('workflow', $values)) {
       $this->_dirtyFields['workflow'] = true;
     }
@@ -52,17 +57,21 @@ class AdhocAgentConfigOverrideForTestRequestModel extends JsonSerializableType
   public function toMultipart(): array
   {
     $parts = [];
-    $parts[] = [
-      'name' => 'conversation_config',
-      'contents' => json_encode($this->conversationConfig),
-      'headers' => ['Content-Type' => 'application/json']
-    ];
+    if ($this->conversationConfig !== null) {
+      $parts[] = [
+        'name' => 'conversation_config',
+        'contents' => json_encode($this->conversationConfig),
+        'headers' => ['Content-Type' => 'application/json']
+      ];
+    }
 
-    $parts[] = [
-      'name' => 'platform_settings',
-      'contents' => json_encode($this->platformSettings),
-      'headers' => ['Content-Type' => 'application/json']
-    ];
+    if ($this->platformSettings !== null) {
+      $parts[] = [
+        'name' => 'platform_settings',
+        'contents' => json_encode($this->platformSettings),
+        'headers' => ['Content-Type' => 'application/json']
+      ];
+    }
 
     if ($this->workflow !== null) {
       $parts[] = [
@@ -77,8 +86,8 @@ class AdhocAgentConfigOverrideForTestRequestModel extends JsonSerializableType
 
   public function validate(): void
   {
-    $this->conversationConfig->validate();
-    $this->platformSettings->validate();
+    $this->conversationConfig?->validate();
+    $this->platformSettings?->validate();
     $this->workflow?->validate();
   }
 }

@@ -32,8 +32,10 @@ enum ConversationInitiationSource: string
   case TelegramIntegration = 'telegram_integration';
   case IntercomIntegration = 'intercom_integration';
   case FreshdeskIntegration = 'freshdesk_integration';
+  case PlainIntegration = 'plain_integration';
   case SalesforceIntegration = 'salesforce_integration';
   case TemplatePreview = 'template_preview';
   case GenesysBotConnector = 'genesys_bot_connector';
   case SubagentTool = 'subagent_tool';
+  case AgentMessagesApi = 'agent_messages_api';
 }

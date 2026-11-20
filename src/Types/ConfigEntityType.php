@@ -32,6 +32,7 @@ enum ConfigEntityType: string
   case Occupation = 'occupation';
   case PhysicalAttribute = 'physical_attribute';
   case Language = 'language';
+  case CriminalRecord = 'criminal_record';
   case Username = 'username';
   case Password = 'password';
   case Url = 'url';
