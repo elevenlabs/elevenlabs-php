@@ -321,6 +321,33 @@ class PushTest extends TestCase
     }
   }
 
+  public function testRejectsABranchWithoutAnAgentToUpdateBeforeAnyRequest(): void
+  {
+    $server = new FakeServer();
+    $agentFile = (string) json_encode(['name' => 'A', 'conversation_config' => ['agent' => ['prompt' => ['prompt' => 'p']]]]);
+    // A project whose entry has the branch's file but no agent id yet.
+    $project = AgentProject::fromFiles([
+      'agents.json' => (string) json_encode(['agents' => [[
+        'config' => 'agent_configs/a.json',
+        'branches' => ['beta' => ['branch_id' => 'agtbrch_1', 'config' => 'agent_configs/a.beta.json']],
+      ]]]),
+      'agent_configs/a.json' => $agentFile,
+      'agent_configs/a.beta.json' => $agentFile,
+    ]);
+    foreach ([
+      fn() => self::agents($server)->push(new Agent('A', prompt: 'p'), branchId: 'agtbrch_1'),
+      fn() => self::agents($server)->push($project->agent('A'), project: $project, branchId: 'agtbrch_1'),
+    ] as $call) {
+      try {
+        $call();
+        $this->fail('expected an InvalidArgumentException');
+      } catch (\InvalidArgumentException $e) {
+        $this->assertStringContainsString('agtbrch_1', $e->getMessage());
+      }
+    }
+    $this->assertSame([], $server->calls);
+  }
+
   public function testNamesTheToolInAToolFailure(): void
   {
     $server = new FakeServer();

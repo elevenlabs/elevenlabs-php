@@ -61,6 +61,7 @@ final class AgentsAsCode
    * @param ?string $versionDescription Describes the new version.
    * @param ?array<string, mixed> $options Per-request options, passed to every request.
    * @throws AgentValidationError if the agent is invalid, before any request
+   * @throws \InvalidArgumentException for `$branchId` without an agent to update, before any request
    * @throws AgentProjectError if the project can't say which agent or tool this is
    * @throws AgentPushError if a request fails, with what was already written
    */
@@ -80,6 +81,11 @@ final class AgentsAsCode
 
     $tools = $agent->tools();
     $agentId = $project !== null ? $project->agentId($agent) : $agentId;
+    if ($branchId !== null && $agentId === null) {
+      throw new \InvalidArgumentException(
+        "push() got branchId \"{$branchId}\" but no agent to update: pass agentId, or a project that records the agent's id"
+      );
+    }
     $result = new AgentPushResult();
     /** @var array<string, string> $ids */
     $ids = [];
