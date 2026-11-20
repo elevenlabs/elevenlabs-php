@@ -337,6 +337,67 @@ class ToolRegressionTest extends TestCase
     }
   }
 
+  // transfer_rules: only transfer_to_number has them, and build() never sends a tool without them.
+
+  public function testTransferRulesDoNotSatisfyAnAgentTransfer(): void
+  {
+    $wire = [
+      'type' => 'system',
+      'name' => 'transfer_to_agent',
+      'params' => [
+        'system_tool_type' => 'transfer_to_agent',
+        'transfers' => [],
+        'transfer_rules' => [$this->transferRule()],
+      ],
+    ];
+    $this->assertSame(['no_transfers'], $this->errors(Tool::fromJson($wire)));
+  }
+
+  public function testBuildNeverDropsLoadedTransferRules(): void
+  {
+    $wire = [
+      'type' => 'system',
+      'name' => 'transfer_to_number',
+      'params' => [
+        'system_tool_type' => 'transfer_to_number',
+        'transfers' => [],
+        'transfer_rules' => [$this->transferRule()],
+      ],
+    ];
+    $tool = Tool::fromJson($wire);
+    $this->assertArrayHasKey('transfer_rules', $tool->toJson()['params']);
+    try {
+      $sent = Wire::toWire($tool->build());
+    } catch (ToolValidationError $e) {
+      // The generated model doesn't have transfer_rules yet.
+      $this->assertSame(['invalid_model'], array_map(static fn(ToolIssue $i): string => $i->code, $e->issues));
+      $this->assertSame('params.transfer_rules', $e->issues[0]->path);
+      return;
+    }
+    $this->assertIsArray($sent);
+    $this->assertSame(
+      Wire::encode(Wire::canonical([$this->transferRule()])),
+      Wire::encode(Wire::canonical($sent['tool_config']['params']['transfer_rules'] ?? null))
+    );
+  }
+
+  /**
+   * @return array<string, mixed>
+   */
+  private function transferRule(): array
+  {
+    return [
+      'condition' => 'Caller asks for the front desk',
+      'provider_configs' => [[
+        'type' => 'twilio',
+        'config' => [
+          'type' => 'twilio_cold_blind_transfer',
+          'transfer_destination' => ['type' => 'phone', 'destination' => '+15551234567'],
+        ],
+      ]],
+    ];
+  }
+
   private function nestedTool(): Tool
   {
     return Tool::webhook('create_order', 'Create an order')
