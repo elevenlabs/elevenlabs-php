@@ -235,7 +235,45 @@ final class SystemTool extends Tool
 
   protected function configModel(array $wire): JsonSerializableType
   {
-    return SystemToolConfigInput::fromJson((string) json_encode($wire));
+    $model = SystemToolConfigInput::fromJson((string) json_encode($wire));
+    $this->checkModelKeepsParams($wire, $model);
+    return $model;
+  }
+
+  /**
+   * The generated params model drops fields it doesn't declare. When it predates an API field (such
+   * as `transfer_rules`), build() would send the tool with that field silently removed, so report
+   * each dropped field as `invalid_model` instead. This stops firing once the SDK is regenerated with
+   * the field; toJson() keeps the field either way.
+   *
+   * @param array<string, mixed> $wire
+   * @throws ToolValidationError
+   */
+  private function checkModelKeepsParams(array $wire, SystemToolConfigInput $model): void
+  {
+    $params = $wire['params'] ?? null;
+    if (!is_array($params)) {
+      return;
+    }
+    $sent = Wire::toWire($model);
+    $sentParams = is_array($sent) ? ($sent['params'] ?? null) : null;
+    $sentKeys = is_array($sentParams) || $sentParams instanceof \stdClass ? array_keys((array) $sentParams) : [];
+    $issues = [];
+    foreach ($params as $key => $value) {
+      $empty = $value === null || $value === [] || ($value instanceof \stdClass && (array) $value === []);
+      // The discriminator may be written by the union rather than the variant.
+      if ($empty || $key === 'system_tool_type' || in_array((string) $key, array_map('strval', $sentKeys), true)) {
+        continue;
+      }
+      $issues[] = ToolIssue::error(
+        'invalid_model',
+        "params.{$key}",
+        "This SDK version's generated {$this->systemToolType} model has no \"{$key}\" field, so build() would drop it from the request. toJson() keeps it; upgrade the SDK, or send the toJson() output directly"
+      );
+    }
+    if ($issues !== []) {
+      throw new ToolValidationError($this->name(), $issues);
+    }
   }
 
   protected function allowedOptions(): array
@@ -251,7 +289,8 @@ final class SystemTool extends Tool
     }
     // A loaded transfer_to_number tool may use transfer_rules instead of transfers; the API takes exactly one.
     $transfers = $this->params['transfers'] ?? null;
-    $rules = $this->params['transfer_rules'] ?? null;
+    // Only transfer_to_number has transfer_rules; transfer_to_agent needs transfers.
+    $rules = $this->systemToolType === 'transfer_to_number' ? ($this->params['transfer_rules'] ?? null) : null;
     $hasTransfers = is_array($transfers) && $transfers !== [];
     $hasRules = is_array($rules) && $rules !== [];
     if (!$hasTransfers && !$hasRules) {
