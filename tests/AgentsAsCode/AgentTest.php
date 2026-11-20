@@ -369,4 +369,18 @@ class AgentTest extends TestCase
       $this->assertStringContainsString('also named "get_order"', $e->getMessage());
     }
   }
+  public function testAnEmptySettingsMergeLeavesALoadedAgentsSettingsAsTheyWere(): void
+  {
+    $config = [
+      'name' => 'A',
+      'conversation_config' => ['agent' => ['prompt' => ['prompt' => 'p']], 'future_setting' => ['on' => true]],
+      'platform_settings' => ['widget' => ['variant' => 'compact']],
+    ];
+    $before = self::canon(Agent::fromJson($config)->toJson());
+    foreach ([[], new ConversationalConfig([])] as $empty) {
+      $agent = Agent::fromJson($config);
+      $agent->update(conversationConfig: $empty, platformSettings: []);
+      $this->assertSame($before, self::canon($agent->toJson()));
+    }
+  }
 }

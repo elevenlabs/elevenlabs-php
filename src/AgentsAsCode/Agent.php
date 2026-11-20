@@ -460,7 +460,7 @@ final class Agent
       $wire = self::rawWire($settings);
       if ($wire instanceof \Throwable) {
         $issues[] = self::invalidConfig('conversationConfig', $wire);
-      } else {
+      } elseif ($wire !== []) {
         ConfigWire::deepMerge($raw, ['conversation_config' => $wire]);
       }
     }
@@ -468,7 +468,7 @@ final class Agent
       $wire = self::rawWire($settings);
       if ($wire instanceof \Throwable) {
         $issues[] = self::invalidConfig('platformSettings', $wire);
-      } else {
+      } elseif ($wire !== []) {
         ConfigWire::deepMerge($raw, ['platform_settings' => $wire]);
       }
     }
@@ -644,7 +644,9 @@ final class Agent
   }
 
   /**
-   * A raw option in API format, or the error that stopped it serializing.
+   * A raw option in API format, or the error that stopped it serializing. An empty one is `[]`,
+   * which the caller must skip rather than merge: `deepMerge()` treats `[]` as a list and would
+   * replace the existing settings with it.
    *
    * @param ConversationalConfig|AgentPlatformSettingsRequestModel|array<string, mixed>|\stdClass $settings
    * @return array<string, mixed>|\Throwable
