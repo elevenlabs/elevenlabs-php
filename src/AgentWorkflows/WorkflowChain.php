@@ -20,10 +20,12 @@ abstract class WorkflowChain
 
   /**
    * The agent holds a conversation with `$prompt` added to its instructions until an outgoing
-   * condition holds (a subagent node). `$label` defaults to `$id`.
+   * condition holds (a subagent node). `$label` defaults to `$id`. `$toolIds` are tools available
+   * to this subagent on top of the agent's own: ids, or `Tool` objects whose ids are filled in when
+   * the workflow is built with `toolIds`, as `AgentsAsCode::push()` does.
    *
    * @param array<string, mixed>|\ElevenLabs\Types\PositionInput|null $position
-   * @param list<mixed>|null $toolIds
+   * @param list<string|\ElevenLabs\AgentTools\Tool>|null $toolIds
    * @param list<mixed>|null $knowledgeBase
    */
   public function converse(
@@ -54,11 +56,13 @@ abstract class WorkflowChain
 
   /**
    * Runs the tools in parallel. Branch on the result with `onResult()`, or `onSuccess()` and
-   * `onFailure()`.
+   * `onFailure()`. Each tool is an id, or a `Tool` object whose id is filled in when the workflow
+   * is built with `toolIds`, as `AgentsAsCode::push()` does.
    *
-   * @param list<string> $toolIds
+   * @param list<string|\ElevenLabs\AgentTools\Tool> $toolIds
    * @param array<string, mixed>|\ElevenLabs\Types\PositionInput|null $position
-   * @param array<string, array<string, mixed>>|null $schemaOverrides
+   * @param array<string, array<string, mixed>>|null $schemaOverrides Parameter overrides per tool
+   *   id (or tool name, for a `Tool` object), keyed by dotted parameter path.
    */
   public function tool(
     string $id,
