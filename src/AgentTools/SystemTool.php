@@ -258,11 +258,8 @@ final class SystemTool extends Tool
       return [ToolIssue::error('no_transfers', 'transfer', "{$this->systemToolType} needs at least one transfer()")];
     }
     if ($hasTransfers && $hasRules) {
-      return [ToolIssue::error(
-        'conflicting_transfers',
-        'transfer',
-        "{$this->systemToolType} has both transfers and transfer_rules; the API takes only one",
-      )];
+      $message = "{$this->systemToolType} has both transfers and transfer_rules; the API takes only one";
+      return [ToolIssue::error('conflicting_transfers', 'transfer', $message)];
     }
     return [];
   }
