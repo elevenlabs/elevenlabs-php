@@ -48,3 +48,13 @@ tests/Flows/Wait/
 # the music client are regenerated.
 src/Music/Detailed/
 tests/Music/Detailed/
+
+# Hand-written agents-as-code layer: the `Agent` builder, `AgentsAsCode` push/pull and
+# `AgentProject` (the ElevenLabs CLI's project layout), on top of the tools and workflow builders.
+# Push and pull send API-format JSON through the generated agents/tools services' own request path,
+# because the generated typed methods drop the settings the SDK doesn't model. A separate entry point
+# (`AgentsAsCode`) because the root client and the agents client are regenerated. The cli-graph
+# project fixture is shared across every SDK.
+src/AgentsAsCode/
+tests/AgentsAsCode/
+tests/fixtures/agents_as_code/

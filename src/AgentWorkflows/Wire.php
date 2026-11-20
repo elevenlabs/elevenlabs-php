@@ -140,18 +140,28 @@ final class Wire
    */
   public static function encode(mixed $value): string
   {
-    return self::encodeValue($value, 0) . "\n";
+    return self::encodeValue($value, 0, '  ') . "\n";
   }
 
-  private static function encodeValue(mixed $value, int $depth): string
+  /**
+   * Serialize a value as JSON indented with `$indent`, with no trailing newline and keys in the
+   * order given: byte-identical to `JSON.stringify(value, null, indent)`. The ElevenLabs CLI's
+   * project files use four spaces.
+   */
+  public static function encodeIndented(mixed $value, string $indent): string
+  {
+    return self::encodeValue($value, 0, $indent);
+  }
+
+  private static function encodeValue(mixed $value, int $depth, string $indent): string
   {
     if ($value instanceof \stdClass) {
-      return self::encodeObject((array) $value, $depth);
+      return self::encodeObject((array) $value, $depth, $indent);
     }
     if (is_array($value)) {
       return array_is_list($value)
-        ? self::encodeList($value, $depth)
-        : self::encodeObject($value, $depth);
+        ? self::encodeList($value, $depth, $indent)
+        : self::encodeObject($value, $depth, $indent);
     }
     if ($value === null) {
       return 'null';
@@ -210,33 +220,33 @@ final class Wire
   /**
    * @param list<mixed> $list
    */
-  private static function encodeList(array $list, int $depth): string
+  private static function encodeList(array $list, int $depth, string $indent): string
   {
     if ($list === []) {
       return '[]';
     }
-    $pad = str_repeat('  ', $depth + 1);
+    $pad = str_repeat($indent, $depth + 1);
     $items = array_map(
-      fn(mixed $item): string => $pad . self::encodeValue($item, $depth + 1),
+      fn(mixed $item): string => $pad . self::encodeValue($item, $depth + 1, $indent),
       $list
     );
-    return "[\n" . implode(",\n", $items) . "\n" . str_repeat('  ', $depth) . ']';
+    return "[\n" . implode(",\n", $items) . "\n" . str_repeat($indent, $depth) . ']';
   }
 
   /**
    * @param array<string, mixed> $object
    */
-  private static function encodeObject(array $object, int $depth): string
+  private static function encodeObject(array $object, int $depth, string $indent): string
   {
     if ($object === []) {
       return '{}';
     }
-    $pad = str_repeat('  ', $depth + 1);
+    $pad = str_repeat($indent, $depth + 1);
     $items = [];
     foreach ($object as $key => $item) {
       $encodedKey = (string) json_encode((string) $key, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-      $items[] = $pad . $encodedKey . ': ' . self::encodeValue($item, $depth + 1);
+      $items[] = $pad . $encodedKey . ': ' . self::encodeValue($item, $depth + 1, $indent);
     }
-    return "{\n" . implode(",\n", $items) . "\n" . str_repeat('  ', $depth) . '}';
+    return "{\n" . implode(",\n", $items) . "\n" . str_repeat($indent, $depth) . '}';
   }
 }

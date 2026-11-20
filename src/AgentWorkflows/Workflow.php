@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ElevenLabs\AgentWorkflows;
 
+use ElevenLabs\AgentTools\Tool;
 use ElevenLabs\Types\AgentWorkflowRequestModel;
 
 /**
@@ -52,18 +53,61 @@ final class Workflow extends WorkflowChain
 
   /**
    * Loads a workflow stored as API-format JSON (snake_case): a JSON string or a parsed array,
-   * holding either the workflow itself or a whole agent config with a `workflow` key.
+   * holding either the workflow itself or a whole agent config with a `workflow` key. Tool ids
+   * found in `$toolsById` are swapped for those `Tool` objects, so the loaded workflow refers to
+   * them as a built one would; other ids stay as they are.
    *
    * @param string|array<string, mixed> $data
+   * @param array<string, Tool> $toolsById
    */
-  public static function fromJson(string|array $data): self
+  public static function fromJson(string|array $data, array $toolsById = []): self
   {
     /** @var mixed $parsed */
     $parsed = is_string($data) ? Wire::decodeJson($data) : $data;
     $raw = (is_array($parsed) && array_key_exists('workflow', $parsed)) ? $parsed['workflow'] : $parsed;
+    if ($raw instanceof \stdClass) {
+      $raw = (array) $raw;
+    }
     $wf = new self();
     $wf->graph->load(is_array($raw) ? $raw : []);
+    if ($toolsById !== []) {
+      $graph = $wf->graph;
+      $swap = static function (string $id) use ($graph, $toolsById): string {
+        $tool = $toolsById[$id] ?? null;
+        if ($tool === null) {
+          return $id;
+        }
+        $key = WorkflowGraph::toolPlaceholder($tool->name());
+        $graph->toolRefs[$key] = $tool;
+        return $key;
+      };
+      foreach ($graph->nodes as $id => $model) {
+        $graph->nodes[$id] = WorkflowGraph::mapNodeToolIds($model, $swap);
+      }
+    }
     return $wf;
+  }
+
+  /**
+   * The `Tool` objects the workflow's nodes reference, in the order they were first used.
+   *
+   * @return list<Tool>
+   */
+  public function tools(): array
+  {
+    $used = [];
+    foreach ($this->graph->nodes as $model) {
+      foreach (WorkflowGraph::nodeToolIds($model) as $id) {
+        $used[$id] = true;
+      }
+    }
+    $tools = [];
+    foreach ($this->graph->toolRefs as $key => $tool) {
+      if (isset($used[$key])) {
+        $tools[] = $tool;
+      }
+    }
+    return $tools;
   }
 
   /** The id of the start node: `"start_node"`, or whatever a loaded workflow uses. */
@@ -192,29 +236,38 @@ final class Workflow extends WorkflowChain
 
   /**
    * Validates the workflow and returns it as the model `agents->create()`/`agents->update()`
-   * accept. `$onWarning` is called for each non-fatal problem.
+   * accept. `$onWarning` is called for each non-fatal problem. `$toolIds` maps the name of each
+   * `Tool` object the nodes use to its id; every such tool needs one (`unresolved_tool`).
    *
    * @param null|callable(WorkflowIssue): mixed $onWarning
+   * @param array<string, string> $toolIds
    * @throws WorkflowValidationError
    */
-  public function build(?callable $onWarning = null): AgentWorkflowRequestModel
+  public function build(?callable $onWarning = null, array $toolIds = []): AgentWorkflowRequestModel
   {
-    $wire = $this->toWireInternal($onWarning);
+    $wire = $this->toWireInternal($onWarning, $toolIds);
     return AgentWorkflowRequestModel::fromJson((string) json_encode($wire));
   }
 
   /**
-   * The workflow in API format (snake_case keys, sorted at every level). Validates like `build()`.
+   * The workflow in API format (snake_case keys, sorted at every level). Validates like `build()`,
+   * and takes the same `$toolIds`.
+   *
+   * @param array<string, string> $toolIds
    */
-  public function toJson(): mixed
+  public function toJson(array $toolIds = []): mixed
   {
-    return Wire::canonical($this->toWireInternal(null));
+    return Wire::canonical($this->toWireInternal(null, $toolIds));
   }
 
-  /** `toJson()` as a string with 2-space indentation and a trailing newline. */
-  public function toJsonString(): string
+  /**
+   * `toJson()` as a string with 2-space indentation and a trailing newline. Takes the same `$toolIds`.
+   *
+   * @param array<string, string> $toolIds
+   */
+  public function toJsonString(array $toolIds = []): string
   {
-    return Wire::encode($this->toJson());
+    return Wire::encode($this->toJson($toolIds));
   }
 
   protected function origin(): EdgeOrigin
@@ -224,12 +277,13 @@ final class Workflow extends WorkflowChain
 
   /**
    * @param null|callable(WorkflowIssue): mixed $onWarning
+   * @param array<string, string> $toolIds
    * @return array<string, mixed>
    */
-  private function toWireInternal(?callable $onWarning): array
+  private function toWireInternal(?callable $onWarning, array $toolIds): array
   {
     $graph = $this->graph;
-    $issues = Validate::validate($graph);
+    $issues = array_merge(Validate::validate($graph), self::unresolvedTools($graph, $toolIds));
     $errors = array_values(array_filter($issues, static fn(WorkflowIssue $i): bool => $i->severity === 'error'));
     if ($errors !== []) {
       throw new WorkflowValidationError($errors);
@@ -289,8 +343,13 @@ final class Workflow extends WorkflowChain
       $edgesWire[$idOf[$edge]] = $wire;
     }
 
+    $resolve = static function (string $id) use ($graph, $toolIds): string {
+      $tool = $graph->toolRefs[$id] ?? null;
+      return $tool === null ? $id : (string) ($toolIds[$tool->name()] ?? $id);
+    };
     $nodesWire = [];
-    foreach ($graph->nodes as $nodeId => $model) {
+    foreach ($graph->nodes as $nodeId => $unresolved) {
+      $model = WorkflowGraph::mapNodeToolIds($unresolved, $resolve);
       $edgeOrderEdges = self::edgeOrder($graph->loadedOrder[(string) $nodeId] ?? [], $outgoing[(string) $nodeId] ?? []);
       $orderIds = [];
       foreach ($edgeOrderEdges as $edge) {
@@ -309,6 +368,32 @@ final class Workflow extends WorkflowChain
     /** @var array<string, mixed> $copy */
     $copy = Wire::deepCopy($workflow);
     return $copy;
+  }
+
+  /**
+   * Each node's `Tool` objects that have no id in `$toolIds`.
+   *
+   * @param array<string, string> $toolIds
+   * @return list<WorkflowIssue>
+   */
+  private static function unresolvedTools(WorkflowGraph $graph, array $toolIds): array
+  {
+    $issues = [];
+    foreach ($graph->nodes as $nodeId => $model) {
+      foreach (WorkflowGraph::nodeToolIds($model) as $id) {
+        $tool = $graph->toolRefs[$id] ?? null;
+        if ($tool !== null && !isset($toolIds[$tool->name()])) {
+          $issues[] = new WorkflowIssue(
+            'unresolved_tool',
+            'error',
+            "Node \"{$nodeId}\" uses tool \"{$tool->name()}\", which has no id yet. Push the agent with "
+              . 'AgentsAsCode::push(), or pass build(toolIds: ...)',
+            (string) $nodeId,
+          );
+        }
+      }
+    }
+    return $issues;
   }
 
   /**

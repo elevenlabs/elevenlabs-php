@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ElevenLabs\AgentWorkflows;
 
+use ElevenLabs\AgentTools\Tool;
+
 /**
  * Mutable state shared by a {@see Workflow} and every node handle created from it. Nodes are
  * kept in wire format (associative arrays).
@@ -27,6 +29,14 @@ final class WorkflowGraph
   public array $loadedOrder = [];
 
   public ?bool $preventSubagentLoops = null;
+
+  /**
+   * `Tool` objects referenced by nodes, by placeholder (`<tool:NAME>`). Nodes hold the placeholder
+   * until `build()` swaps in the tool's id.
+   *
+   * @var array<string, Tool>
+   */
+  public array $toolRefs = [];
 
   /** Canonical option name → API field, per node type. */
   private const FIELDS = [
@@ -84,6 +94,118 @@ final class WorkflowGraph
     }
   }
 
+  /** The placeholder a `Tool` object stands under in the graph until `build()` swaps in its id. */
+  public static function toolPlaceholder(string $name): string
+  {
+    return "<tool:{$name}>";
+  }
+
+  /** A tool id as shown in messages: the name, for a `Tool` object's placeholder. */
+  public static function displayTool(string $id): string
+  {
+    return preg_match('/^<tool:(.*)>$/s', $id, $match) === 1 ? $match[1] : $id;
+  }
+
+  /**
+   * Swaps `Tool` objects for placeholders, remembering each one. Ids pass through.
+   *
+   * @param list<string|Tool> $refs
+   * @return list<string>
+   */
+  public function refTools(string $nodeId, array $refs): array
+  {
+    /** @var array<string, Tool> $inThisNode */
+    $inThisNode = [];
+    $out = [];
+    foreach ($refs as $ref) {
+      if (!($ref instanceof Tool)) {
+        $out[] = $ref;
+        continue;
+      }
+      $key = self::toolPlaceholder($ref->name());
+      $known = $this->toolRefs[$key] ?? null;
+      // A different tool of the same name conflicts if this node or another node still uses it; one
+      // left behind by a removed or edited node doesn't.
+      $clash = $inThisNode[$key] ?? null;
+      if ($clash === null && $known !== null && $this->usesPlaceholder($key, $nodeId)) {
+        $clash = $known;
+      }
+      $inThisNode[$key] = $ref;
+      if ($clash !== null && $clash !== $ref) {
+        $this->issue(
+          'duplicate_tool_name',
+          "Node \"{$nodeId}\" uses a different tool also named \"{$ref->name()}\"",
+          $nodeId
+        );
+      }
+      $this->toolRefs[$key] = $ref;
+      $out[] = $key;
+    }
+    return $out;
+  }
+
+  /**
+   * The tool ids (or placeholders) a node uses: a tool node's tools, or a subagent's extra tools.
+   *
+   * @param array<string, mixed> $model
+   * @return list<string>
+   */
+  public static function nodeToolIds(array $model): array
+  {
+    $ids = [];
+    $tools = $model['tools'] ?? [];
+    foreach (is_array($tools) ? $tools : [] as $tool) {
+      if (is_array($tool) && is_string($tool['tool_id'] ?? null)) {
+        $ids[] = $tool['tool_id'];
+      }
+    }
+    $extra = $model['additional_tool_ids'] ?? [];
+    foreach (is_array($extra) ? $extra : [] as $id) {
+      if (is_string($id)) {
+        $ids[] = $id;
+      }
+    }
+    return $ids;
+  }
+
+  /**
+   * A node with each tool id (or placeholder) replaced by `$map($id)`.
+   *
+   * @param array<string, mixed> $model
+   * @param callable(string): string $map
+   * @return array<string, mixed>
+   */
+  public static function mapNodeToolIds(array $model, callable $map): array
+  {
+    $type = $model['type'] ?? null;
+    if ($type === 'tool' && is_array($model['tools'] ?? null)) {
+      $tools = [];
+      foreach ($model['tools'] as $tool) {
+        if (is_array($tool) && is_string($tool['tool_id'] ?? null)) {
+          $tool['tool_id'] = $map($tool['tool_id']);
+        }
+        $tools[] = $tool;
+      }
+      $model['tools'] = $tools;
+    } elseif ($type === 'override_agent' && is_array($model['additional_tool_ids'] ?? null)) {
+      $model['additional_tool_ids'] = array_map(
+        static fn(mixed $id): mixed => is_string($id) ? $map($id) : $id,
+        $model['additional_tool_ids']
+      );
+    }
+    return $model;
+  }
+
+  private function usesPlaceholder(string $key, string $exceptNodeId): bool
+  {
+    foreach ($this->nodes as $id => $model) {
+      if ((string) $id !== $exceptNodeId && in_array($key, self::nodeToolIds($model), true)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public function issue(string $code, string $message, ?string $nodeId): void
   {
     $this->issues[] = new WorkflowIssue($code, 'error', $message, $nodeId);
@@ -110,6 +232,16 @@ final class WorkflowGraph
     unset($rest['tool_ids']);
     $schemaOverrides = $rest['schema_overrides'] ?? null;
     unset($rest['schema_overrides']);
+    $toolIds = is_array($toolIds) ? $this->refTools($id, array_values($toolIds)) : null;
+    if (is_array($schemaOverrides)) {
+      // For a `Tool` object, overrides may be keyed by the tool's name.
+      $rekeyed = [];
+      foreach ($schemaOverrides as $key => $value) {
+        $placeholder = self::toolPlaceholder((string) $key);
+        $rekeyed[isset($this->toolRefs[$placeholder]) ? $placeholder : $key] = $value;
+      }
+      $schemaOverrides = $rekeyed;
+    }
     $node = $model;
 
     if ($destination instanceof Destination) {
@@ -146,7 +278,7 @@ final class WorkflowGraph
         if (!in_array($toolId, $ids, true)) {
           $this->issue(
             'invalid_option',
-            "Node \"{$id}\" has schema overrides for tool \"{$toolId}\", which it doesn't run",
+            "Node \"{$id}\" has schema overrides for tool \"" . self::displayTool((string) $toolId) . "\", which it doesn't run",
             $id
           );
         }
@@ -205,6 +337,7 @@ final class WorkflowGraph
     $this->edges = [];
     $this->issues = [];
     $this->loadedOrder = [];
+    $this->toolRefs = [];
     $this->preventSubagentLoops = $workflow['prevent_subagent_loops'] ?? null;
 
     // The top-level node/edge maps must be arrays for the loader. Decoding preserves an empty object

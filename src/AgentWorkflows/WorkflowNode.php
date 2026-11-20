@@ -90,7 +90,7 @@ final class WorkflowNode extends WorkflowChain
    * reports the rest.
    *
    * @param array<string, mixed>|\ElevenLabs\Types\PositionInput|null $position
-   * @param list<string>|null $toolIds
+   * @param list<string|\ElevenLabs\AgentTools\Tool>|null $toolIds
    * @param list<mixed>|null $knowledgeBase
    * @param array<string, array<string, mixed>>|null $schemaOverrides
    * @param list<mixed>|null $customSipHeaders

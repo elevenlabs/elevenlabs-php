@@ -271,6 +271,86 @@ file_put_contents('tool_configs/issue_refund.json', $refund->toJsonString());
 - A system tool goes in the agent's `prompt.builtInTools` rather than `tools->create()`:
   `new BuiltInToolsInput(['endCall' => SystemTool::endCall()->buildConfig()])`.
 
+## Agents as code
+
+`ElevenLabs\AgentsAsCode\Agent` puts an agent's settings, tools and workflow in one definition.
+`AgentsAsCode::push()` creates or updates every webhook and client tool it uses, then the agent,
+with the tools' ids filled in. Workflow tool nodes and subagents take `Tool` objects as well as ids.
+
+```php
+use ElevenLabs\AgentsAsCode\Agent;
+use ElevenLabs\AgentsAsCode\AgentsAsCode;
+use ElevenLabs\AgentTools\Schema;
+use ElevenLabs\AgentTools\SystemTool;
+use ElevenLabs\AgentTools\Tool;
+use ElevenLabs\AgentWorkflows\Workflow;
+
+$getOrder = Tool::webhook('get_order', 'Look up an order by its number')
+    ->get('https://api.example.com/orders/{order_id}')
+    ->pathParam('order_id', Schema::string()->describe('The order number, e.g. A-1042'));
+
+$wf = new Workflow();
+$wf->converse('triage', 'Find out what the caller needs')
+    ->when('Caller gave an order number')
+    ->tool('lookup', [$getOrder]) // a Tool object: push fills in its id
+    ->onSuccess()
+    ->converse('resolve', 'Explain the order status');
+
+$agent = new Agent(
+    'Support line',
+    prompt: 'You are a support agent for Acme.',
+    firstMessage: 'Hi, how can I help?',
+    voiceId: '21m00Tcm4TlvDq8ikWAM',
+    tools: [SystemTool::endCall()],
+    workflow: $wf,
+);
+
+$agents = new AgentsAsCode($client);
+$result = $agents->push($agent);                       // creates the agent and get_order
+$agents->push($agent, agentId: $result->agentId);      // later: updates only what changed
+```
+
+- **Validation first:** `push()` calls `$agent->validate()` before any request, so an invalid agent
+  writes nothing. CI can call `validate()` without an API key; it throws `AgentValidationError`,
+  whose `issues` each have a `code` such as `duplicate_tool_name`.
+- **Tools are matched safely:** with `agentId`, existing tools are found among the tools that agent
+  already uses, by name (on `branchId` when given). A tool with the same name that another agent uses
+  is never touched. Tools the agent stops using are reported as `"detached"`, not deleted.
+- **Escape hatch:** `conversationConfig` and `platformSettings` take any other setting, as the
+  generated model or an API-format array, merged under the typed options. `toolIds` attaches
+  existing tools that `push()` leaves alone.
+- **Partial failures:** if a request fails, `push()` throws an `AgentPushError` whose `result`
+  lists the tools it had already created.
+- `AgentsAsCode` is a separate entry point because the root client is regenerated; it sends through
+  `$client->agents` and `$client->agents->tools`, so their base URL, retries and per-method config
+  apply. `$options` takes the same per-request options as the generated methods.
+
+### Keeping agents in git
+
+`AgentProject` reads and writes the ElevenLabs CLI's project layout (`agents.json`, `tools.json`,
+`agent_configs/`, `tool_configs/`). The same repo works with the SDK and with
+`elevenlabs agents push`. The project records each agent's and tool's id, so running a script again
+updates them instead of making copies:
+
+```php
+use ElevenLabs\AgentsAsCode\AgentProject;
+
+$project = AgentProject::open('.'); // an empty directory works too
+$agents->push($agent, project: $project); // writes the configs and ids it pushed
+
+// Edit an agent stored in the project
+$support = $project->agent('Support line');
+$support->update(firstMessage: 'Hello!');
+$agents->push($support, project: $project);
+
+// Bring an agent made in the dashboard into the repo
+$agents->pull('agent_123', project: $project);
+```
+
+Configs are kept in API format, and settings the SDK doesn't model survive a round trip. Files are
+written owner-only, never through a symlink and never outside the project. Only JSON configs are
+supported for now; projects that use YAML or TOML configs raise an `AgentProjectError`.
+
 ## Environments
 
 This SDK allows you to configure different environments for API requests. It defaults to the `Production` environment.
