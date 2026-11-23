@@ -17,9 +17,4 @@ enum Environments: string
   case ProductionEu = 'https://api.eu.residency.elevenlabs.io';
   case ProductionIndia = 'https://api.in.residency.elevenlabs.io';
   case ProductionSingapore = 'https://api.sg.residency.elevenlabs.io';
-  case Api = 'wss://api.elevenlabs.io';
-  case ProductionUs_1 = 'wss://api.us.elevenlabs.io';
-  case ProductionEu_1 = 'wss://api.eu.residency.elevenlabs.io';
-  case ProductionIndia_1 = 'wss://api.in.residency.elevenlabs.io';
-  case ProductionSingapore_1 = 'wss://api.sg.residency.elevenlabs.io';
 }
