@@ -782,4 +782,33 @@ class AgentsClient extends BaseService
     }
     return $result;
   }
+
+  /**
+   * Opens a WebSocket connection to `/v1/convai/conversation`.
+   *
+   * Iterating the socket blocks until the server closes it, so call this from a CLI worker or
+   * queue job rather than a web request.
+   */
+  public function conversation(
+    \ElevenLabs\Agents\Requests\V1ConvaiConversationRequest $request,
+    ?array $options = null
+  ): V1ConvaiConversationSocket {
+    $agentId = $request->agentId;
+    $resolvedConfig = $this->getResolvedConfig(null, $options);
+    return new V1ConvaiConversationSocket(
+      \ElevenLabs\Core\WebSocket\WebSocketConnector::connect(
+        $this->getBaseUrl($resolvedConfig) . '/v1/convai/conversation',
+        $this->withHandshakeHeaders(
+          [
+            'query' => [
+              'agent_id' => $agentId
+            ]
+          ],
+          $resolvedConfig
+        ),
+        $this->options,
+        $resolvedConfig
+      )
+    );
+  }
 }

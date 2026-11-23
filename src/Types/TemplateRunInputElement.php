@@ -60,6 +60,9 @@ class TemplateRunInputElement extends JsonSerializableType
       if ($value instanceof \ElevenLabs\Types\TemplateInputReference) {
         $mappedValues['templateinputreference'] = $value;
       }
+      if (is_array($value) && array_is_list($value)) {
+        $mappedValues['array'] = $value;
+      }
     }
     return new self($mappedValues);
   }
@@ -103,6 +106,14 @@ class TemplateRunInputElement extends JsonSerializableType
   public function hasTemplateInputReference(): bool
   {
     return isset($this->values['templateinputreference']);
+  }
+
+  /**
+   * Check if this TemplateRunInputElement contains a array
+   */
+  public function hasArray(): bool
+  {
+    return isset($this->values['array']);
   }
 
   // Getter methods
@@ -152,6 +163,15 @@ class TemplateRunInputElement extends JsonSerializableType
   }
 
   /**
+   * Get the array value if present
+   * @return array|null
+   */
+  public function getArray(): ?array
+  {
+    return $this->values['array'] ?? null;
+  }
+
+  /**
    * Get all matched types
    * @return array<mixed>
    */
@@ -198,11 +218,20 @@ class TemplateRunInputElement extends JsonSerializableType
       // \ElevenLabs\Types\TemplateInputReference didn't match, continue
     }
 
+    if (is_array($data) && array_is_list($data)) {
+      $matches['array'] = $data;
+    }
+
     if (empty($matches)) {
       throw new \InvalidArgumentException('Data does not match any TemplateRunInputElement type');
     }
 
     return new self($matches);
+  }
+
+  protected function encodesEmptyArrayAsList(): bool
+  {
+    return array_key_exists('array', $this->values);
   }
 
   /**

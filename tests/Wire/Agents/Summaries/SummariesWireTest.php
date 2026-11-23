@@ -47,7 +47,7 @@ class SummariesWireTest extends TestCase
     $sdk = new ElevenLabs(options: ['client' => $transport]);
     $sdk->agents->summaries->get(
       request: new \ElevenLabs\Agents\Summaries\Requests\GetSummariesRequest([
-        'agentIds' => []
+        'agentIds' => ['agent_ids']
       ])
     );
 

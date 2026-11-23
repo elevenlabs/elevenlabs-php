@@ -1,0 +1,46 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ElevenLabs\Agents\Requests;
+
+use ElevenLabs\Core\Json\JsonSerializableType;
+
+class V1ConvaiConversationRequest extends JsonSerializableType
+{
+  /**
+   * @var string $agentId
+   */
+  public string $agentId;
+
+  /**
+   * @param array{
+   *   agentId: string,
+   * } $values
+   */
+  public function __construct(array $values)
+  {
+    $this->agentId = $values['agentId'];
+  }
+
+  /**
+   * @param array<string, mixed> $data
+   * @return self
+   */
+  public static function fromArray(array $data): self
+  {
+    return new self([
+      'agentId' => $data['agent_id']
+    ]);
+  }
+
+  /**
+   * @return array<string, mixed>
+   */
+  public function jsonSerialize(): array
+  {
+    $result = [];
+    $result['agent_id'] = $this->agentId;
+    return $result;
+  }
+}

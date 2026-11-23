@@ -79,7 +79,7 @@ class SpeechToSpeechClient extends BaseService
       'post',
       '/v1/voice-changer/' . \ElevenLabs\Core\Client\RawClient::encodePathParam($voiceId),
       [
-        'multipart' => $request?->toMultipart(),
+        'multipart' => $request->toMultipart(),
         'query' => [
           'enable_logging' => $enableLogging,
           'optimize_streaming_latency' => $optimizeStreamingLatency,
@@ -128,7 +128,7 @@ class SpeechToSpeechClient extends BaseService
         \ElevenLabs\Core\Client\RawClient::encodePathParam($voiceId) .
         '/stream',
       [
-        'multipart' => $request?->toMultipart(),
+        'multipart' => $request->toMultipart(),
         'query' => [
           'enable_logging' => $enableLogging,
           'optimize_streaming_latency' => $optimizeStreamingLatency,

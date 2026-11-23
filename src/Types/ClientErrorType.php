@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ElevenLabs\Types;
 
-enum Type: string
+enum ClientErrorType: string
 {
-  case AgentResponse = 'agent_response';
+  case ClientError = 'client_error';
 }

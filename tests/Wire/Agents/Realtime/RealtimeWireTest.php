@@ -423,7 +423,7 @@ class RealtimeWireTest extends TestCase
     $openAiSessionConfigInputTracing =
       \ElevenLabs\Types\OpenAiSessionConfigInputTracing1::Auto->value;
 
-    $openAiSessionConfigInputTruncation = []; // TODO: populate with required fields
+    $openAiSessionConfigInputTruncation = 'esse enim';
 
     $openAiSessionConfigInput = new \ElevenLabs\Types\OpenAiSessionConfigInput([
       'type' => $openAiSessionConfigInputType,

@@ -527,7 +527,7 @@ class ToolsWireTest extends TestCase
       'dynamicVariable' => 'dynamic_variable'
     ]);
 
-    $literalJsonSchemaPropertyConstantValue = []; // TODO: populate with required fields
+    $literalJsonSchemaPropertyConstantValue = 'veniam';
 
     $literalJsonSchemaProperty = new \ElevenLabs\Types\LiteralJsonSchemaProperty([
       'type' => $literalJsonSchemaPropertyType,
@@ -1193,7 +1193,7 @@ class ToolsWireTest extends TestCase
       'dynamicVariable' => 'dynamic_variable'
     ]);
 
-    $literalJsonSchemaPropertyConstantValue = []; // TODO: populate with required fields
+    $literalJsonSchemaPropertyConstantValue = 'veniam';
 
     $literalJsonSchemaProperty = new \ElevenLabs\Types\LiteralJsonSchemaProperty([
       'type' => $literalJsonSchemaPropertyType,

@@ -46,7 +46,8 @@
     ],
     "build": "find src tests -name '*.php' -print0 | xargs -0 -n1 php -l > /dev/null",
     "test": [
-      "./vendor/bin/phpunit --testdox"
+      "./vendor/bin/phpunit --testdox --testsuite default",
+      "./vendor/bin/phpunit --testdox --testsuite wire"
     ],
     "analyze": "phpstan analyze src tests --memory-limit=1G"
   },

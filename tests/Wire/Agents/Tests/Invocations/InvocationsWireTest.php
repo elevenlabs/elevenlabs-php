@@ -1763,7 +1763,7 @@ class InvocationsWireTest extends TestCase
       'dynamicVariable' => 'dynamic_variable'
     ]);
 
-    $literalJsonSchemaPropertyConstantValue = []; // TODO: populate with required fields
+    $literalJsonSchemaPropertyConstantValue = 'veniam';
 
     $objectJsonSchemaPropertyOutputPropertiesValue = new \ElevenLabs\Types\LiteralJsonSchemaProperty(
       [
@@ -2291,7 +2291,7 @@ class InvocationsWireTest extends TestCase
 
     $analysisPropertyType = \ElevenLabs\Types\AnalysisPropertyType::Boolean->value;
 
-    $analysisPropertyConstantValue = []; // TODO: populate with required fields
+    $analysisPropertyConstantValue = 'irure dese';
 
     $analysisProperty = new \ElevenLabs\Types\AnalysisProperty([
       'type' => $analysisPropertyType,

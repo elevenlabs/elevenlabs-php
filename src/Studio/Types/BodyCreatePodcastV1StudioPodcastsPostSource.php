@@ -51,6 +51,9 @@ class BodyCreatePodcastV1StudioPodcastsPostSource extends JsonSerializableType
       if ($value instanceof \ElevenLabs\Types\PodcastUrlSource) {
         $mappedValues['podcasturlsource'] = $value;
       }
+      if (is_array($value) && array_is_list($value)) {
+        $mappedValues['array'] = $value;
+      }
     }
     return new self($mappedValues);
   }
@@ -70,6 +73,14 @@ class BodyCreatePodcastV1StudioPodcastsPostSource extends JsonSerializableType
   public function hasPodcastUrlSource(): bool
   {
     return isset($this->values['podcasturlsource']);
+  }
+
+  /**
+   * Check if this BodyCreatePodcastV1StudioPodcastsPostSource contains a array
+   */
+  public function hasArray(): bool
+  {
+    return isset($this->values['array']);
   }
 
   // Getter methods
@@ -92,6 +103,15 @@ class BodyCreatePodcastV1StudioPodcastsPostSource extends JsonSerializableType
   }
 
   /**
+   * Get the array value if present
+   * @return array|null
+   */
+  public function getArray(): ?array
+  {
+    return $this->values['array'] ?? null;
+  }
+
+  /**
    * Get all matched types
    * @return array<mixed>
    */
@@ -102,11 +122,11 @@ class BodyCreatePodcastV1StudioPodcastsPostSource extends JsonSerializableType
 
   /**
    * Deserialize from array - try all types, keep successful ones
-   * @param array<string, mixed> $data
+   * @param mixed $data
    * @return self
    * @throws \InvalidArgumentException if data doesn't match any type
    */
-  public static function fromArray(array $data): self
+  public static function fromArray(mixed $data): self
   {
     $matches = [];
 
@@ -129,6 +149,10 @@ class BodyCreatePodcastV1StudioPodcastsPostSource extends JsonSerializableType
       // \ElevenLabs\Types\PodcastUrlSource didn't match, continue
     }
 
+    if (is_array($data) && array_is_list($data)) {
+      $matches['array'] = $data;
+    }
+
     if (empty($matches)) {
       throw new \InvalidArgumentException(
         'Data does not match any BodyCreatePodcastV1StudioPodcastsPostSource type'
@@ -138,15 +162,25 @@ class BodyCreatePodcastV1StudioPodcastsPostSource extends JsonSerializableType
     return new self($matches);
   }
 
+  protected function encodesEmptyArrayAsList(): bool
+  {
+    return array_key_exists('array', $this->values);
+  }
+
   /**
    * Serialize to JSON - merge all values
-   *
-   * @return array<mixed>
    */
-  public function jsonSerialize(): array
+  public function jsonSerialize(): mixed
   {
     $result = [];
     foreach ($this->values as $value) {
+      // A scalar or enum match is the whole value; there is nothing to merge it with.
+      if ($value instanceof \BackedEnum) {
+        return $value->value;
+      }
+      if (!is_object($value) && !is_array($value)) {
+        return $value;
+      }
       if ($value instanceof \JsonSerializable) {
         $serialized = $value->jsonSerialize();
       } elseif (is_array($value)) {

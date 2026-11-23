@@ -172,7 +172,7 @@ class MembersClient extends BaseService
    */
   public function updateUsageLimit(
     string $userId,
-    \ElevenLabs\Workspace\Members\Requests\UpdateMemberUsageLimitRequestModel $request = new \ElevenLabs\Workspace\Members\Requests\UpdateMemberUsageLimitRequestModel(),
+    \ElevenLabs\Workspace\Members\Requests\UpdateMemberUsageLimitRequestModel $request,
     ?array $options = null
   ): ?\ElevenLabs\Types\UpdateMemberUsageLimitResponseModel {
     $request->validate();

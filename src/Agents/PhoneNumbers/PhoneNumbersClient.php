@@ -181,7 +181,7 @@ class PhoneNumbersClient extends BaseService
   /**
    * Import Phone Number from provider configuration (Twilio, Exotel, or SIP trunk)
    *
-   * @param \ElevenLabs\Agents\PhoneNumbers\Types\CreatePhoneNumbersRequestBody $request Request body
+   * @param \ElevenLabs\Types\CreateTwilioPhoneNumberRequest|\ElevenLabs\Types\CreateExotelPhoneNumberRequest|\ElevenLabs\Types\CreateSipTrunkPhoneNumberRequest $request Request body
    * @param ?array{
    *   baseUrl?: string,
    *   maxRetries?: int,
@@ -195,7 +195,7 @@ class PhoneNumbersClient extends BaseService
    * @throws \ElevenLabs\Exceptions\ElevenlabsApiException
    */
   public function create(
-    \ElevenLabs\Agents\PhoneNumbers\Types\CreatePhoneNumbersRequestBody $request,
+    \ElevenLabs\Types\CreateTwilioPhoneNumberRequest|\ElevenLabs\Types\CreateExotelPhoneNumberRequest|\ElevenLabs\Types\CreateSipTrunkPhoneNumberRequest $request,
     ?array $options = null
   ): ?\ElevenLabs\Types\CreatePhoneNumberResponseModel {
     $resolvedConfig = $this->getResolvedConfig($this->createConfig, $options);

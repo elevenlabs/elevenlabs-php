@@ -33,9 +33,21 @@ abstract class JsonSerializableType implements \JsonSerializable
     // An empty model has to encode as `{}`, not `[]`: PHP cannot tell an empty map from an
     // empty list, and json_encode picks the array form, which a server reading an object
     // would reject.
-    $payload = is_array($serialized) && $serialized === [] ? new \stdClass() : $serialized;
+    $payload =
+      is_array($serialized) && $serialized === [] && !$this->encodesEmptyArrayAsList()
+        ? new \stdClass()
+        : $serialized;
 
     return json_encode($payload, JSON_THROW_ON_ERROR);
+  }
+
+  /**
+   * Whether an empty array returned by jsonSerialize() represents a JSON list rather than an
+   * empty object. Object models keep the default; union wrappers override it for array branches.
+   */
+  protected function encodesEmptyArrayAsList(): bool
+  {
+    return false;
   }
 
   /**

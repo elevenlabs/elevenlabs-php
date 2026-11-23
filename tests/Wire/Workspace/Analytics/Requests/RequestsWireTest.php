@@ -42,7 +42,7 @@ class RequestsWireTest extends TestCase
 
     $columnFilterOperation = \ElevenLabs\Types\ColumnFilterOperation::In->value;
 
-    $columnFilterValuesItem = []; // TODO: populate with required fields
+    $columnFilterValuesItem = 'et pariatu';
 
     $columnFilter = new \ElevenLabs\Types\ColumnFilter([
       'column' => 'column',

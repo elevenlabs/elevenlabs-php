@@ -61,7 +61,7 @@ class ContentClient extends BaseService
       '/v1/studio/projects/' .
         \ElevenLabs\Core\Client\RawClient::encodePathParam($projectId) .
         '/content',
-      ['multipart' => $request?->toMultipart()],
+      ['multipart' => $request->toMultipart()],
       $resolvedConfig
     );
     $data = $response->getBody()->getContents();

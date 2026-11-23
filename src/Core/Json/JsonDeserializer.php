@@ -137,6 +137,27 @@ class JsonDeserializer
       return $data;
     }
 
+    // Union wrapper models declare fromArray(mixed), unlike object models whose fromArray()
+    // takes an array. Cache that distinction because this path runs for every nested value.
+    /** @var array<string, bool> $acceptsMixedFromArray */
+    static $acceptsMixedFromArray = [];
+    if (!array_key_exists($type, $acceptsMixedFromArray)) {
+      $acceptsMixedFromArray[$type] = false;
+      if (class_exists($type) && method_exists($type, 'fromArray')) {
+        $fromArray = new \ReflectionMethod($type, 'fromArray');
+        $parameters = $fromArray->getParameters();
+        $parameterType = $parameters === [] ? null : $parameters[0]->getType();
+        $acceptsMixedFromArray[$type] =
+          $fromArray->isPublic() &&
+          $fromArray->isStatic() &&
+          $parameterType instanceof \ReflectionNamedType &&
+          $parameterType->getName() === 'mixed';
+      }
+    }
+    if ($acceptsMixedFromArray[$type]) {
+      return $type::fromArray($data);
+    }
+
     // A non-empty JSON list is not an object, so it never becomes a model: in a union it would
     // otherwise turn `["a","b"]` into an empty object variant. `[]` stays allowed, because
     // json_decode gives an empty object `{}` that same shape.

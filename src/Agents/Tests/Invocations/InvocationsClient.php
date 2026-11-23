@@ -229,7 +229,7 @@ class InvocationsClient extends BaseService
    */
   public function update(
     string $testInvocationId,
-    \ElevenLabs\Agents\Tests\Invocations\Requests\UpdateTestSuiteInvocationRequestModel $request = new \ElevenLabs\Agents\Tests\Invocations\Requests\UpdateTestSuiteInvocationRequestModel(),
+    \ElevenLabs\Agents\Tests\Invocations\Requests\UpdateTestSuiteInvocationRequestModel $request,
     ?array $options = null
   ): ?\ElevenLabs\Types\GetTestSuiteInvocationResponseModel {
     $request->validate();

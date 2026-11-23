@@ -125,7 +125,7 @@ class ImageClient extends BaseService
   /**
    * Start an image generation with the selected model.
    *
-   * @param \ElevenLabs\Types\ImageGenerationRequest $request Request body
+   * @param \ElevenLabs\Types\GptImage1Request|\ElevenLabs\Types\GptImage15Request|\ElevenLabs\Types\GptImage2Request|\ElevenLabs\Types\GptImage25SunburstRequest|\ElevenLabs\Types\GptImage25FlareRequest|\ElevenLabs\Types\Gemini25FlashImageRequest|\ElevenLabs\Types\Gemini3ProImageRequest|\ElevenLabs\Types\Gemini31FlashImageRequest|\ElevenLabs\Types\Gemini31FlashLiteImageRequest|\ElevenLabs\Types\BytedanceSeedream5LiteRequest|\ElevenLabs\Types\BytedanceSeedream5ProRequest $request Request body
    * @param ?array{
    *   baseUrl?: string,
    *   maxRetries?: int,
@@ -139,7 +139,7 @@ class ImageClient extends BaseService
    * @throws \ElevenLabs\Exceptions\ElevenlabsApiException
    */
   public function create(
-    \ElevenLabs\Types\ImageGenerationRequest $request,
+    \ElevenLabs\Types\GptImage1Request|\ElevenLabs\Types\GptImage15Request|\ElevenLabs\Types\GptImage2Request|\ElevenLabs\Types\GptImage25SunburstRequest|\ElevenLabs\Types\GptImage25FlareRequest|\ElevenLabs\Types\Gemini25FlashImageRequest|\ElevenLabs\Types\Gemini3ProImageRequest|\ElevenLabs\Types\Gemini31FlashImageRequest|\ElevenLabs\Types\Gemini31FlashLiteImageRequest|\ElevenLabs\Types\BytedanceSeedream5LiteRequest|\ElevenLabs\Types\BytedanceSeedream5ProRequest $request,
     ?array $options = null
   ): ?\ElevenLabs\Types\MediaGenerationCreateResponse {
     $resolvedConfig = $this->getResolvedConfig($this->createConfig, $options);

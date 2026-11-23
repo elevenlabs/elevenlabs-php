@@ -176,7 +176,7 @@ class ProjectClient extends BaseService
     $response = $this->sendRequest(
       'post',
       '/v1/dubbing/project',
-      ['multipart' => $request?->toMultipart()],
+      ['multipart' => $request->toMultipart()],
       $resolvedConfig
     );
     $data = $response->getBody()->getContents();

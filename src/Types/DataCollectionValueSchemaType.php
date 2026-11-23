@@ -45,6 +45,9 @@ class DataCollectionValueSchemaType extends JsonSerializableType
       if ($value instanceof \ElevenLabs\Types\Type13) {
         $mappedValues['type13'] = $value;
       }
+      if (is_array($value) && array_is_list($value)) {
+        $mappedValues['array'] = $value;
+      }
     }
     return new self($mappedValues);
   }
@@ -58,6 +61,14 @@ class DataCollectionValueSchemaType extends JsonSerializableType
     return isset($this->values['type13']);
   }
 
+  /**
+   * Check if this DataCollectionValueSchemaType contains a array
+   */
+  public function hasArray(): bool
+  {
+    return isset($this->values['array']);
+  }
+
   // Getter methods
   /**
    * Get the \ElevenLabs\Types\Type13 value if present
@@ -66,6 +77,15 @@ class DataCollectionValueSchemaType extends JsonSerializableType
   public function getType13(): ?\ElevenLabs\Types\Type13
   {
     return $this->values['type13'] ?? null;
+  }
+
+  /**
+   * Get the array value if present
+   * @return array|null
+   */
+  public function getArray(): ?array
+  {
+    return $this->values['array'] ?? null;
   }
 
   /**
@@ -95,6 +115,10 @@ class DataCollectionValueSchemaType extends JsonSerializableType
       $matches['type13'] = $enumValue;
     }
 
+    if (is_array($data) && array_is_list($data)) {
+      $matches['array'] = $data;
+    }
+
     if (empty($matches)) {
       throw new \InvalidArgumentException(
         'Data does not match any DataCollectionValueSchemaType type'
@@ -102,6 +126,11 @@ class DataCollectionValueSchemaType extends JsonSerializableType
     }
 
     return new self($matches);
+  }
+
+  protected function encodesEmptyArrayAsList(): bool
+  {
+    return array_key_exists('array', $this->values);
   }
 
   /**
