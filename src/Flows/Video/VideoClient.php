@@ -125,7 +125,7 @@ class VideoClient extends BaseService
   /**
    * Start a video generation with the selected model.
    *
-   * @param \ElevenLabs\Types\VideoGenerationRequest $request Request body
+   * @param \ElevenLabs\Types\CreatifyAuroraRequest|\ElevenLabs\Types\Veo31Request|\ElevenLabs\Types\Veo31FastRequest|\ElevenLabs\Types\BytedanceSeedance2Request|\ElevenLabs\Types\BytedanceSeedance2FastRequest|\ElevenLabs\Types\BytedanceSeedance2MiniRequest|\ElevenLabs\Types\BytedanceSeedance25Request $request Request body
    * @param ?array{
    *   baseUrl?: string,
    *   maxRetries?: int,
@@ -139,7 +139,7 @@ class VideoClient extends BaseService
    * @throws \ElevenLabs\Exceptions\ElevenlabsApiException
    */
   public function create(
-    \ElevenLabs\Types\VideoGenerationRequest $request,
+    \ElevenLabs\Types\CreatifyAuroraRequest|\ElevenLabs\Types\Veo31Request|\ElevenLabs\Types\Veo31FastRequest|\ElevenLabs\Types\BytedanceSeedance2Request|\ElevenLabs\Types\BytedanceSeedance2FastRequest|\ElevenLabs\Types\BytedanceSeedance2MiniRequest|\ElevenLabs\Types\BytedanceSeedance25Request $request,
     ?array $options = null
   ): ?\ElevenLabs\Types\MediaGenerationCreateResponse {
     $resolvedConfig = $this->getResolvedConfig($this->createConfig, $options);

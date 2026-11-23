@@ -1,0 +1,72 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ElevenLabs\Types;
+
+use ElevenLabs\Core\Json\JsonSerializableType;
+use ElevenLabs\Core\Json\ReflectiveSerialization;
+use ElevenLabs\Core\Json\JsonProperty;
+
+/**
+ * The reflective deserializer reconstructs this model with `new static($values)`, so a subclass has
+ * to keep a constructor it can call with one associative array.
+ *
+ * @phpstan-consistent-constructor
+ */
+class Interruption extends JsonSerializableType
+{
+  use ReflectiveSerialization;
+
+  #[JsonProperty('interruption_event', required: true)]
+  public \ElevenLabs\Types\InterruptionInterruptionEvent $interruptionEvent;
+
+  /**
+   * @var ?value-of<\ElevenLabs\Types\InterruptionType>
+   */
+  #[JsonProperty('type')]
+  public ?string $type;
+
+  /**
+   * @param array{
+   *   interruptionEvent: \ElevenLabs\Types\InterruptionInterruptionEvent,
+   *   type?: ?value-of<\ElevenLabs\Types\InterruptionType>,
+   * } $values
+   */
+  public function __construct(array $values)
+  {
+    $this->interruptionEvent = $values['interruptionEvent'];
+    $this->type = $values['type'] ?? 'interruption';
+
+    $this->_dirtyFields = [
+      'interruption_event' => true
+    ];
+    if (array_key_exists('type', $values)) {
+      $this->_dirtyFields['type'] = true;
+    }
+  }
+
+  public function toMultipart(): array
+  {
+    $parts = [];
+    $parts[] = [
+      'name' => 'interruption_event',
+      'contents' => json_encode($this->interruptionEvent),
+      'headers' => ['Content-Type' => 'application/json']
+    ];
+
+    if ($this->type !== null) {
+      $parts[] = [
+        'name' => 'type',
+        'contents' => $this->type
+      ];
+    }
+
+    return $parts;
+  }
+
+  public function validate(): void
+  {
+    $this->interruptionEvent->validate();
+  }
+}

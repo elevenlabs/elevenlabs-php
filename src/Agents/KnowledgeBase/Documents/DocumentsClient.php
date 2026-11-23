@@ -682,7 +682,7 @@ class DocumentsClient extends BaseService
    */
   public function updateChunkingOverride(
     string $documentationId,
-    \ElevenLabs\Agents\KnowledgeBase\Documents\Requests\UpdateDocumentChunkingOverrideRequestModel $request = new \ElevenLabs\Agents\KnowledgeBase\Documents\Requests\UpdateDocumentChunkingOverrideRequestModel(),
+    \ElevenLabs\Agents\KnowledgeBase\Documents\Requests\UpdateDocumentChunkingOverrideRequestModel $request,
     ?array $options = null
   ): ?\ElevenLabs\Types\UpdateDocumentChunkingOverrideResponseModel {
     $request->validate();

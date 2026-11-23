@@ -125,7 +125,7 @@ class TextToSpeechClient extends BaseService
   /**
    * Start a speech generation with the selected model. Charged per character via text-to-speech billing. Use this over `/v1/text-to-speech` for the asynchronous generation lifecycle or for models not offered there; for direct, synchronous speech synthesis, prefer `/v1/text-to-speech`.
    *
-   * @param \ElevenLabs\Types\TextToSpeechGenerationRequest $request Request body
+   * @param \ElevenLabs\Types\ElevenFlashV25Request|\ElevenLabs\Types\ElevenMultilingualV2Request|\ElevenLabs\Types\ElevenV3Request $request Request body
    * @param ?array{
    *   baseUrl?: string,
    *   maxRetries?: int,
@@ -139,7 +139,7 @@ class TextToSpeechClient extends BaseService
    * @throws \ElevenLabs\Exceptions\ElevenlabsApiException
    */
   public function create(
-    \ElevenLabs\Types\TextToSpeechGenerationRequest $request,
+    \ElevenLabs\Types\ElevenFlashV25Request|\ElevenLabs\Types\ElevenMultilingualV2Request|\ElevenLabs\Types\ElevenV3Request $request,
     ?array $options = null
   ): ?\ElevenLabs\Types\MediaGenerationCreateResponse {
     $resolvedConfig = $this->getResolvedConfig($this->createConfig, $options);

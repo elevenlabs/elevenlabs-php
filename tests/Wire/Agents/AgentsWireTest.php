@@ -282,7 +282,7 @@ class AgentsWireTest extends TestCase
       'dynamicVariable' => 'dynamic_variable'
     ]);
 
-    $literalJsonSchemaPropertyConstantValue = []; // TODO: populate with required fields
+    $literalJsonSchemaPropertyConstantValue = 'veniam';
 
     $objectJsonSchemaPropertyOutputPropertiesValue = new \ElevenLabs\Types\LiteralJsonSchemaProperty(
       [
@@ -810,7 +810,7 @@ class AgentsWireTest extends TestCase
 
     $analysisPropertyType = \ElevenLabs\Types\AnalysisPropertyType::Boolean->value;
 
-    $analysisPropertyConstantValue = []; // TODO: populate with required fields
+    $analysisPropertyConstantValue = 'irure dese';
 
     $analysisProperty = new \ElevenLabs\Types\AnalysisProperty([
       'type' => $analysisPropertyType,
@@ -4133,7 +4133,7 @@ class AgentsWireTest extends TestCase
       'dynamicVariable' => 'dynamic_variable'
     ]);
 
-    $literalJsonSchemaPropertyConstantValue = []; // TODO: populate with required fields
+    $literalJsonSchemaPropertyConstantValue = 'veniam';
 
     $objectJsonSchemaPropertyOutputPropertiesValue = new \ElevenLabs\Types\LiteralJsonSchemaProperty(
       [
@@ -4661,7 +4661,7 @@ class AgentsWireTest extends TestCase
 
     $analysisPropertyType = \ElevenLabs\Types\AnalysisPropertyType::Boolean->value;
 
-    $analysisPropertyConstantValue = []; // TODO: populate with required fields
+    $analysisPropertyConstantValue = 'irure dese';
 
     $analysisProperty = new \ElevenLabs\Types\AnalysisProperty([
       'type' => $analysisPropertyType,
@@ -6138,7 +6138,7 @@ class AgentsWireTest extends TestCase
       'dynamicVariable' => 'dynamic_variable'
     ]);
 
-    $literalJsonSchemaPropertyConstantValue = []; // TODO: populate with required fields
+    $literalJsonSchemaPropertyConstantValue = 'veniam';
 
     $objectJsonSchemaPropertyOutputPropertiesValue = new \ElevenLabs\Types\LiteralJsonSchemaProperty(
       [
@@ -6666,7 +6666,7 @@ class AgentsWireTest extends TestCase
 
     $analysisPropertyType = \ElevenLabs\Types\AnalysisPropertyType::Boolean->value;
 
-    $analysisPropertyConstantValue = []; // TODO: populate with required fields
+    $analysisPropertyConstantValue = 'irure dese';
 
     $analysisProperty = new \ElevenLabs\Types\AnalysisProperty([
       'type' => $analysisPropertyType,

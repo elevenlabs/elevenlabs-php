@@ -149,7 +149,7 @@ class ToolConfigsWireTest extends TestCase
 
     $constantSchemaOverrideSource = \ElevenLabs\Types\ConstantSchemaOverrideSource::Constant->value;
 
-    $constantSchemaOverrideConstantValue = []; // TODO: populate with required fields
+    $constantSchemaOverrideConstantValue = 'Duis amet m';
 
     $constantSchemaOverride = new \ElevenLabs\Types\ConstantSchemaOverride([
       'source' => $constantSchemaOverrideSource,
@@ -408,7 +408,7 @@ class ToolConfigsWireTest extends TestCase
 
     $constantSchemaOverrideSource = \ElevenLabs\Types\ConstantSchemaOverrideSource::Constant->value;
 
-    $constantSchemaOverrideConstantValue = []; // TODO: populate with required fields
+    $constantSchemaOverrideConstantValue = 'Duis amet m';
 
     $constantSchemaOverride = new \ElevenLabs\Types\ConstantSchemaOverride([
       'source' => $constantSchemaOverrideSource,

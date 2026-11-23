@@ -157,7 +157,7 @@ class EnvironmentVariablesClient extends BaseService
   /**
    * Create a new environment variable for the workspace
    *
-   * @param \ElevenLabs\EnvironmentVariables\Types\CreateEnvironmentVariablesRequestBody $request Request body
+   * @param \ElevenLabs\Types\CreateStringEnvironmentVariableRequest|\ElevenLabs\Types\CreateSecretEnvironmentVariableRequest|\ElevenLabs\Types\CreateAuthConnectionEnvironmentVariableRequest $request Request body
    * @param ?array{
    *   baseUrl?: string,
    *   maxRetries?: int,
@@ -171,7 +171,7 @@ class EnvironmentVariablesClient extends BaseService
    * @throws \ElevenLabs\Exceptions\ElevenlabsApiException
    */
   public function create(
-    \ElevenLabs\EnvironmentVariables\Types\CreateEnvironmentVariablesRequestBody $request,
+    \ElevenLabs\Types\CreateStringEnvironmentVariableRequest|\ElevenLabs\Types\CreateSecretEnvironmentVariableRequest|\ElevenLabs\Types\CreateAuthConnectionEnvironmentVariableRequest $request,
     ?array $options = null
   ): ?\ElevenLabs\Types\EnvironmentVariableResponse {
     $resolvedConfig = $this->getResolvedConfig($this->createConfig, $options);

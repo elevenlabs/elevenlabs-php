@@ -19,7 +19,7 @@ class AgentResponse extends JsonSerializableType
   use ReflectiveSerialization;
 
   /**
-   * @var value-of<\ElevenLabs\Types\Type>
+   * @var value-of<\ElevenLabs\Types\Type1>
    */
   #[JsonProperty('type', required: true)]
   public string $type;
@@ -35,7 +35,7 @@ class AgentResponse extends JsonSerializableType
 
   /**
    * @param array{
-   *   type: value-of<\ElevenLabs\Types\Type>,
+   *   type: value-of<\ElevenLabs\Types\Type1>,
    *   eventId: int,
    *   content?: ?string,
    *   isFinal?: ?bool,

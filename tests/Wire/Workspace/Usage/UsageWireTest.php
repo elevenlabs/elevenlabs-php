@@ -42,7 +42,7 @@ class UsageWireTest extends TestCase
 
     $columnFilterOperation = \ElevenLabs\Types\ColumnFilterOperation::In->value;
 
-    $columnFilterValuesItem = []; // TODO: populate with required fields
+    $columnFilterValuesItem = 'et pariatu';
 
     $columnFilter = new \ElevenLabs\Types\ColumnFilter([
       'column' => 'column',
@@ -107,7 +107,7 @@ class UsageWireTest extends TestCase
     $metronomeUsageColumnFilterOperation =
       \ElevenLabs\Types\MetronomeUsageColumnFilterOperation::Eq->value;
 
-    $metronomeUsageColumnFilterValuesItem = []; // TODO: populate with required fields
+    $metronomeUsageColumnFilterValuesItem = 'est aute';
 
     $metronomeUsageColumnFilter = new \ElevenLabs\Types\MetronomeUsageColumnFilter([
       'column' => $metronomeUsageColumnFilterColumn,

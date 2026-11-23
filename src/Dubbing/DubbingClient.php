@@ -182,7 +182,7 @@ class DubbingClient extends BaseService
    * @throws \ElevenLabs\Exceptions\ElevenlabsApiException
    */
   public function create(
-    \ElevenLabs\Dubbing\Requests\BodyDubAVideoOrAnAudioFileV1DubbingPost $request = new \ElevenLabs\Dubbing\Requests\BodyDubAVideoOrAnAudioFileV1DubbingPost(),
+    \ElevenLabs\Dubbing\Requests\BodyDubAVideoOrAnAudioFileV1DubbingPost $request,
     ?array $options = null
   ): ?\ElevenLabs\Types\DoDubbingResponse {
     $request->validate();
@@ -191,7 +191,7 @@ class DubbingClient extends BaseService
     $response = $this->sendRequest(
       'post',
       '/v1/dubbing',
-      ['multipart' => $request?->toMultipart()],
+      ['multipart' => $request->toMultipart()],
       $resolvedConfig
     );
     $data = $response->getBody()->getContents();

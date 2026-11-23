@@ -123,7 +123,7 @@ class AuthConnectionsClient extends BaseService
   /**
    * Create a new OAuth2 auth connection for the workspace
    *
-   * @param \ElevenLabs\Workspace\AuthConnections\Types\CreateAuthConnectionsRequestBody $request Request body
+   * @param \ElevenLabs\Types\CreateOAuth2ClientCredsRequest|\ElevenLabs\Types\CreateCustomHeaderAuthRequest|\ElevenLabs\Types\CreateBasicAuthRequest|\ElevenLabs\Types\CreateBearerAuthRequest|\ElevenLabs\Types\CreateOAuth2JwtRequest|\ElevenLabs\Types\CreatePrivateKeyJwtRequest|\ElevenLabs\Types\CreateMtlsAuthRequest $request Request body
    * @param ?array{
    *   baseUrl?: string,
    *   maxRetries?: int,
@@ -137,7 +137,7 @@ class AuthConnectionsClient extends BaseService
    * @throws \ElevenLabs\Exceptions\ElevenlabsApiException
    */
   public function create(
-    \ElevenLabs\Workspace\AuthConnections\Types\CreateAuthConnectionsRequestBody $request,
+    \ElevenLabs\Types\CreateOAuth2ClientCredsRequest|\ElevenLabs\Types\CreateCustomHeaderAuthRequest|\ElevenLabs\Types\CreateBasicAuthRequest|\ElevenLabs\Types\CreateBearerAuthRequest|\ElevenLabs\Types\CreateOAuth2JwtRequest|\ElevenLabs\Types\CreatePrivateKeyJwtRequest|\ElevenLabs\Types\CreateMtlsAuthRequest $request,
     ?array $options = null
   ): ?\ElevenLabs\Workspace\AuthConnections\Types\CreateAuthConnectionsResponse {
     $resolvedConfig = $this->getResolvedConfig($this->createConfig, $options);
@@ -169,7 +169,7 @@ class AuthConnectionsClient extends BaseService
    * Update an auth connection
    *
    * @param string $authConnectionId
-   * @param \ElevenLabs\Workspace\AuthConnections\Types\UpdateAuthConnectionsRequestBody $request Request body
+   * @param \ElevenLabs\Types\UpdateOAuth2ClientCredsRequest|\ElevenLabs\Types\UpdateBasicAuthRequest|\ElevenLabs\Types\UpdateBearerAuthRequest|\ElevenLabs\Types\UpdateOAuth2JwtRequest $request Request body
    * @param ?array{
    *   baseUrl?: string,
    *   maxRetries?: int,
@@ -184,7 +184,7 @@ class AuthConnectionsClient extends BaseService
    */
   public function update(
     string $authConnectionId,
-    \ElevenLabs\Workspace\AuthConnections\Types\UpdateAuthConnectionsRequestBody $request,
+    \ElevenLabs\Types\UpdateOAuth2ClientCredsRequest|\ElevenLabs\Types\UpdateBasicAuthRequest|\ElevenLabs\Types\UpdateBearerAuthRequest|\ElevenLabs\Types\UpdateOAuth2JwtRequest $request,
     ?array $options = null
   ): ?\ElevenLabs\Workspace\AuthConnections\Types\UpdateAuthConnectionsResponse {
     $resolvedConfig = $this->getResolvedConfig($this->updateConfig, $options);

@@ -140,7 +140,7 @@ class TestsClient extends BaseService
   /**
    * Creates a new agent response test.
    *
-   * @param \ElevenLabs\Agents\Tests\Types\CreateTestsRequestBody $request Request body
+   * @param \ElevenLabs\Types\CreateResponseUnitTestRequest|\ElevenLabs\Types\CreateToolCallUnitTestRequest|\ElevenLabs\Types\CreateSimulationTestRequest $request Request body
    * @param ?array{
    *   baseUrl?: string,
    *   maxRetries?: int,
@@ -154,7 +154,7 @@ class TestsClient extends BaseService
    * @throws \ElevenLabs\Exceptions\ElevenlabsApiException
    */
   public function create(
-    \ElevenLabs\Agents\Tests\Types\CreateTestsRequestBody $request,
+    \ElevenLabs\Types\CreateResponseUnitTestRequest|\ElevenLabs\Types\CreateToolCallUnitTestRequest|\ElevenLabs\Types\CreateSimulationTestRequest $request,
     ?array $options = null
   ): ?\ElevenLabs\Types\CreateAgentTestResponseModel {
     $resolvedConfig = $this->getResolvedConfig($this->createConfig, $options);
@@ -277,7 +277,7 @@ class TestsClient extends BaseService
    * Updates an agent response test by ID.
    *
    * @param string $testId The id of a chat response test. This is returned on test creation.
-   * @param \ElevenLabs\Agents\Tests\Types\UpdateTestsRequestBody $request Request body
+   * @param \ElevenLabs\Types\UpdateResponseUnitTestRequest|\ElevenLabs\Types\UpdateToolCallUnitTestRequest|\ElevenLabs\Types\UpdateSimulationTestRequest $request Request body
    * @param ?array{
    *   baseUrl?: string,
    *   maxRetries?: int,
@@ -292,7 +292,7 @@ class TestsClient extends BaseService
    */
   public function update(
     string $testId,
-    \ElevenLabs\Agents\Tests\Types\UpdateTestsRequestBody $request,
+    \ElevenLabs\Types\UpdateResponseUnitTestRequest|\ElevenLabs\Types\UpdateToolCallUnitTestRequest|\ElevenLabs\Types\UpdateSimulationTestRequest $request,
     ?array $options = null
   ): ?\ElevenLabs\Agents\Tests\Types\UpdateTestsResponse {
     $resolvedConfig = $this->getResolvedConfig($this->updateConfig, $options);

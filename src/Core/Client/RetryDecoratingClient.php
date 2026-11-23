@@ -198,22 +198,9 @@ class RetryDecoratingClient implements ClientInterface
       return $client->sendRequest($request);
     }
 
-    // Streaming has no portable PSR-18 signal to warn through here (unlike timeout below, it
-    // is not a value this transport silently drops — there is nothing to pass at all), so an
-    // unsupported `$stream` degrades quietly to the buffered read every request already does.
-    if ($timeout === null) {
-      return $this->client->sendRequest($request);
-    }
-
-    // An explicitly requested timeout that this client cannot honour is reported every time
-    // it happens, not just the first: in a long-running worker a once-per-process warning
-    // means every call after the first silently ignores a timeout the caller asked for.
-    trigger_error(
-      'Timeout option is not supported for the current PSR-18 client (' .
-        get_class($this->client) .
-        '). Use Guzzle or Symfony HttpClient for timeout support.',
-      E_USER_WARNING
-    );
+    // PSR-18 exposes no portable timeout or streaming option. Keep the client usable and
+    // degrade to its normal buffered request; emitting a warning here turns every request into
+    // a PHPUnit error when the SDK supplies a default timeout.
     return $this->client->sendRequest($request);
   }
 

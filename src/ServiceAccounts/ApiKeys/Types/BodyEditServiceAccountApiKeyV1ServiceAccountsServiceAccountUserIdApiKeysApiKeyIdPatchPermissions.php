@@ -46,6 +46,9 @@ class BodyEditServiceAccountApiKeyV1ServiceAccountsServiceAccountUserIdApiKeysAp
   {
     $mappedValues = [];
     foreach ($values as $value) {
+      if (is_array($value) && array_is_list($value)) {
+        $mappedValues['array'] = $value;
+      }
       if ($value instanceof \ElevenLabs\ServiceAccounts\ApiKeys\Types\Permissions22) {
         $mappedValues['permissions22'] = $value;
       }
@@ -55,6 +58,14 @@ class BodyEditServiceAccountApiKeyV1ServiceAccountsServiceAccountUserIdApiKeysAp
 
   // Check presence methods
   /**
+   * Check if this BodyEditServiceAccountApiKeyV1ServiceAccountsServiceAccountUserIdApiKeysApiKeyIdPatchPermissions contains a array
+   */
+  public function hasArray(): bool
+  {
+    return isset($this->values['array']);
+  }
+
+  /**
    * Check if this BodyEditServiceAccountApiKeyV1ServiceAccountsServiceAccountUserIdApiKeysApiKeyIdPatchPermissions contains a \ElevenLabs\ServiceAccounts\ApiKeys\Types\Permissions22
    */
   public function hasPermissions22(): bool
@@ -63,6 +74,15 @@ class BodyEditServiceAccountApiKeyV1ServiceAccountsServiceAccountUserIdApiKeysAp
   }
 
   // Getter methods
+  /**
+   * Get the array value if present
+   * @return array|null
+   */
+  public function getArray(): ?array
+  {
+    return $this->values['array'] ?? null;
+  }
+
   /**
    * Get the \ElevenLabs\ServiceAccounts\ApiKeys\Types\Permissions22 value if present
    * @return \ElevenLabs\ServiceAccounts\ApiKeys\Types\Permissions22|null
@@ -92,6 +112,10 @@ class BodyEditServiceAccountApiKeyV1ServiceAccountsServiceAccountUserIdApiKeysAp
     $matches = [];
 
     // Try each type and collect successful matches
+    if (is_array($data) && array_is_list($data)) {
+      $matches['array'] = $data;
+    }
+
     if (
       (is_string($data) || is_int($data)) &&
       ($enumValue = \ElevenLabs\ServiceAccounts\ApiKeys\Types\Permissions22::tryFrom($data)) !==
@@ -107,6 +131,11 @@ class BodyEditServiceAccountApiKeyV1ServiceAccountsServiceAccountUserIdApiKeysAp
     }
 
     return new self($matches);
+  }
+
+  protected function encodesEmptyArrayAsList(): bool
+  {
+    return array_key_exists('array', $this->values);
   }
 
   /**

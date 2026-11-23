@@ -45,6 +45,9 @@ class LiteralJsonSchemaPropertyType extends JsonSerializableType
       if ($value instanceof \ElevenLabs\Types\Type11) {
         $mappedValues['type11'] = $value;
       }
+      if (is_array($value) && array_is_list($value)) {
+        $mappedValues['array'] = $value;
+      }
     }
     return new self($mappedValues);
   }
@@ -58,6 +61,14 @@ class LiteralJsonSchemaPropertyType extends JsonSerializableType
     return isset($this->values['type11']);
   }
 
+  /**
+   * Check if this LiteralJsonSchemaPropertyType contains a array
+   */
+  public function hasArray(): bool
+  {
+    return isset($this->values['array']);
+  }
+
   // Getter methods
   /**
    * Get the \ElevenLabs\Types\Type11 value if present
@@ -66,6 +77,15 @@ class LiteralJsonSchemaPropertyType extends JsonSerializableType
   public function getType11(): ?\ElevenLabs\Types\Type11
   {
     return $this->values['type11'] ?? null;
+  }
+
+  /**
+   * Get the array value if present
+   * @return array|null
+   */
+  public function getArray(): ?array
+  {
+    return $this->values['array'] ?? null;
   }
 
   /**
@@ -95,6 +115,10 @@ class LiteralJsonSchemaPropertyType extends JsonSerializableType
       $matches['type11'] = $enumValue;
     }
 
+    if (is_array($data) && array_is_list($data)) {
+      $matches['array'] = $data;
+    }
+
     if (empty($matches)) {
       throw new \InvalidArgumentException(
         'Data does not match any LiteralJsonSchemaPropertyType type'
@@ -102,6 +126,11 @@ class LiteralJsonSchemaPropertyType extends JsonSerializableType
     }
 
     return new self($matches);
+  }
+
+  protected function encodesEmptyArrayAsList(): bool
+  {
+    return array_key_exists('array', $this->values);
   }
 
   /**

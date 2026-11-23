@@ -200,7 +200,7 @@ class AudioNativeClient extends BaseService
       '/v1/audio-native/' .
         \ElevenLabs\Core\Client\RawClient::encodePathParam($projectId) .
         '/content',
-      ['multipart' => $request?->toMultipart()],
+      ['multipart' => $request->toMultipart()],
       $resolvedConfig
     );
     $data = $response->getBody()->getContents();

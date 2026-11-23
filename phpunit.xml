@@ -3,6 +3,10 @@
     <testsuites>
         <testsuite name="default">
             <directory suffix="Test.php">tests</directory>
+            <exclude>tests/Wire</exclude>
+        </testsuite>
+        <testsuite name="wire">
+            <directory suffix="Test.php">tests/Wire</directory>
         </testsuite>
     </testsuites>
 </phpunit>
