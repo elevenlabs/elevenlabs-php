@@ -37,7 +37,7 @@ class TestsWireTest extends TestCase
       [
         'text' => 'text',
         'voiceLabel' => 'voice_label',
-        'timeInCallSecs' => 0
+        'timeInCallSecs' => 6
       ]
     );
 
@@ -83,7 +83,7 @@ class TestsWireTest extends TestCase
       'variableName' => 'variable_name',
       'oldValue' => 'old_value',
       'newValue' => 'new_value',
-      'updatedAt' => 4.11,
+      'updatedAt' => 7.02,
       'toolName' => 'tool_name',
       'toolRequestId' => 'tool_request_id'
     ]);
@@ -100,7 +100,7 @@ class TestsWireTest extends TestCase
         'isError' => false,
         'isBlocked' => true,
         'toolHasBeenCalled' => true,
-        'toolLatencySecs' => 9.12,
+        'toolLatencySecs' => 6.17,
         'errorType' => 'error_type',
         'rawErrorMessage' => 'raw_error_message',
         'dynamicVariableUpdates' => [],
@@ -112,11 +112,11 @@ class TestsWireTest extends TestCase
 
     $userFeedback = new \ElevenLabs\Types\UserFeedback([
       'score' => $userFeedbackScore,
-      'timeInCallSecs' => 7
+      'timeInCallSecs' => 10
     ]);
 
     $metricRecord = new \ElevenLabs\Types\MetricRecord([
-      'elapsedTime' => 7.84
+      'elapsedTime' => 6.47
     ]);
 
     $conversationTurnMetrics = new \ElevenLabs\Types\ConversationTurnMetrics([
@@ -130,7 +130,7 @@ class TestsWireTest extends TestCase
     $ragChunkMetadata = new \ElevenLabs\Types\RagChunkMetadata([
       'documentId' => 'document_id',
       'chunkId' => 'chunk_id',
-      'vectorDistance' => 2.56
+      'vectorDistance' => 0.28
     ]);
 
     $embeddingModelEnum = \ElevenLabs\Types\EmbeddingModelEnum::E5Mistral7BInstruct->value;
@@ -139,20 +139,21 @@ class TestsWireTest extends TestCase
       'chunks' => [],
       'embeddingModel' => $embeddingModelEnum,
       'retrievalQuery' => 'retrieval_query',
-      'ragLatencySecs' => 6.43,
+      'ragLatencySecs' => 3.59,
       'usedChunkIds' => []
     ]);
 
     $llmTokensCategoryUsage = new \ElevenLabs\Types\LlmTokensCategoryUsage([
-      'tokens' => 4,
-      'price' => 6.35
+      'tokens' => 5,
+      'price' => 0.97
     ]);
 
     $llmInputOutputTokensUsage = new \ElevenLabs\Types\LlmInputOutputTokensUsage([
       'input' => $llmTokensCategoryUsage,
       'inputCacheRead' => $llmTokensCategoryUsage,
       'inputCacheWrite' => $llmTokensCategoryUsage,
-      'outputTotal' => $llmTokensCategoryUsage
+      'outputTotal' => $llmTokensCategoryUsage,
+      'outputTotalReasoningPortion' => $llmTokensCategoryUsage
     ]);
 
     $llmUsageInput = new \ElevenLabs\Types\LlmUsageInput([
@@ -200,21 +201,21 @@ class TestsWireTest extends TestCase
         'feedback' => $userFeedback,
         'llmOverride' => 'llm_override',
         'producingLlm' => 'producing_llm',
-        'timeInCallSecs' => 9,
+        'timeInCallSecs' => 5,
         'conversationTurnMetrics' => $conversationTurnMetrics,
         'ragRetrievalInfo' => $ragRetrievalInfo,
         'llmUsage' => $llmUsageInput,
-        'interrupted' => false,
+        'interrupted' => true,
         'ignoredAsBackchannel' => true,
         'platformEvent' => $transcriptPlatformEvent,
         'originalMessage' => 'original_message',
         'reasoning' => [],
         'sourceMedium' => $chatSourceMedium,
-        'sourceEventId' => 0,
+        'sourceEventId' => 2,
         'usedStaticKbDocumentIds' => [],
         'userIdentifier' => 'user_identifier',
         'id' => 'id',
-        'createdAtUnixMs' => 3,
+        'createdAtUnixMs' => 0,
         'triggeredGuardrails' => []
       ]
     );
@@ -238,21 +239,21 @@ class TestsWireTest extends TestCase
         'feedback' => $userFeedback,
         'llmOverride' => 'llm_override',
         'producingLlm' => 'producing_llm',
-        'timeInCallSecs' => 9,
+        'timeInCallSecs' => 5,
         'conversationTurnMetrics' => $conversationTurnMetrics,
         'ragRetrievalInfo' => $ragRetrievalInfo,
         'llmUsage' => $llmUsageInput,
-        'interrupted' => false,
+        'interrupted' => true,
         'ignoredAsBackchannel' => true,
         'platformEvent' => $transcriptPlatformEvent,
         'originalMessage' => 'original_message',
         'reasoning' => [],
         'sourceMedium' => $chatSourceMedium,
-        'sourceEventId' => 0,
+        'sourceEventId' => 2,
         'usedStaticKbDocumentIds' => [],
         'userIdentifier' => 'user_identifier',
         'id' => 'id',
-        'createdAtUnixMs' => 3,
+        'createdAtUnixMs' => 0,
         'triggeredGuardrails' => []
       ]
     );
@@ -472,6 +473,10 @@ class TestsWireTest extends TestCase
                                   "output_total": {
                                       "tokens": 1,
                                       "price": 1
+                                  },
+                                  "output_total_reasoning_portion": {
+                                      "tokens": 1,
+                                      "price": 1
                                   }
                               }
                           }
@@ -629,6 +634,10 @@ class TestsWireTest extends TestCase
                                   "price": 1
                               },
                               "output_total": {
+                                  "tokens": 1,
+                                  "price": 1
+                              },
+                              "output_total_reasoning_portion": {
                                   "tokens": 1,
                                   "price": 1
                               }
@@ -838,6 +847,10 @@ class TestsWireTest extends TestCase
                                   "output_total": {
                                       "tokens": 1,
                                       "price": 1
+                                  },
+                                  "output_total_reasoning_portion": {
+                                      "tokens": 1,
+                                      "price": 1
                                   }
                               }
                           }
@@ -997,6 +1010,10 @@ class TestsWireTest extends TestCase
                               "output_total": {
                                   "tokens": 1,
                                   "price": 1
+                              },
+                              "output_total_reasoning_portion": {
+                                  "tokens": 1,
+                                  "price": 1
                               }
                           }
                       }
@@ -1068,7 +1085,7 @@ class TestsWireTest extends TestCase
       [
         'text' => 'text',
         'voiceLabel' => 'voice_label',
-        'timeInCallSecs' => 0
+        'timeInCallSecs' => 6
       ]
     );
 
@@ -1114,7 +1131,7 @@ class TestsWireTest extends TestCase
       'variableName' => 'variable_name',
       'oldValue' => 'old_value',
       'newValue' => 'new_value',
-      'updatedAt' => 4.11,
+      'updatedAt' => 7.02,
       'toolName' => 'tool_name',
       'toolRequestId' => 'tool_request_id'
     ]);
@@ -1131,7 +1148,7 @@ class TestsWireTest extends TestCase
         'isError' => false,
         'isBlocked' => true,
         'toolHasBeenCalled' => true,
-        'toolLatencySecs' => 9.12,
+        'toolLatencySecs' => 6.17,
         'errorType' => 'error_type',
         'rawErrorMessage' => 'raw_error_message',
         'dynamicVariableUpdates' => [],
@@ -1143,11 +1160,11 @@ class TestsWireTest extends TestCase
 
     $userFeedback = new \ElevenLabs\Types\UserFeedback([
       'score' => $userFeedbackScore,
-      'timeInCallSecs' => 7
+      'timeInCallSecs' => 10
     ]);
 
     $metricRecord = new \ElevenLabs\Types\MetricRecord([
-      'elapsedTime' => 7.84
+      'elapsedTime' => 6.47
     ]);
 
     $conversationTurnMetrics = new \ElevenLabs\Types\ConversationTurnMetrics([
@@ -1161,7 +1178,7 @@ class TestsWireTest extends TestCase
     $ragChunkMetadata = new \ElevenLabs\Types\RagChunkMetadata([
       'documentId' => 'document_id',
       'chunkId' => 'chunk_id',
-      'vectorDistance' => 2.56
+      'vectorDistance' => 0.28
     ]);
 
     $embeddingModelEnum = \ElevenLabs\Types\EmbeddingModelEnum::E5Mistral7BInstruct->value;
@@ -1170,20 +1187,21 @@ class TestsWireTest extends TestCase
       'chunks' => [],
       'embeddingModel' => $embeddingModelEnum,
       'retrievalQuery' => 'retrieval_query',
-      'ragLatencySecs' => 6.43,
+      'ragLatencySecs' => 3.59,
       'usedChunkIds' => []
     ]);
 
     $llmTokensCategoryUsage = new \ElevenLabs\Types\LlmTokensCategoryUsage([
-      'tokens' => 4,
-      'price' => 6.35
+      'tokens' => 5,
+      'price' => 0.97
     ]);
 
     $llmInputOutputTokensUsage = new \ElevenLabs\Types\LlmInputOutputTokensUsage([
       'input' => $llmTokensCategoryUsage,
       'inputCacheRead' => $llmTokensCategoryUsage,
       'inputCacheWrite' => $llmTokensCategoryUsage,
-      'outputTotal' => $llmTokensCategoryUsage
+      'outputTotal' => $llmTokensCategoryUsage,
+      'outputTotalReasoningPortion' => $llmTokensCategoryUsage
     ]);
 
     $llmUsageInput = new \ElevenLabs\Types\LlmUsageInput([
@@ -1231,21 +1249,21 @@ class TestsWireTest extends TestCase
         'feedback' => $userFeedback,
         'llmOverride' => 'llm_override',
         'producingLlm' => 'producing_llm',
-        'timeInCallSecs' => 9,
+        'timeInCallSecs' => 5,
         'conversationTurnMetrics' => $conversationTurnMetrics,
         'ragRetrievalInfo' => $ragRetrievalInfo,
         'llmUsage' => $llmUsageInput,
-        'interrupted' => false,
+        'interrupted' => true,
         'ignoredAsBackchannel' => true,
         'platformEvent' => $transcriptPlatformEvent,
         'originalMessage' => 'original_message',
         'reasoning' => [],
         'sourceMedium' => $chatSourceMedium,
-        'sourceEventId' => 0,
+        'sourceEventId' => 2,
         'usedStaticKbDocumentIds' => [],
         'userIdentifier' => 'user_identifier',
         'id' => 'id',
-        'createdAtUnixMs' => 3,
+        'createdAtUnixMs' => 0,
         'triggeredGuardrails' => []
       ]
     );
@@ -1269,21 +1287,21 @@ class TestsWireTest extends TestCase
         'feedback' => $userFeedback,
         'llmOverride' => 'llm_override',
         'producingLlm' => 'producing_llm',
-        'timeInCallSecs' => 9,
+        'timeInCallSecs' => 5,
         'conversationTurnMetrics' => $conversationTurnMetrics,
         'ragRetrievalInfo' => $ragRetrievalInfo,
         'llmUsage' => $llmUsageInput,
-        'interrupted' => false,
+        'interrupted' => true,
         'ignoredAsBackchannel' => true,
         'platformEvent' => $transcriptPlatformEvent,
         'originalMessage' => 'original_message',
         'reasoning' => [],
         'sourceMedium' => $chatSourceMedium,
-        'sourceEventId' => 0,
+        'sourceEventId' => 2,
         'usedStaticKbDocumentIds' => [],
         'userIdentifier' => 'user_identifier',
         'id' => 'id',
-        'createdAtUnixMs' => 3,
+        'createdAtUnixMs' => 0,
         'triggeredGuardrails' => []
       ]
     );
@@ -1457,7 +1475,7 @@ class TestsWireTest extends TestCase
         'search' => 'search',
         'parentFolderId' => 'parent_folder_id',
         'types' => [],
-        'includeFolders' => true,
+        'includeFolders' => false,
         'sortMode' => $sortMode->value,
         'sharingMode' => $sharingMode->value,
         'createdByUserId' => 'created_by_user_id'

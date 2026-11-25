@@ -56,6 +56,11 @@ class ListHistoryRequest extends JsonSerializableType
   public ?string $source;
 
   /**
+   * @var ?array $sources Sources of the generated history items, matching any of them. Cannot be combined with source.
+   */
+  public ?array $sources;
+
+  /**
    * @param array{
    *   pageSize?: ?int,
    *   startAfterHistoryItemId?: ?string,
@@ -66,6 +71,7 @@ class ListHistoryRequest extends JsonSerializableType
    *   sortDirection?: ?value-of<ListHistoryRequestSortDirection>,
    *   search?: ?string,
    *   source?: ?value-of<ListHistoryRequestSource>,
+   *   sources?: ?array,
    * } $values
    */
   public function __construct(array $values = [])
@@ -79,6 +85,7 @@ class ListHistoryRequest extends JsonSerializableType
     $this->sortDirection = $values['sortDirection'] ?? null;
     $this->search = $values['search'] ?? null;
     $this->source = $values['source'] ?? null;
+    $this->sources = $values['sources'] ?? null;
   }
 
   /**
@@ -96,7 +103,8 @@ class ListHistoryRequest extends JsonSerializableType
       'dateAfterUnix' => $data['date_after_unix'] ?? null,
       'sortDirection' => $data['sort_direction'] ?? null,
       'search' => $data['search'] ?? null,
-      'source' => $data['source'] ?? null
+      'source' => $data['source'] ?? null,
+      'sources' => $data['sources'] ?? null
     ]);
   }
 
@@ -132,6 +140,9 @@ class ListHistoryRequest extends JsonSerializableType
     }
     if ($this->source !== null) {
       $result['source'] = $this->source;
+    }
+    if ($this->sources !== null) {
+      $result['sources'] = $this->sources;
     }
     return $result;
   }

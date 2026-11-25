@@ -91,10 +91,10 @@ class CrawlJobsWireTest extends TestCase
         'excludePatterns' => [],
         'sitemapUrls' => [],
         'parentFolderId' => 'parent_folder_id',
-        'enableAutoSync' => true,
+        'enableAutoSync' => false,
         'autoRemove' => true,
         'autoDiscover' => false,
-        'minimumFrequencyDays' => 139
+        'minimumFrequencyDays' => 99
       ]
     );
     $sdk->agents->knowledgeBase->crawlJobs->create(request: $request);

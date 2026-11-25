@@ -22,6 +22,7 @@ class SubmitCampaignRequestTest extends TestCase
                 ],
                 "whatsapp_user_id": "test-value",
                 "id": "test-value",
+                "timezone_override": "test-value",
                 "conversation_initiation_client_data": {
                     "conversation_config_override": {
                         "asr": {

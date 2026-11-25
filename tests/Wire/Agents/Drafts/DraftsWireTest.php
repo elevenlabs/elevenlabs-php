@@ -37,8 +37,8 @@ class DraftsWireTest extends TestCase
     );
 
     $positionInput = new \ElevenLabs\Types\PositionInput([
-      'x' => 0.13,
-      'y' => 8.06
+      'x' => 0.28,
+      'y' => 3.65
     ]);
 
     $workflowEdgeModelInput = new \ElevenLabs\Types\WorkflowEdgeModelInput([

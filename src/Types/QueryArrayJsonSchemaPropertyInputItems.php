@@ -22,7 +22,7 @@ use ElevenLabs\Core\Json\JsonSerializableType;
 class QueryArrayJsonSchemaPropertyInputItems extends JsonSerializableType
 {
   /**
-   * @var \ElevenLabs\Types\LiteralJsonSchemaProperty|\ElevenLabs\Types\ObjectJsonSchemaPropertyInput|\ElevenLabs\Types\ArrayJsonSchemaPropertyInput The value, exactly one of the variant types
+   * @var \ElevenLabs\Types\LiteralJsonSchemaProperty|\ElevenLabs\Types\ObjectJsonSchemaPropertyInput|\ElevenLabs\Types\ArrayJsonSchemaPropertyInput|\ElevenLabs\Types\AnyOfJsonSchemaPropertyInput The value, exactly one of the variant types
    */
   public readonly mixed $value;
 
@@ -33,7 +33,7 @@ class QueryArrayJsonSchemaPropertyInputItems extends JsonSerializableType
 
   /**
    * Private constructor - use factory methods to create instances
-   * @param \ElevenLabs\Types\LiteralJsonSchemaProperty|\ElevenLabs\Types\ObjectJsonSchemaPropertyInput|\ElevenLabs\Types\ArrayJsonSchemaPropertyInput $value
+   * @param \ElevenLabs\Types\LiteralJsonSchemaProperty|\ElevenLabs\Types\ObjectJsonSchemaPropertyInput|\ElevenLabs\Types\ArrayJsonSchemaPropertyInput|\ElevenLabs\Types\AnyOfJsonSchemaPropertyInput $value
    */
   private function __construct($value, int $typeIndex)
   {
@@ -69,6 +69,15 @@ class QueryArrayJsonSchemaPropertyInputItems extends JsonSerializableType
     return new self($arrayJsonSchemaPropertyInput, 2);
   }
 
+  /**
+   * Create a QueryArrayJsonSchemaPropertyInputItems instance containing a \ElevenLabs\Types\AnyOfJsonSchemaPropertyInput
+   */
+  public static function anyOfJsonSchemaPropertyInput(
+    \ElevenLabs\Types\AnyOfJsonSchemaPropertyInput $anyOfJsonSchemaPropertyInput
+  ): self {
+    return new self($anyOfJsonSchemaPropertyInput, 3);
+  }
+
   // Type checking methods
   /**
    * Check if this QueryArrayJsonSchemaPropertyInputItems contains a \ElevenLabs\Types\LiteralJsonSchemaProperty
@@ -92,6 +101,14 @@ class QueryArrayJsonSchemaPropertyInputItems extends JsonSerializableType
   public function isArrayJsonSchemaPropertyInput(): bool
   {
     return $this->typeIndex === 2;
+  }
+
+  /**
+   * Check if this QueryArrayJsonSchemaPropertyInputItems contains a \ElevenLabs\Types\AnyOfJsonSchemaPropertyInput
+   */
+  public function isAnyOfJsonSchemaPropertyInput(): bool
+  {
+    return $this->typeIndex === 3;
   }
 
   // Throwing getters (fail-fast)
@@ -137,6 +154,20 @@ class QueryArrayJsonSchemaPropertyInputItems extends JsonSerializableType
     return $this->value;
   }
 
+  /**
+   * Get the \ElevenLabs\Types\AnyOfJsonSchemaPropertyInput value
+   * @throws \RuntimeException if this QueryArrayJsonSchemaPropertyInputItems does not contain a \ElevenLabs\Types\AnyOfJsonSchemaPropertyInput
+   */
+  public function asAnyOfJsonSchemaPropertyInput(): \ElevenLabs\Types\AnyOfJsonSchemaPropertyInput
+  {
+    if (!$this->isAnyOfJsonSchemaPropertyInput()) {
+      throw new \RuntimeException(
+        'QueryArrayJsonSchemaPropertyInputItems does not contain \ElevenLabs\Types\AnyOfJsonSchemaPropertyInput'
+      );
+    }
+    return $this->value;
+  }
+
   // Safe getters (return null)
   /**
    * Try to get the \ElevenLabs\Types\LiteralJsonSchemaProperty value
@@ -166,22 +197,34 @@ class QueryArrayJsonSchemaPropertyInputItems extends JsonSerializableType
   }
 
   /**
+   * Try to get the \ElevenLabs\Types\AnyOfJsonSchemaPropertyInput value
+   * @return \ElevenLabs\Types\AnyOfJsonSchemaPropertyInput|null Returns the value if this QueryArrayJsonSchemaPropertyInputItems contains a \ElevenLabs\Types\AnyOfJsonSchemaPropertyInput, null otherwise
+   */
+  public function tryAsAnyOfJsonSchemaPropertyInput(): ?\ElevenLabs\Types\AnyOfJsonSchemaPropertyInput
+  {
+    return $this->isAnyOfJsonSchemaPropertyInput() ? $this->value : null;
+  }
+
+  /**
    * Pattern matching for exhaustive type handling
    * @template T
    * @param callable(\ElevenLabs\Types\LiteralJsonSchemaProperty): T $onLiteralJsonSchemaProperty
    * @param callable(\ElevenLabs\Types\ObjectJsonSchemaPropertyInput): T $onObjectJsonSchemaPropertyInput
    * @param callable(\ElevenLabs\Types\ArrayJsonSchemaPropertyInput): T $onArrayJsonSchemaPropertyInput
+   * @param callable(\ElevenLabs\Types\AnyOfJsonSchemaPropertyInput): T $onAnyOfJsonSchemaPropertyInput
    * @return T
    */
   public function match(
     callable $onLiteralJsonSchemaProperty,
     callable $onObjectJsonSchemaPropertyInput,
-    callable $onArrayJsonSchemaPropertyInput
+    callable $onArrayJsonSchemaPropertyInput,
+    callable $onAnyOfJsonSchemaPropertyInput
   ): mixed {
     return match ($this->typeIndex) {
       0 => $onLiteralJsonSchemaProperty($this->value),
       1 => $onObjectJsonSchemaPropertyInput($this->value),
       2 => $onArrayJsonSchemaPropertyInput($this->value),
+      3 => $onAnyOfJsonSchemaPropertyInput($this->value),
       default => throw new \UnexpectedValueException("Unknown type index: $this->typeIndex")
     };
   }
@@ -239,6 +282,18 @@ class QueryArrayJsonSchemaPropertyInputItems extends JsonSerializableType
       // the shared deserializer raises — a JsonException for a missing required field, not
       // just a TypeError. Narrowing it turns a non-matching variant into a fatal.
       // \ElevenLabs\Types\ArrayJsonSchemaPropertyInput didn't match, continue to next type
+    }
+
+    try {
+      $candidate = \ElevenLabs\Types\AnyOfJsonSchemaPropertyInput::fromArray($data);
+      // Keys the variant actually mapped = input keys minus the ones it could not place.
+      $score = count($data) - count($candidate->getAdditionalProperties());
+      $candidates[] = ['instance' => $candidate, 'idx' => 3, 'score' => $score];
+    } catch (\Throwable $e) {
+      // Throwable, because under fernMode "this variant does not match" arrives as whatever
+      // the shared deserializer raises — a JsonException for a missing required field, not
+      // just a TypeError. Narrowing it turns a non-matching variant into a fatal.
+      // \ElevenLabs\Types\AnyOfJsonSchemaPropertyInput didn't match, continue to next type
     }
 
     if (count($candidates) === 0) {

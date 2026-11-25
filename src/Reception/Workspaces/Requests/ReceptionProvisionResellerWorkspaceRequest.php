@@ -31,6 +31,12 @@ class ReceptionProvisionResellerWorkspaceRequest extends JsonSerializableType
   public ?string $vertical;
 
   /**
+   * Bill the workspace's own customer instead of the reseller: it checks out and sees its billing itself, and the reseller earns a commission. Only for a reseller on standard billing.
+   */
+  #[JsonProperty('charge_customer')]
+  public ?bool $chargeCustomer;
+
+  /**
    * Paid tier to subscribe to. Omitted leaves the workspace with no subscription.
    */
   #[JsonProperty('subscription')]
@@ -65,6 +71,7 @@ class ReceptionProvisionResellerWorkspaceRequest extends JsonSerializableType
    * @param array{
    *   businessName: string,
    *   vertical?: ?value-of<\ElevenLabs\Types\ReceptionVertical>,
+   *   chargeCustomer?: ?bool,
    *   subscription?: ?\ElevenLabs\Types\ProvisionResellerWorkspaceSubscription,
    *   phoneNumber?: ?string,
    *   members?: \ElevenLabs\Types\TeamInviteRequest[]|null,
@@ -76,6 +83,7 @@ class ReceptionProvisionResellerWorkspaceRequest extends JsonSerializableType
   {
     $this->businessName = $values['businessName'];
     $this->vertical = $values['vertical'] ?? null;
+    $this->chargeCustomer = $values['chargeCustomer'] ?? null;
     $this->subscription = $values['subscription'] ?? null;
     $this->phoneNumber = $values['phoneNumber'] ?? null;
     $this->members = $values['members'] ?? null;
@@ -87,6 +95,9 @@ class ReceptionProvisionResellerWorkspaceRequest extends JsonSerializableType
     ];
     if (array_key_exists('vertical', $values)) {
       $this->_dirtyFields['vertical'] = true;
+    }
+    if (array_key_exists('chargeCustomer', $values)) {
+      $this->_dirtyFields['charge_customer'] = true;
     }
     if (array_key_exists('subscription', $values)) {
       $this->_dirtyFields['subscription'] = true;
@@ -117,6 +128,13 @@ class ReceptionProvisionResellerWorkspaceRequest extends JsonSerializableType
       $parts[] = [
         'name' => 'vertical',
         'contents' => $this->vertical
+      ];
+    }
+
+    if ($this->chargeCustomer !== null) {
+      $parts[] = [
+        'name' => 'charge_customer',
+        'contents' => $this->chargeCustomer ? 'true' : 'false'
       ];
     }
 

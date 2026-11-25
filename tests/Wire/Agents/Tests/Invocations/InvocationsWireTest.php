@@ -65,8 +65,8 @@ class InvocationsWireTest extends TestCase
         'branchId' => 'branch_id',
         'createdByUserId' => 'created_by_user_id',
         'testId' => 'test_id',
-        'startTime' => 1,
-        'endTime' => 8,
+        'startTime' => 5,
+        'endTime' => 2,
         'versionId' => 'version_id',
         'pageSize' => 30,
         'search' => 'search',
@@ -246,6 +246,10 @@ class InvocationsWireTest extends TestCase
                                               "output_total": {
                                                   "tokens": 1,
                                                   "price": 1
+                                              },
+                                              "output_total_reasoning_portion": {
+                                                  "tokens": 1,
+                                                  "price": 1
                                               }
                                           }
                                       }
@@ -403,6 +407,10 @@ class InvocationsWireTest extends TestCase
                                               "price": 1
                                           },
                                           "output_total": {
+                                              "tokens": 1,
+                                              "price": 1
+                                          },
+                                          "output_total_reasoning_portion": {
                                               "tokens": 1,
                                               "price": 1
                                           }
@@ -584,6 +592,10 @@ class InvocationsWireTest extends TestCase
                                       "output_total": {
                                           "tokens": 1,
                                           "price": 1
+                                      },
+                                      "output_total_reasoning_portion": {
+                                          "tokens": 1,
+                                          "price": 1
                                       }
                                   }
                               }
@@ -675,6 +687,10 @@ class InvocationsWireTest extends TestCase
                                       "output_total": {
                                           "tokens": 1,
                                           "price": 1
+                                      },
+                                      "output_total_reasoning_portion": {
+                                          "tokens": 1,
+                                          "price": 1
                                       }
                                   }
                               }
@@ -695,6 +711,10 @@ class InvocationsWireTest extends TestCase
                                           "price": 1
                                       },
                                       "output_total": {
+                                          "tokens": 1,
+                                          "price": 1
+                                      },
+                                      "output_total_reasoning_portion": {
                                           "tokens": 1,
                                           "price": 1
                                       }
@@ -939,6 +959,10 @@ class InvocationsWireTest extends TestCase
                                               "output_total": {
                                                   "tokens": 1,
                                                   "price": 1
+                                              },
+                                              "output_total_reasoning_portion": {
+                                                  "tokens": 1,
+                                                  "price": 1
                                               }
                                           }
                                       }
@@ -1096,6 +1120,10 @@ class InvocationsWireTest extends TestCase
                                               "price": 1
                                           },
                                           "output_total": {
+                                              "tokens": 1,
+                                              "price": 1
+                                          },
+                                          "output_total_reasoning_portion": {
                                               "tokens": 1,
                                               "price": 1
                                           }
@@ -1277,6 +1305,10 @@ class InvocationsWireTest extends TestCase
                                       "output_total": {
                                           "tokens": 1,
                                           "price": 1
+                                      },
+                                      "output_total_reasoning_portion": {
+                                          "tokens": 1,
+                                          "price": 1
                                       }
                                   }
                               }
@@ -1368,6 +1400,10 @@ class InvocationsWireTest extends TestCase
                                       "output_total": {
                                           "tokens": 1,
                                           "price": 1
+                                      },
+                                      "output_total_reasoning_portion": {
+                                          "tokens": 1,
+                                          "price": 1
                                       }
                                   }
                               }
@@ -1388,6 +1424,10 @@ class InvocationsWireTest extends TestCase
                                           "price": 1
                                       },
                                       "output_total": {
+                                          "tokens": 1,
+                                          "price": 1
+                                      },
+                                      "output_total_reasoning_portion": {
                                           "tokens": 1,
                                           "price": 1
                                       }
@@ -1528,25 +1568,26 @@ class InvocationsWireTest extends TestCase
       'message' => 'Hhmmmm...yeah.',
       'additionalSoftTimeoutMessages' => [],
       'useLlmGeneratedMessage' => true,
-      'randomizeFillers' => false,
+      'randomizeFillers' => true,
       'maxSoftTimeoutsPerGeneration' => 1,
+      'pauseAfterFiller' => true,
       'llmGeneratedMessagePromptOverride' => 'llm_generated_message_prompt_override',
       'disableUntilFirstUserMessage' => false
     ]);
 
     $turnConfig = new \ElevenLabs\Types\TurnConfig([
       'turnTimeout' => 7,
-      'initialWaitTime' => 0.63,
+      'initialWaitTime' => 9.4,
       'silenceEndCallTimeout' => -1,
       'turnEagerness' => $turnEagerness,
       'spellingPatience' => $spellingPatience,
       'speculativeTurn' => false,
-      'retranscribeOnTurnTimeout' => true,
+      'retranscribeOnTurnTimeout' => false,
       'turnModel' => $turnModel,
       'interruptionIgnoreTerms' => [],
       'interruptionIgnoreTermLanguages' => [],
-      'mergeWithDefaultIgnoreTerms' => false,
-      'transcribeOnDisabledInterruptions' => true,
+      'mergeWithDefaultIgnoreTerms' => true,
+      'transcribeOnDisabledInterruptions' => false,
       'softTimeoutConfig' => $softTimeoutConfig,
       'noisyEnvironmentDetection' => true,
       'noisyEnvironmentMessage' =>
@@ -1566,10 +1607,10 @@ class InvocationsWireTest extends TestCase
       'language' => 'language',
       'modelFamily' => $ttsModelFamily,
       'optimizeStreamingLatency' => $ttsOptimizeStreamingLatency,
-      'stability' => 0.42,
-      'speed' => 0.78,
-      'similarityBoost' => 0.33,
-      'cloneStrength' => 0.41
+      'stability' => 0.56,
+      'speed' => 0.83,
+      'similarityBoost' => 0.04,
+      'cloneStrength' => 0.3
     ]);
 
     $suggestedAudioTag = new \ElevenLabs\Types\SuggestedAudioTag([
@@ -1592,11 +1633,11 @@ class InvocationsWireTest extends TestCase
 
     $effectsSpecOutput = new \ElevenLabs\Types\EffectsSpecOutput([
       'filterPresetId' => 'filter_preset_id',
-      'distance' => 0.38,
+      'distance' => 0.86,
       'environmentId' => 'environment_id',
       'backgroundNoiseId' => 'background_noise_id',
       'sendLevel' => 1,
-      'pan' => -0.59
+      'pan' => 0.27
     ]);
 
     $ttsConversationalConfigOutput = new \ElevenLabs\Types\TtsConversationalConfigOutput([
@@ -1610,7 +1651,7 @@ class InvocationsWireTest extends TestCase
       'stability' => 0.5,
       'speed' => 1,
       'similarityBoost' => 0.8,
-      'cloneStrength' => 0.91,
+      'cloneStrength' => 0.03,
       'textNormalisationType' => $textNormalisationType,
       'pronunciationDictionaryLocators' => [],
       'enablePhonemeTags' => true,
@@ -1628,7 +1669,7 @@ class InvocationsWireTest extends TestCase
     $dtmfInputConfig = new \ElevenLabs\Types\DtmfInputConfig([
       'dtmfInputTimeout' => 2,
       'hashTerminator' => true,
-      'redactInput' => false
+      'redactInput' => true
     ]);
 
     $backgroundSoundSourceType = \ElevenLabs\Types\BackgroundSoundSourceType::Preset->value;
@@ -1643,11 +1684,11 @@ class InvocationsWireTest extends TestCase
     ]);
 
     $conversationConfigOutput = new \ElevenLabs\Types\ConversationConfigOutput([
-      'textOnly' => false,
+      'textOnly' => true,
       'maxDurationSeconds' => 600,
       'clientEvents' => [],
       'fileInput' => $fileInputConfig,
-      'monitoringEnabled' => true,
+      'monitoringEnabled' => false,
       'monitoringEvents' => [],
       'dtmfInputSettings' => $dtmfInputConfig,
       'backgroundSound' => $backgroundSoundConfig,
@@ -1672,16 +1713,16 @@ class InvocationsWireTest extends TestCase
       'modelId' => $ttsConversationalModel,
       'voiceId' => 'voice_id',
       'supportedVoices' => [],
-      'stability' => 6.57,
-      'speed' => 1.8,
-      'similarityBoost' => 6.48,
-      'cloneStrength' => 1.49,
+      'stability' => 4.99,
+      'speed' => 7.29,
+      'similarityBoost' => 5.75,
+      'cloneStrength' => 5.08,
       'pronunciationDictionaryLocators' => []
     ]);
 
     $conversationConfigOverride = new \ElevenLabs\Types\ConversationConfigOverride([
-      'textOnly' => false,
-      'maxDurationSeconds' => 5
+      'textOnly' => true,
+      'maxDurationSeconds' => 9
     ]);
 
     $llm = \ElevenLabs\Types\Llm::Gpt4OMini->value;
@@ -1763,7 +1804,7 @@ class InvocationsWireTest extends TestCase
       'dynamicVariable' => 'dynamic_variable'
     ]);
 
-    $literalJsonSchemaPropertyConstantValue = 'veniam';
+    $literalJsonSchemaPropertyConstantValue = 'culpa ei';
 
     $objectJsonSchemaPropertyOutputPropertiesValue = new \ElevenLabs\Types\LiteralJsonSchemaProperty(
       [
@@ -1836,7 +1877,7 @@ class InvocationsWireTest extends TestCase
       'source' => $dynamicVariableAssignmentSource,
       'dynamicVariable' => 'dynamic_variable',
       'valuePath' => 'value_path',
-      'sanitize' => false,
+      'sanitize' => true,
       'preserveNativeType' => false
     ]);
 
@@ -1861,9 +1902,9 @@ class InvocationsWireTest extends TestCase
       'name' => 'name',
       'description' => 'description',
       'responseTimeoutSecs' => 20,
-      'disableInterruptions' => true,
+      'disableInterruptions' => false,
       'interruptionMode' => $toolInterruptionMode,
-      'forcePreToolSpeech' => true,
+      'forcePreToolSpeech' => false,
       'preToolSpeech' => $preToolSpeechMode,
       'assignments' => [],
       'toolCallSound' => $toolCallSoundType,
@@ -1890,6 +1931,10 @@ class InvocationsWireTest extends TestCase
       'authConnectionId' => 'auth_connection_id'
     ]);
 
+    $customLlmMtlsAuthConnection = new \ElevenLabs\Types\AuthConnectionLocator([
+      'authConnectionId' => 'auth_connection_id'
+    ]);
+
     $customLlmRequestHeadersValue = new \ElevenLabs\Types\ConvAiSecretLocator([
       'secretId' => 'secret_id'
     ]);
@@ -1901,6 +1946,7 @@ class InvocationsWireTest extends TestCase
       'modelId' => 'model_id',
       'apiKey' => $customLlmApiKey,
       'authConnection' => $customLlmAuthConnection,
+      'mtlsAuthConnection' => $customLlmMtlsAuthConnection,
       'requestHeaders' => [],
       'apiVersion' => 'api_version',
       'apiType' => $customLlmapiType
@@ -1915,12 +1961,12 @@ class InvocationsWireTest extends TestCase
     ]);
 
     $ragConfigOutput = new \ElevenLabs\Types\RagConfigOutput([
-      'enabled' => true,
+      'enabled' => false,
       'embeddingModel' => $embeddingModelEnum,
       'maxVectorDistance' => 0.5,
       'maxDocumentsLength' => 50000,
       'maxRetrievedRagChunksCount' => 5,
-      'numCandidates' => 8647,
+      'numCandidates' => 9095,
       'queryRewritePromptOverride' => 'query_rewrite_prompt_override',
       'knowledgeBaseToolInfo' => $knowledgeBaseToolInfo
     ]);
@@ -2040,9 +2086,9 @@ class InvocationsWireTest extends TestCase
       'llm' => $llm,
       'reasoningEffort' => $llmReasoningEffort,
       'serviceTier' => $llmServiceTier,
-      'thinkingBudget' => 3,
-      'enableReasoningSummary' => true,
-      'temperature' => 6.3,
+      'thinkingBudget' => 9,
+      'enableReasoningSummary' => false,
+      'temperature' => 7.72,
       'maxTokens' => -1,
       'toolIds' => [],
       'toolIdsStrict' => false,
@@ -2052,7 +2098,7 @@ class InvocationsWireTest extends TestCase
       'nativeMcpServerIds' => [],
       'knowledgeBase' => [],
       'customLlm' => $customLlm,
-      'ignoreDefaultPersonality' => true,
+      'ignoreDefaultPersonality' => false,
       'rag' => $ragConfigOutput,
       'timezone' => 'timezone',
       'backupLlmConfig' => $promptAgentApiModelOutputBackupLlmConfig,
@@ -2063,7 +2109,7 @@ class InvocationsWireTest extends TestCase
     $agentConfig = new \ElevenLabs\Types\AgentConfig([
       'firstMessage' => 'first_message',
       'language' => 'en',
-      'hinglishMode' => false,
+      'hinglishMode' => true,
       'dynamicVariables' => [],
       'disableFirstMessageInterruptions' => false,
       'maxConversationDurationMessage' => 'max_conversation_duration_message',
@@ -2206,13 +2252,13 @@ class InvocationsWireTest extends TestCase
       'accentBorder' => 'accent_border',
       'accentSubtle' => 'accent_subtle',
       'accentPrimary' => 'accent_primary',
-      'overlayPadding' => 6.64,
-      'buttonRadius' => 6.41,
-      'inputRadius' => 6.32,
-      'bubbleRadius' => 3.68,
-      'sheetRadius' => 3.55,
-      'compactSheetRadius' => 3.52,
-      'dropdownSheetRadius' => 6.58
+      'overlayPadding' => 7.96,
+      'buttonRadius' => 3.89,
+      'inputRadius' => 2.86,
+      'bubbleRadius' => 8.46,
+      'sheetRadius' => 6.37,
+      'compactSheetRadius' => 4.94,
+      'dropdownSheetRadius' => 1.85
     ]);
 
     $widgetTextContentsTranslation = new \ElevenLabs\Types\WidgetTextContentsTranslation([
@@ -2248,7 +2294,7 @@ class InvocationsWireTest extends TestCase
       'borderColor' => '#e1e1e1',
       'focusColor' => '#000000',
       'borderRadius' => 5,
-      'btnRadius' => 8,
+      'btnRadius' => 1,
       'actionText' => 'action_text',
       'startCallText' => 'start_call_text',
       'endCallText' => 'end_call_text',
@@ -2260,7 +2306,7 @@ class InvocationsWireTest extends TestCase
       'termsText' => 'terms_text',
       'termsHtml' => 'terms_html',
       'termsKey' => 'terms_key',
-      'showAvatarWhenCollapsed' => true,
+      'showAvatarWhenCollapsed' => false,
       'disableBanner' => true,
       'overrideLink' => 'override_link',
       'markdownLinkAllowedHosts' => [],
@@ -2269,8 +2315,8 @@ class InvocationsWireTest extends TestCase
       'micMutingEnabled' => true,
       'transcriptEnabled' => true,
       'textInputEnabled' => true,
-      'conversationModeToggleEnabled' => true,
-      'defaultExpanded' => false,
+      'conversationModeToggleEnabled' => false,
+      'defaultExpanded' => true,
       'alwaysExpanded' => true,
       'dismissible' => false,
       'showAgentStatus' => false,
@@ -2280,7 +2326,7 @@ class InvocationsWireTest extends TestCase
       'textContents' => $widgetTextContents,
       'styles' => $widgetStyles,
       'showResizeButton' => true,
-      'endConfirmationEnabled' => false,
+      'endConfirmationEnabled' => true,
       'mobileFullscreen' => true,
       'transcriptSpeechSyncEnabled' => true,
       'languageSelector' => false,
@@ -2291,18 +2337,18 @@ class InvocationsWireTest extends TestCase
 
     $analysisPropertyType = \ElevenLabs\Types\AnalysisPropertyType::Boolean->value;
 
-    $analysisPropertyConstantValue = 'irure dese';
+    $analysisPropertyConstantValue = 'consectetur';
 
     $analysisProperty = new \ElevenLabs\Types\AnalysisProperty([
       'type' => $analysisPropertyType,
       'description' => 'description',
       'enum' => [],
-      'isSystemProvided' => true,
+      'isSystemProvided' => false,
       'dynamicVariable' => 'dynamic_variable',
       'allowedValues' => $allowedValues,
       'allowedValuesDynamicVariable' => 'allowed_values_dynamic_variable',
       'constantValue' => $analysisPropertyConstantValue,
-      'isOmitted' => false,
+      'isOmitted' => true,
       'name' => 'name',
       'llm' => $llm
     ]);
@@ -2318,7 +2364,7 @@ class InvocationsWireTest extends TestCase
       'versionId' => 'latest',
       'additionalVersionIds' => [],
       'scope' => $analysisScope,
-      'weight' => 7.08
+      'weight' => 0.86
     ]);
     $agentAnalysisItemsInputEvaluationCriteriaItem = \ElevenLabs\Types\AgentAnalysisItemsInputEvaluationCriteriaItem::user(
       $attachedUserEvaluationRef
@@ -2344,13 +2390,13 @@ class InvocationsWireTest extends TestCase
 
     $asrConversationalConfigOverrideConfig = new \ElevenLabs\Types\AsrConversationalConfigOverrideConfig(
       [
-        'keywords' => false
+        'keywords' => true
       ]
     );
 
     $softTimeoutConfigOverrideConfig = new \ElevenLabs\Types\SoftTimeoutConfigOverrideConfig([
-      'message' => false,
-      'additionalSoftTimeoutMessages' => false
+      'message' => true,
+      'additionalSoftTimeoutMessages' => true
     ]);
 
     $turnConfigOverrideConfig = new \ElevenLabs\Types\TurnConfigOverrideConfig([
@@ -2360,8 +2406,8 @@ class InvocationsWireTest extends TestCase
 
     $ttsConversationalConfigOverrideConfig = new \ElevenLabs\Types\TtsConversationalConfigOverrideConfig(
       [
-        'modelId' => false,
-        'voiceId' => false,
+        'modelId' => true,
+        'voiceId' => true,
         'supportedVoices' => false,
         'stability' => false,
         'speed' => false,
@@ -2373,22 +2419,22 @@ class InvocationsWireTest extends TestCase
 
     $conversationConfigOverrideConfig = new \ElevenLabs\Types\ConversationConfigOverrideConfig([
       'textOnly' => true,
-      'maxDurationSeconds' => false
+      'maxDurationSeconds' => true
     ]);
 
     $promptAgentApiModelOverrideConfig = new \ElevenLabs\Types\PromptAgentApiModelOverrideConfig([
       'prompt' => true,
       'llm' => false,
-      'reasoningEffort' => false,
-      'toolIds' => true,
+      'reasoningEffort' => true,
+      'toolIds' => false,
       'toolIdsStrict' => true,
-      'nativeMcpServerIds' => true,
+      'nativeMcpServerIds' => false,
       'knowledgeBase' => true
     ]);
 
     $agentConfigOverrideConfig = new \ElevenLabs\Types\AgentConfigOverrideConfig([
-      'firstMessage' => true,
-      'language' => true,
+      'firstMessage' => false,
+      'language' => false,
       'maxConversationDurationMessage' => true,
       'prompt' => $promptAgentApiModelOverrideConfig
     ]);
@@ -2406,9 +2452,9 @@ class InvocationsWireTest extends TestCase
     $conversationInitiationClientDataConfigInput = new \ElevenLabs\Types\ConversationInitiationClientDataConfigInput(
       [
         'conversationConfigOverride' => $conversationConfigClientOverrideConfigInput,
-        'customLlmExtraBody' => true,
-        'enableConversationInitiationClientDataFromWebhook' => false,
-        'enableStartingWorkflowNodeIdFromClient' => true,
+        'customLlmExtraBody' => false,
+        'enableConversationInitiationClientDataFromWebhook' => true,
+        'enableStartingWorkflowNodeIdFromClient' => false,
         'enableProcedureIdsFromClient' => false
       ]
     );
@@ -2434,8 +2480,8 @@ class InvocationsWireTest extends TestCase
       'postCallWebhookId' => 'post_call_webhook_id',
       'events' => [],
       'transcriptFormat' => $webhookTranscriptFormat,
-      'excludeTranscript' => false,
-      'sendAudio' => true
+      'excludeTranscript' => true,
+      'sendAudio' => false
     ]);
 
     $agentWorkspaceOverridesInput = new \ElevenLabs\Types\AgentWorkspaceOverridesInput([
@@ -2455,7 +2501,7 @@ class InvocationsWireTest extends TestCase
     $guardrailsV1InputVersion = \ElevenLabs\Types\GuardrailsV1InputVersion::One->value;
 
     $focusGuardrail = new \ElevenLabs\Types\FocusGuardrail([
-      'isEnabled' => false
+      'isEnabled' => true
     ]);
 
     $promptInjectionGuardrail = new \ElevenLabs\Types\PromptInjectionGuardrail([
@@ -2467,7 +2513,7 @@ class InvocationsWireTest extends TestCase
     $contentThresholdGuardrailThreshold = \ElevenLabs\Types\Threshold2::Low->value;
 
     $contentThresholdGuardrail = new \ElevenLabs\Types\ContentThresholdGuardrail([
-      'isEnabled' => false,
+      'isEnabled' => true,
       'threshold' => $contentThresholdGuardrailThreshold
     ]);
 
@@ -2510,9 +2556,9 @@ class InvocationsWireTest extends TestCase
       'executionMode' => $guardrailExecutionMode,
       'model' => $customGuardrailConfigModel,
       'serviceTier' => $llmServiceTier,
-      'historyMessageCount' => 33,
+      'historyMessageCount' => 62,
       'triggerAction' => $customGuardrailConfigTriggerAction,
-      'evaluateFullResponseOnly' => false
+      'evaluateFullResponseOnly' => true
     ]);
 
     $customGuardrailsConfigInput = new \ElevenLabs\Types\CustomGuardrailsConfigInput([
@@ -2548,8 +2594,8 @@ class InvocationsWireTest extends TestCase
       'audioPath' => 'audio_path',
       'audioUrl' => 'audio_url',
       'originalFilename' => 'original_filename',
-      'durationSecs' => 4.56,
-      'sizeBytes' => 7
+      'durationSecs' => 8.35,
+      'sizeBytes' => 8
     ]);
 
     $agentQueueingConfig = new \ElevenLabs\Types\AgentQueueingConfig([
@@ -2561,7 +2607,7 @@ class InvocationsWireTest extends TestCase
     $configEntityType = \ElevenLabs\Types\ConfigEntityType::Name->value;
 
     $conversationHistoryRedactionConfig = new \ElevenLabs\Types\ConversationHistoryRedactionConfig([
-      'enabled' => false,
+      'enabled' => true,
       'entities' => [],
       'excludedDataCollectionIds' => []
     ]);
@@ -2570,9 +2616,9 @@ class InvocationsWireTest extends TestCase
       'recordVoice' => true,
       'retentionDays' => -1,
       'deleteTranscriptAndPii' => true,
-      'deleteAudio' => false,
+      'deleteAudio' => true,
       'applyToExistingConversations' => true,
-      'zeroRetentionMode' => true,
+      'zeroRetentionMode' => false,
       'conversationHistoryRedaction' => $conversationHistoryRedactionConfig
     ]);
 
@@ -2584,13 +2630,13 @@ class InvocationsWireTest extends TestCase
 
     $alertingMonitorConfig = new \ElevenLabs\Types\AlertingMonitorConfig([
       'enabled' => false,
-      'threshold' => 0.24,
-      'relativeIncreaseThreshold' => 9.18,
-      'minFailureCount' => 1,
-      'minHistoryBucketCount' => 7,
-      'minSampleCount' => 2,
-      'suspectTriggerThreshold' => 8,
-      'autoResolveAfterInactiveMinutes' => 10
+      'threshold' => 0.83,
+      'relativeIncreaseThreshold' => 7.96,
+      'minFailureCount' => 3,
+      'minHistoryBucketCount' => 2,
+      'minSampleCount' => 7,
+      'suspectTriggerThreshold' => 4,
+      'autoResolveAfterInactiveMinutes' => 1
     ]);
 
     $alertingWebhookNotifierType = \ElevenLabs\Types\AlertingWebhookNotifierType::Webhook->value;
@@ -2605,7 +2651,7 @@ class InvocationsWireTest extends TestCase
 
     $alertingSettings = new \ElevenLabs\Types\AlertingSettings([
       'monitorConfigs' => [],
-      'autoResolveAfterInactiveMinutes' => 10,
+      'autoResolveAfterInactiveMinutes' => 3,
       'environments' => ['environments'],
       'notifiers' => []
     ]);
@@ -2622,7 +2668,7 @@ class InvocationsWireTest extends TestCase
       'archived' => false,
       'guardrails' => $guardrailsV1Input,
       'summaryLanguage' => 'summary_language',
-      'autoTranslateTranscriptToAppLanguage' => false,
+      'autoTranslateTranscriptToAppLanguage' => true,
       'auth' => $authSettings,
       'callLimits' => $agentCallLimits,
       'queueingConfig' => $agentQueueingConfig,
@@ -2650,8 +2696,8 @@ class InvocationsWireTest extends TestCase
     );
 
     $positionInput = new \ElevenLabs\Types\PositionInput([
-      'x' => 0.13,
-      'y' => 8.06
+      'x' => 0.28,
+      'y' => 3.65
     ]);
 
     $workflowEdgeModelInput = new \ElevenLabs\Types\WorkflowEdgeModelInput([

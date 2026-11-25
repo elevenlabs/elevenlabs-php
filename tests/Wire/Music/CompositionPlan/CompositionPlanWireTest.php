@@ -58,8 +58,8 @@ class CompositionPlanWireTest extends TestCase
     $sdk = new ElevenLabs(options: ['client' => $transport]);
 
     $timeRange = new \ElevenLabs\Types\TimeRange([
-      'startMs' => 6,
-      'endMs' => 7
+      'startMs' => 2,
+      'endMs' => 3
     ]);
 
     $sectionSource = new \ElevenLabs\Types\SectionSource([
@@ -72,7 +72,7 @@ class CompositionPlanWireTest extends TestCase
       'sectionName' => 'section_name',
       'positiveLocalStyles' => [],
       'negativeLocalStyles' => [],
-      'durationMs' => 3874,
+      'durationMs' => 65272,
       'lines' => [],
       'sourceFrom' => $sectionSource
     ]);
@@ -91,7 +91,7 @@ class CompositionPlanWireTest extends TestCase
       [
         'enableLogging' => true,
         'prompt' => 'prompt',
-        'musicLengthMs' => 172352,
+        'musicLengthMs' => 453382,
         'sourceCompositionPlan' => $bodyGenerateCompositionPlanV1MusicPlanPostSourceCompositionPlan,
         'modelId' => $musicModelId
       ]

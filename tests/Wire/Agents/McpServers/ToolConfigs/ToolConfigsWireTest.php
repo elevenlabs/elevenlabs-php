@@ -143,13 +143,13 @@ class ToolConfigsWireTest extends TestCase
       'source' => $dynamicVariableAssignmentSource,
       'dynamicVariable' => 'dynamic_variable',
       'valuePath' => 'value_path',
-      'sanitize' => false,
+      'sanitize' => true,
       'preserveNativeType' => false
     ]);
 
     $constantSchemaOverrideSource = \ElevenLabs\Types\ConstantSchemaOverrideSource::Constant->value;
 
-    $constantSchemaOverrideConstantValue = 'Duis amet m';
+    $constantSchemaOverrideConstantValue = 'exercitatio';
 
     $constantSchemaOverride = new \ElevenLabs\Types\ConstantSchemaOverride([
       'source' => $constantSchemaOverrideSource,
@@ -178,7 +178,7 @@ class ToolConfigsWireTest extends TestCase
     $toolResponseMockConfigInput = new \ElevenLabs\Types\ToolResponseMockConfigInput([
       'parameterConditions' => [],
       'mockResult' => 'mock_result',
-      'isError' => false
+      'isError' => true
     ]);
 
     $request = new \ElevenLabs\Agents\McpServers\ToolConfigs\Requests\McpToolConfigOverrideCreateRequestModel(
@@ -191,7 +191,7 @@ class ToolConfigsWireTest extends TestCase
         'toolCallSound' => $mcpToolConfigOverrideCreateRequestModelToolCallSound,
         'toolCallSoundBehavior' => $toolCallSoundBehavior,
         'executionMode' => $toolExecutionMode,
-        'responseTimeoutSecs' => 34,
+        'responseTimeoutSecs' => 266,
         'assignments' => [],
         'inputOverrides' => [],
         'responseMocks' => [],
@@ -402,13 +402,13 @@ class ToolConfigsWireTest extends TestCase
       'source' => $dynamicVariableAssignmentSource,
       'dynamicVariable' => 'dynamic_variable',
       'valuePath' => 'value_path',
-      'sanitize' => false,
+      'sanitize' => true,
       'preserveNativeType' => false
     ]);
 
     $constantSchemaOverrideSource = \ElevenLabs\Types\ConstantSchemaOverrideSource::Constant->value;
 
-    $constantSchemaOverrideConstantValue = 'Duis amet m';
+    $constantSchemaOverrideConstantValue = 'exercitatio';
 
     $constantSchemaOverride = new \ElevenLabs\Types\ConstantSchemaOverride([
       'source' => $constantSchemaOverrideSource,
@@ -437,7 +437,7 @@ class ToolConfigsWireTest extends TestCase
     $toolResponseMockConfigInput = new \ElevenLabs\Types\ToolResponseMockConfigInput([
       'parameterConditions' => [],
       'mockResult' => 'mock_result',
-      'isError' => false
+      'isError' => true
     ]);
 
     $request = new \ElevenLabs\Agents\McpServers\ToolConfigs\Requests\McpToolConfigOverrideUpdateRequestModel(
@@ -445,12 +445,12 @@ class ToolConfigsWireTest extends TestCase
         'environment' => 'production',
         'forcePreToolSpeech' => true,
         'preToolSpeech' => $preToolSpeechMode,
-        'disableInterruptions' => false,
+        'disableInterruptions' => true,
         'interruptionMode' => $toolInterruptionMode,
         'toolCallSound' => $mcpToolConfigOverrideUpdateRequestModelToolCallSound,
         'toolCallSoundBehavior' => $toolCallSoundBehavior,
         'executionMode' => $toolExecutionMode,
-        'responseTimeoutSecs' => 117,
+        'responseTimeoutSecs' => 49,
         'assignments' => [],
         'inputOverrides' => [],
         'responseMocks' => []

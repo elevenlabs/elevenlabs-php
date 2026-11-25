@@ -493,7 +493,7 @@ class VoicesClient extends BaseService
   /**
    * Returns a list of shared voices similar to the provided audio sample. If neither similarity_threshold nor top_k is provided, we will apply default values.
    *
-   * @param \ElevenLabs\Voices\Requests\BodyGetSimilarLibraryVoicesV1SimilarVoicesPost $request Request body
+   * @param \ElevenLabs\Voices\Requests\BodyGetSimilarLibraryVoicesV1SimilarVoicesPost $request Request parameters
    * @param ?array{
    *   baseUrl?: string,
    *   maxRetries?: int,
@@ -510,13 +510,34 @@ class VoicesClient extends BaseService
     \ElevenLabs\Voices\Requests\BodyGetSimilarLibraryVoicesV1SimilarVoicesPost $request = new \ElevenLabs\Voices\Requests\BodyGetSimilarLibraryVoicesV1SimilarVoicesPost(),
     ?array $options = null
   ): ?\ElevenLabs\Types\GetLibraryVoicesResponse {
+    $category = $request->category;
+    $gender = $request->gender;
+    $age = $request->age;
+    $useCases = $request->useCases;
+    $minNoticePeriodDays = $request->minNoticePeriodDays;
+    $includeCustomRates = $request->includeCustomRates;
+    $includeLiveModerated = $request->includeLiveModerated;
+    $ownerId = $request->ownerId;
+
     $request->validate();
 
     $resolvedConfig = $this->getResolvedConfig($this->findSimilarVoicesConfig, $options);
     $response = $this->sendRequest(
       'post',
       '/v1/similar-voices',
-      ['multipart' => $request->toMultipart()],
+      [
+        'multipart' => $request->toMultipart(),
+        'query' => [
+          'category' => $category,
+          'gender' => $gender,
+          'age' => $age,
+          'use_cases' => $useCases,
+          'min_notice_period_days' => $minNoticePeriodDays,
+          'include_custom_rates' => $includeCustomRates,
+          'include_live_moderated' => $includeLiveModerated,
+          'owner_id' => $ownerId
+        ]
+      ],
       $resolvedConfig
     );
     $data = $response->getBody()->getContents();

@@ -243,6 +243,9 @@ class AgentConfigApiModelWorkflowOverrideOutputTest extends TestCase
                 "auth_connection": {
                     "auth_connection_id": "test-value"
                 },
+                "mtls_auth_connection": {
+                    "auth_connection_id": "test-value"
+                },
                 "request_headers": {
                     "key": "test-value"
                 },

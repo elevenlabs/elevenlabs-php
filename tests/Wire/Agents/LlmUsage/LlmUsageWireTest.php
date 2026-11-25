@@ -32,9 +32,9 @@ class LlmUsageWireTest extends TestCase
     $llmServiceTier = \ElevenLabs\Types\LlmServiceTier::Standard->value;
 
     $request = new \ElevenLabs\Agents\LlmUsage\Requests\LlmUsageCalculatorRequestModel([
-      'promptLength' => 0,
-      'numberOfPages' => 4,
-      'ragEnabled' => false,
+      'promptLength' => 9,
+      'numberOfPages' => 6,
+      'ragEnabled' => true,
       'serviceTier' => $llmServiceTier
     ]);
     $sdk->agents->llmUsage->calculateForAgent(request: $request, agentId: 'agent_id');
@@ -70,8 +70,8 @@ class LlmUsageWireTest extends TestCase
     $llmServiceTier = \ElevenLabs\Types\LlmServiceTier::Standard->value;
 
     $request = new \ElevenLabs\Agents\LlmUsage\Requests\LlmUsageCalculatorPublicRequestModel([
-      'promptLength' => 10,
-      'numberOfPages' => 10,
+      'promptLength' => 9,
+      'numberOfPages' => 9,
       'ragEnabled' => false,
       'serviceTier' => $llmServiceTier
     ]);

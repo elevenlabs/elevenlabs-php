@@ -20,9 +20,9 @@ use ElevenLabs\TextToVoice\TextToVoiceClient;
 use ElevenLabs\User\UserClient;
 use ElevenLabs\Studio\StudioClient;
 use ElevenLabs\PronunciationDictionaries\PronunciationDictionariesClient;
+use ElevenLabs\AudioNative\AudioNativeClient;
 use ElevenLabs\SpeechToText\SpeechToTextClient;
 use ElevenLabs\Models\ModelsClient;
-use ElevenLabs\AudioNative\AudioNativeClient;
 use ElevenLabs\ContentProvenance\ContentProvenanceClient;
 use ElevenLabs\Reception\ReceptionClient;
 use ElevenLabs\Workspaces\WorkspacesClient;
@@ -40,6 +40,7 @@ use ElevenLabs\Assets\AssetsClient;
 use ElevenLabs\TextToDialogueMultiContext\TextToDialogueMultiContextClient;
 use ElevenLabs\TextToSpeechMultiContext\TextToSpeechMultiContextClient;
 use ElevenLabs\Translation\TranslationClient;
+use ElevenLabs\Subtitling\SubtitlingClient;
 
 use ElevenLabs\Core\Client\RawClient;
 
@@ -68,9 +69,9 @@ class ElevenLabs
   public UserClient $user;
   public StudioClient $studio;
   public PronunciationDictionariesClient $pronunciationDictionaries;
+  public AudioNativeClient $audioNative;
   public SpeechToTextClient $speechToText;
   public ModelsClient $models;
-  public AudioNativeClient $audioNative;
   public ContentProvenanceClient $contentProvenance;
   public ReceptionClient $reception;
   public WorkspacesClient $workspaces;
@@ -88,6 +89,7 @@ class ElevenLabs
   public TextToDialogueMultiContextClient $textToDialogueMultiContext;
   public TextToSpeechMultiContextClient $textToSpeechMultiContext;
   public TranslationClient $translation;
+  public SubtitlingClient $subtitling;
   private array $options;
   /** @var RawClient $client */
   private RawClient $client;
@@ -128,9 +130,9 @@ class ElevenLabs
       $this->client,
       $this->options
     );
+    $this->audioNative = new AudioNativeClient($this->client, $this->options);
     $this->speechToText = new SpeechToTextClient($this->client, $this->options);
     $this->models = new ModelsClient($this->client, $this->options);
-    $this->audioNative = new AudioNativeClient($this->client, $this->options);
     $this->contentProvenance = new ContentProvenanceClient($this->client, $this->options);
     $this->reception = new ReceptionClient($this->client, $this->options);
     $this->workspaces = new WorkspacesClient($this->client, $this->options);
@@ -154,6 +156,7 @@ class ElevenLabs
       $this->options
     );
     $this->translation = new TranslationClient($this->client, $this->options);
+    $this->subtitling = new SubtitlingClient($this->client, $this->options);
   }
 
   /**
@@ -275,10 +278,10 @@ class ElevenLabs
     $this->studio->projects->chapters->snapshots->setBaseUrl($url);
     $this->pronunciationDictionaries->setBaseUrl($url);
     $this->pronunciationDictionaries->rules->setBaseUrl($url);
+    $this->audioNative->setBaseUrl($url);
     $this->speechToText->setBaseUrl($url);
     $this->speechToText->transcripts->setBaseUrl($url);
     $this->models->setBaseUrl($url);
-    $this->audioNative->setBaseUrl($url);
     $this->contentProvenance->setBaseUrl($url);
     $this->reception->receptionists->setBaseUrl($url);
     $this->reception->receptionists->rules->setBaseUrl($url);
@@ -331,6 +334,7 @@ class ElevenLabs
     $this->textToDialogueMultiContext->setBaseUrl($url);
     $this->textToSpeechMultiContext->setBaseUrl($url);
     $this->translation->setBaseUrl($url);
+    $this->subtitling->setBaseUrl($url);
   }
 }
 

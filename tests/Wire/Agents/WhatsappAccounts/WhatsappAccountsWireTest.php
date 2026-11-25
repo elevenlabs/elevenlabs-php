@@ -57,8 +57,8 @@ class WhatsappAccountsWireTest extends TestCase
 
     $request = new \ElevenLabs\Agents\WhatsappAccounts\Requests\UpdateWhatsAppAccountRequest([
       'assignedAgentId' => 'assigned_agent_id',
-      'enableMessaging' => false,
-      'enableAudioMessageResponse' => true,
+      'enableMessaging' => true,
+      'enableAudioMessageResponse' => false,
       'enableTypingIndicator' => true
     ]);
     $sdk->agents->whatsappAccounts->update(request: $request, phoneNumberId: 'phone_number_id');

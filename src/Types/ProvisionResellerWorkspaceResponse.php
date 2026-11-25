@@ -38,10 +38,16 @@ class ProvisionResellerWorkspaceResponse extends JsonSerializableType
   public int $createdAtUnix;
 
   /**
-   * The reseller-managed subscription, when this workspace has one. None means nothing is sold here yet and a tier can be assigned.
+   * The reseller-managed subscription, when this workspace has one. None means the reseller sells nothing here: no tier is assigned yet, or the workspace pays for its own subscription (see charge_customer).
    */
   #[JsonProperty('subscription')]
   public ?\ElevenLabs\Types\ResellerWorkspaceSubscription $subscription;
+
+  /**
+   * The workspace pays for its own subscription, so its tier can't be assigned or changed here.
+   */
+  #[JsonProperty('charge_customer')]
+  public ?bool $chargeCustomer;
 
   /**
    * A charge for this workspace is unpaid. Assigning or changing a tier is refused until it clears, so surface it rather than letting it fail.
@@ -70,6 +76,7 @@ class ProvisionResellerWorkspaceResponse extends JsonSerializableType
    *   callsLast30Days: int,
    *   createdAtUnix: int,
    *   subscription?: ?\ElevenLabs\Types\ResellerWorkspaceSubscription,
+   *   chargeCustomer?: ?bool,
    *   hasPaymentIssue?: ?bool,
    *   onboardingCompletedAtUnix?: ?int,
    *   memberResults?: \ElevenLabs\Types\TeamInviteResult[]|null,
@@ -84,6 +91,7 @@ class ProvisionResellerWorkspaceResponse extends JsonSerializableType
     $this->callsLast30Days = $values['callsLast30Days'];
     $this->createdAtUnix = $values['createdAtUnix'];
     $this->subscription = $values['subscription'] ?? null;
+    $this->chargeCustomer = $values['chargeCustomer'] ?? null;
     $this->hasPaymentIssue = $values['hasPaymentIssue'] ?? null;
     $this->onboardingCompletedAtUnix = $values['onboardingCompletedAtUnix'] ?? null;
     $this->memberResults = $values['memberResults'] ?? null;
@@ -98,6 +106,9 @@ class ProvisionResellerWorkspaceResponse extends JsonSerializableType
     ];
     if (array_key_exists('subscription', $values)) {
       $this->_dirtyFields['subscription'] = true;
+    }
+    if (array_key_exists('chargeCustomer', $values)) {
+      $this->_dirtyFields['charge_customer'] = true;
     }
     if (array_key_exists('hasPaymentIssue', $values)) {
       $this->_dirtyFields['has_payment_issue'] = true;
@@ -148,6 +159,13 @@ class ProvisionResellerWorkspaceResponse extends JsonSerializableType
         'name' => 'subscription',
         'contents' => json_encode($this->subscription),
         'headers' => ['Content-Type' => 'application/json']
+      ];
+    }
+
+    if ($this->chargeCustomer !== null) {
+      $parts[] = [
+        'name' => 'charge_customer',
+        'contents' => $this->chargeCustomer ? 'true' : 'false'
       ];
     }
 

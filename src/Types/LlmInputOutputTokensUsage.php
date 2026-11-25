@@ -30,12 +30,16 @@ class LlmInputOutputTokensUsage extends JsonSerializableType
   #[JsonProperty('output_total')]
   public ?\ElevenLabs\Types\LlmTokensCategoryUsage $outputTotal;
 
+  #[JsonProperty('output_total_reasoning_portion')]
+  public ?\ElevenLabs\Types\LlmTokensCategoryUsage $outputTotalReasoningPortion;
+
   /**
    * @param array{
    *   input?: ?\ElevenLabs\Types\LlmTokensCategoryUsage,
    *   inputCacheRead?: ?\ElevenLabs\Types\LlmTokensCategoryUsage,
    *   inputCacheWrite?: ?\ElevenLabs\Types\LlmTokensCategoryUsage,
    *   outputTotal?: ?\ElevenLabs\Types\LlmTokensCategoryUsage,
+   *   outputTotalReasoningPortion?: ?\ElevenLabs\Types\LlmTokensCategoryUsage,
    * } $values
    */
   public function __construct(array $values = [])
@@ -44,6 +48,7 @@ class LlmInputOutputTokensUsage extends JsonSerializableType
     $this->inputCacheRead = $values['inputCacheRead'] ?? null;
     $this->inputCacheWrite = $values['inputCacheWrite'] ?? null;
     $this->outputTotal = $values['outputTotal'] ?? null;
+    $this->outputTotalReasoningPortion = $values['outputTotalReasoningPortion'] ?? null;
 
     if (array_key_exists('input', $values)) {
       $this->_dirtyFields['input'] = true;
@@ -56,6 +61,9 @@ class LlmInputOutputTokensUsage extends JsonSerializableType
     }
     if (array_key_exists('outputTotal', $values)) {
       $this->_dirtyFields['output_total'] = true;
+    }
+    if (array_key_exists('outputTotalReasoningPortion', $values)) {
+      $this->_dirtyFields['output_total_reasoning_portion'] = true;
     }
   }
 
@@ -94,6 +102,14 @@ class LlmInputOutputTokensUsage extends JsonSerializableType
       ];
     }
 
+    if ($this->outputTotalReasoningPortion !== null) {
+      $parts[] = [
+        'name' => 'output_total_reasoning_portion',
+        'contents' => json_encode($this->outputTotalReasoningPortion),
+        'headers' => ['Content-Type' => 'application/json']
+      ];
+    }
+
     return $parts;
   }
 
@@ -103,5 +119,6 @@ class LlmInputOutputTokensUsage extends JsonSerializableType
     $this->inputCacheRead?->validate();
     $this->inputCacheWrite?->validate();
     $this->outputTotal?->validate();
+    $this->outputTotalReasoningPortion?->validate();
   }
 }

@@ -27,6 +27,13 @@ class ResellerTierResponse extends JsonSerializableType
   public string $displayName;
 
   /**
+   * @var value-of<\ElevenLabs\Types\ResellerTierResponseCurrency>
+   * What the prices are in. The same for every tier on a ladder.
+   */
+  #[JsonProperty('currency', required: true)]
+  public string $currency;
+
+  /**
    * A tier's prices and the limits shown on its tier card.
    */
   #[JsonProperty('tier_economics', required: true)]
@@ -36,6 +43,7 @@ class ResellerTierResponse extends JsonSerializableType
    * @param array{
    *   tierId: string,
    *   displayName: string,
+   *   currency: value-of<\ElevenLabs\Types\ResellerTierResponseCurrency>,
    *   tierEconomics: \ElevenLabs\Types\ResellerTierEconomics,
    * } $values
    */
@@ -43,11 +51,13 @@ class ResellerTierResponse extends JsonSerializableType
   {
     $this->tierId = $values['tierId'];
     $this->displayName = $values['displayName'];
+    $this->currency = $values['currency'];
     $this->tierEconomics = $values['tierEconomics'];
 
     $this->_dirtyFields = [
       'tier_id' => true,
       'display_name' => true,
+      'currency' => true,
       'tier_economics' => true
     ];
   }
@@ -63,6 +73,11 @@ class ResellerTierResponse extends JsonSerializableType
     $parts[] = [
       'name' => 'display_name',
       'contents' => $this->displayName
+    ];
+
+    $parts[] = [
+      'name' => 'currency',
+      'contents' => $this->currency
     ];
 
     $parts[] = [

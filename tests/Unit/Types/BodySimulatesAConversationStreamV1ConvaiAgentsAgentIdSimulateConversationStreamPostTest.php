@@ -303,6 +303,9 @@ class BodySimulatesAConversationStreamV1ConvaiAgentsAgentIdSimulateConversationS
                         "auth_connection": {
                             "auth_connection_id": "test-value"
                         },
+                        "mtls_auth_connection": {
+                            "auth_connection_id": "test-value"
+                        },
                         "request_headers": {
                             "key": "test-value"
                         },
@@ -639,6 +642,10 @@ class BodySimulatesAConversationStreamV1ConvaiAgentsAgentIdSimulateConversationS
                                     "price": 1
                                 },
                                 "output_total": {
+                                    "tokens": 1,
+                                    "price": 1
+                                },
+                                "output_total_reasoning_portion": {
                                     "tokens": 1,
                                     "price": 1
                                 }

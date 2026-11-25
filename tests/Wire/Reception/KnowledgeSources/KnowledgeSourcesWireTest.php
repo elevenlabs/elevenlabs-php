@@ -154,7 +154,7 @@ class KnowledgeSourcesWireTest extends TestCase
     $request = new \ElevenLabs\Reception\KnowledgeSources\Requests\AddUrlRequest([
       'xiWorkspaceId' => 'xi-workspace-id',
       'url' => 'https://example.com',
-      'crawlEntireSite' => false
+      'crawlEntireSite' => true
     ]);
     $sdk->reception->knowledgeSources->addUrl(request: $request);
 

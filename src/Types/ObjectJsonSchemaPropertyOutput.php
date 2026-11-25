@@ -55,7 +55,7 @@ class ObjectJsonSchemaPropertyOutput extends JsonSerializableType
   public ?array $required;
 
   /**
-   * @var array<string, \ElevenLabs\Types\LiteralJsonSchemaProperty|\ElevenLabs\Types\ObjectJsonSchemaPropertyOutput|\ElevenLabs\Types\ArrayJsonSchemaPropertyOutput>|null
+   * @var array<string, \ElevenLabs\Types\LiteralJsonSchemaProperty|\ElevenLabs\Types\ObjectJsonSchemaPropertyOutput|\ElevenLabs\Types\ArrayJsonSchemaPropertyOutput|\ElevenLabs\Types\AnyOfJsonSchemaPropertyOutput>|null
    */
   #[
     JsonProperty('properties'),
@@ -63,7 +63,8 @@ class ObjectJsonSchemaPropertyOutput extends JsonSerializableType
       'string' => new Union(
         \ElevenLabs\Types\LiteralJsonSchemaProperty::class,
         \ElevenLabs\Types\ObjectJsonSchemaPropertyOutput::class,
-        \ElevenLabs\Types\ArrayJsonSchemaPropertyOutput::class
+        \ElevenLabs\Types\ArrayJsonSchemaPropertyOutput::class,
+        \ElevenLabs\Types\AnyOfJsonSchemaPropertyOutput::class
       )
     ])
   ]
@@ -80,7 +81,7 @@ class ObjectJsonSchemaPropertyOutput extends JsonSerializableType
    *   isOmitted?: ?bool,
    *   type?: ?value-of<\ElevenLabs\Types\ObjectJsonSchemaPropertyOutputType>,
    *   required?: string[]|null,
-   *   properties?: array<string, \ElevenLabs\Types\LiteralJsonSchemaProperty|\ElevenLabs\Types\ObjectJsonSchemaPropertyOutput|\ElevenLabs\Types\ArrayJsonSchemaPropertyOutput>|null,
+   *   properties?: array<string, \ElevenLabs\Types\LiteralJsonSchemaProperty|\ElevenLabs\Types\ObjectJsonSchemaPropertyOutput|\ElevenLabs\Types\ArrayJsonSchemaPropertyOutput|\ElevenLabs\Types\AnyOfJsonSchemaPropertyOutput>|null,
    *   requiredConstraints?: ?\ElevenLabs\Types\RequiredConstraints,
    * } $values
    */

@@ -148,7 +148,7 @@ class AuthConnectionsWireTest extends TestCase
       'tokenUrl' => 'token_url',
       'scopes' => [],
       'extraParams' => [],
-      'basicAuthInHeader' => false,
+      'basicAuthInHeader' => true,
       'clientSecret' => 'client_secret',
       'customHeaders' => []
     ]);
@@ -229,7 +229,7 @@ class AuthConnectionsWireTest extends TestCase
       'clientId' => 'client_id',
       'scopes' => [],
       'extraParams' => [],
-      'basicAuthInHeader' => false,
+      'basicAuthInHeader' => true,
       'clientSecret' => 'client_secret',
       'customHeaders' => []
     ]);

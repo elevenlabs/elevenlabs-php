@@ -90,8 +90,8 @@ class VideoWireTest extends TestCase
       'image' => $imageReference,
       'audio' => $audioReference,
       'resolution' => $creatifyAuroraRequestResolution,
-      'guidanceScale' => 1.47,
-      'audioGuidanceScale' => 1.08
+      'guidanceScale' => 0.66,
+      'audioGuidanceScale' => 3.13
     ]);
     $sdk->flows->video->create(request: $request);
 

@@ -1,0 +1,64 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches: ['main']
+
+permissions:
+  contents: read
+
+env:
+  # Baked in at generation time from the builders that emit the test files, so the assertion
+  # below compares what PHPUnit collected against what generation intended — not against a
+  # count re-derived from the same files PHPUnit is reading.
+  MINIMUM_TEST_COUNT: '2273'
+  PHPUNIT_TEST_LIST: collected-tests.xml
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          coverage: none
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+      # A green suite does not prove the generated tests ran: a class outside the autoload-dev
+      # PSR-4 prefix, a directory outside phpunit.xml's <testsuite>, or a class not suffixed
+      # Test is skipped silently, and PHPUnit still exits 0. Ask the runner what it collected.
+      #
+      # A floor rather than an equality, because this repository is yours: tests you add under
+      # tests/ are collected by the same suite and must not fail the build. The ceiling is that
+      # a generated test dropped in the same commit that adds one of your own nets out and
+      # slips through. Scoping the count to the generated classes would close that, and needs
+      # the suite split that phpunit.xml deliberately avoids.
+      - name: Assert the generated tests are collected
+        run: |
+          # Collection failures exit non-zero and stop the step here (the default shell is
+          # `bash -e`), so the parse below only ever reads a list PHPUnit finished writing.
+          collected=0
+          for suite in default wire; do
+            list="$PHPUNIT_TEST_LIST-$suite"
+            ./vendor/bin/phpunit --testsuite "$suite" --list-tests-xml "$list"
+            suite_collected=$(PHPUNIT_SUITE_TEST_LIST="$list" php -r '
+              libxml_use_internal_errors(true);
+              $list = simplexml_load_file(getenv("PHPUNIT_SUITE_TEST_LIST"));
+              if ($list === false) {
+                fwrite(STDERR, "::error::Could not parse " . getenv("PHPUNIT_SUITE_TEST_LIST") . "\n");
+                exit(1);
+              }
+              echo count($list->xpath("//testCaseMethod"));
+            ')
+            collected=$((collected + suite_collected))
+          done
+          if [ "$collected" -lt "$MINIMUM_TEST_COUNT" ]; then
+            echo "::error::PHPUnit collected $collected test methods but generation emitted $MINIMUM_TEST_COUNT, so some generated tests are not being collected."
+            exit 1
+          fi
+          echo "::notice::PHPUnit collected $collected test methods, at or above the $MINIMUM_TEST_COUNT generated"
+      - name: Run tests
+        run: |
+          ./vendor/bin/phpunit --testdox --fail-on-empty-test-suite --testsuite default
+          ./vendor/bin/phpunit --testdox --fail-on-empty-test-suite --testsuite wire

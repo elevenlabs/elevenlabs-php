@@ -304,13 +304,13 @@ class McpServersWireTest extends TestCase
       'source' => $dynamicVariableAssignmentSource,
       'dynamicVariable' => 'dynamic_variable',
       'valuePath' => 'value_path',
-      'sanitize' => false,
+      'sanitize' => true,
       'preserveNativeType' => false
     ]);
 
     $constantSchemaOverrideSource = \ElevenLabs\Types\ConstantSchemaOverrideSource::Constant->value;
 
-    $constantSchemaOverrideConstantValue = 'Duis amet m';
+    $constantSchemaOverrideConstantValue = 'exercitatio';
 
     $constantSchemaOverride = new \ElevenLabs\Types\ConstantSchemaOverride([
       'source' => $constantSchemaOverrideSource,
@@ -339,19 +339,19 @@ class McpServersWireTest extends TestCase
     $toolResponseMockConfigInput = new \ElevenLabs\Types\ToolResponseMockConfigInput([
       'parameterConditions' => [],
       'mockResult' => 'mock_result',
-      'isError' => false
+      'isError' => true
     ]);
 
     $mcpToolConfigOverrideInput = new \ElevenLabs\Types\McpToolConfigOverrideInput([
       'toolName' => 'tool_name',
       'forcePreToolSpeech' => false,
       'preToolSpeech' => $preToolSpeechMode,
-      'disableInterruptions' => false,
+      'disableInterruptions' => true,
       'interruptionMode' => $toolInterruptionMode,
       'toolCallSound' => $mcpToolConfigOverrideInputToolCallSound,
       'toolCallSoundBehavior' => $toolCallSoundBehavior,
       'executionMode' => $toolExecutionMode,
-      'responseTimeoutSecs' => 45,
+      'responseTimeoutSecs' => 47,
       'assignments' => [],
       'inputOverrides' => [],
       'responseMocks' => []
@@ -368,16 +368,16 @@ class McpServersWireTest extends TestCase
       'authConnection' => $mcpServerConfigInputAuthConnection,
       'name' => 'name',
       'description' => 'description',
-      'forcePreToolSpeech' => false,
+      'forcePreToolSpeech' => true,
       'preToolSpeech' => $preToolSpeechMode,
-      'disableInterruptions' => false,
+      'disableInterruptions' => true,
       'interruptionMode' => $toolInterruptionMode,
       'toolCallSound' => $toolCallSoundType,
       'toolCallSoundBehavior' => $toolCallSoundBehavior,
       'executionMode' => $toolExecutionMode,
       'responseTimeoutSecs' => 30,
       'toolConfigOverrides' => [],
-      'disableCompression' => false
+      'disableCompression' => true
     ]);
 
     $request = new \ElevenLabs\Agents\McpServers\Requests\McpServerRequestModel([
@@ -672,7 +672,7 @@ class McpServersWireTest extends TestCase
       'toolCallSound' => $toolCallSoundType,
       'toolCallSoundBehavior' => $toolCallSoundBehavior,
       'executionMode' => $toolExecutionMode,
-      'responseTimeoutSecs' => 96,
+      'responseTimeoutSecs' => 89,
       'requestHeaders' => [],
       'requestMeta' => [],
       'disableCompression' => false,

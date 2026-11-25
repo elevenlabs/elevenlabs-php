@@ -90,7 +90,8 @@ class HistoryWireTest extends TestCase
         'dateAfterUnix' => 2,
         'sortDirection' => $sortDirection->value,
         'search' => 'search',
-        'source' => $source->value
+        'source' => $source->value,
+        'sources' => []
       ])
     );
 

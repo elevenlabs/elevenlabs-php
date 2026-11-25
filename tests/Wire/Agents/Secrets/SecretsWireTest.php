@@ -78,8 +78,8 @@ class SecretsWireTest extends TestCase
     $sdk = new ElevenLabs(options: ['client' => $transport]);
     $sdk->agents->secrets->list(
       request: new \ElevenLabs\Agents\Secrets\Requests\ListSecretsRequest([
-        'pageSize' => 9,
-        'dependencyLimit' => 64,
+        'pageSize' => 100,
+        'dependencyLimit' => 100,
         'search' => 'search',
         'cursor' => 'cursor'
       ])

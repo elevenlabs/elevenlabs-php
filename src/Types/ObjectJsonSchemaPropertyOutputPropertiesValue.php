@@ -19,7 +19,7 @@ use ElevenLabs\Core\Json\JsonSerializableType;
 class ObjectJsonSchemaPropertyOutputPropertiesValue extends JsonSerializableType
 {
   /**
-   * @var \ElevenLabs\Types\LiteralJsonSchemaProperty|\ElevenLabs\Types\ObjectJsonSchemaPropertyOutput|\ElevenLabs\Types\ArrayJsonSchemaPropertyOutput The value, exactly one of the variant types
+   * @var \ElevenLabs\Types\LiteralJsonSchemaProperty|\ElevenLabs\Types\ObjectJsonSchemaPropertyOutput|\ElevenLabs\Types\ArrayJsonSchemaPropertyOutput|\ElevenLabs\Types\AnyOfJsonSchemaPropertyOutput The value, exactly one of the variant types
    */
   public readonly mixed $value;
 
@@ -30,7 +30,7 @@ class ObjectJsonSchemaPropertyOutputPropertiesValue extends JsonSerializableType
 
   /**
    * Private constructor - use factory methods to create instances
-   * @param \ElevenLabs\Types\LiteralJsonSchemaProperty|\ElevenLabs\Types\ObjectJsonSchemaPropertyOutput|\ElevenLabs\Types\ArrayJsonSchemaPropertyOutput $value
+   * @param \ElevenLabs\Types\LiteralJsonSchemaProperty|\ElevenLabs\Types\ObjectJsonSchemaPropertyOutput|\ElevenLabs\Types\ArrayJsonSchemaPropertyOutput|\ElevenLabs\Types\AnyOfJsonSchemaPropertyOutput $value
    */
   private function __construct($value, int $typeIndex)
   {
@@ -66,6 +66,15 @@ class ObjectJsonSchemaPropertyOutputPropertiesValue extends JsonSerializableType
     return new self($arrayJsonSchemaPropertyOutput, 2);
   }
 
+  /**
+   * Create a ObjectJsonSchemaPropertyOutputPropertiesValue instance containing a \ElevenLabs\Types\AnyOfJsonSchemaPropertyOutput
+   */
+  public static function anyOfJsonSchemaPropertyOutput(
+    \ElevenLabs\Types\AnyOfJsonSchemaPropertyOutput $anyOfJsonSchemaPropertyOutput
+  ): self {
+    return new self($anyOfJsonSchemaPropertyOutput, 3);
+  }
+
   // Type checking methods
   /**
    * Check if this ObjectJsonSchemaPropertyOutputPropertiesValue contains a \ElevenLabs\Types\LiteralJsonSchemaProperty
@@ -89,6 +98,14 @@ class ObjectJsonSchemaPropertyOutputPropertiesValue extends JsonSerializableType
   public function isArrayJsonSchemaPropertyOutput(): bool
   {
     return $this->typeIndex === 2;
+  }
+
+  /**
+   * Check if this ObjectJsonSchemaPropertyOutputPropertiesValue contains a \ElevenLabs\Types\AnyOfJsonSchemaPropertyOutput
+   */
+  public function isAnyOfJsonSchemaPropertyOutput(): bool
+  {
+    return $this->typeIndex === 3;
   }
 
   // Throwing getters (fail-fast)
@@ -134,6 +151,20 @@ class ObjectJsonSchemaPropertyOutputPropertiesValue extends JsonSerializableType
     return $this->value;
   }
 
+  /**
+   * Get the \ElevenLabs\Types\AnyOfJsonSchemaPropertyOutput value
+   * @throws \RuntimeException if this ObjectJsonSchemaPropertyOutputPropertiesValue does not contain a \ElevenLabs\Types\AnyOfJsonSchemaPropertyOutput
+   */
+  public function asAnyOfJsonSchemaPropertyOutput(): \ElevenLabs\Types\AnyOfJsonSchemaPropertyOutput
+  {
+    if (!$this->isAnyOfJsonSchemaPropertyOutput()) {
+      throw new \RuntimeException(
+        'ObjectJsonSchemaPropertyOutputPropertiesValue does not contain \ElevenLabs\Types\AnyOfJsonSchemaPropertyOutput'
+      );
+    }
+    return $this->value;
+  }
+
   // Safe getters (return null)
   /**
    * Try to get the \ElevenLabs\Types\LiteralJsonSchemaProperty value
@@ -163,22 +194,34 @@ class ObjectJsonSchemaPropertyOutputPropertiesValue extends JsonSerializableType
   }
 
   /**
+   * Try to get the \ElevenLabs\Types\AnyOfJsonSchemaPropertyOutput value
+   * @return \ElevenLabs\Types\AnyOfJsonSchemaPropertyOutput|null Returns the value if this ObjectJsonSchemaPropertyOutputPropertiesValue contains a \ElevenLabs\Types\AnyOfJsonSchemaPropertyOutput, null otherwise
+   */
+  public function tryAsAnyOfJsonSchemaPropertyOutput(): ?\ElevenLabs\Types\AnyOfJsonSchemaPropertyOutput
+  {
+    return $this->isAnyOfJsonSchemaPropertyOutput() ? $this->value : null;
+  }
+
+  /**
    * Pattern matching for exhaustive type handling
    * @template T
    * @param callable(\ElevenLabs\Types\LiteralJsonSchemaProperty): T $onLiteralJsonSchemaProperty
    * @param callable(\ElevenLabs\Types\ObjectJsonSchemaPropertyOutput): T $onObjectJsonSchemaPropertyOutput
    * @param callable(\ElevenLabs\Types\ArrayJsonSchemaPropertyOutput): T $onArrayJsonSchemaPropertyOutput
+   * @param callable(\ElevenLabs\Types\AnyOfJsonSchemaPropertyOutput): T $onAnyOfJsonSchemaPropertyOutput
    * @return T
    */
   public function match(
     callable $onLiteralJsonSchemaProperty,
     callable $onObjectJsonSchemaPropertyOutput,
-    callable $onArrayJsonSchemaPropertyOutput
+    callable $onArrayJsonSchemaPropertyOutput,
+    callable $onAnyOfJsonSchemaPropertyOutput
   ): mixed {
     return match ($this->typeIndex) {
       0 => $onLiteralJsonSchemaProperty($this->value),
       1 => $onObjectJsonSchemaPropertyOutput($this->value),
       2 => $onArrayJsonSchemaPropertyOutput($this->value),
+      3 => $onAnyOfJsonSchemaPropertyOutput($this->value),
       default => throw new \UnexpectedValueException("Unknown type index: $this->typeIndex")
     };
   }
@@ -236,6 +279,18 @@ class ObjectJsonSchemaPropertyOutputPropertiesValue extends JsonSerializableType
       // the shared deserializer raises — a JsonException for a missing required field, not
       // just a TypeError. Narrowing it turns a non-matching variant into a fatal.
       // \ElevenLabs\Types\ArrayJsonSchemaPropertyOutput didn't match, continue to next type
+    }
+
+    try {
+      $candidate = \ElevenLabs\Types\AnyOfJsonSchemaPropertyOutput::fromArray($data);
+      // Keys the variant actually mapped = input keys minus the ones it could not place.
+      $score = count($data) - count($candidate->getAdditionalProperties());
+      $candidates[] = ['instance' => $candidate, 'idx' => 3, 'score' => $score];
+    } catch (\Throwable $e) {
+      // Throwable, because under fernMode "this variant does not match" arrives as whatever
+      // the shared deserializer raises — a JsonException for a missing required field, not
+      // just a TypeError. Narrowing it turns a non-matching variant into a fatal.
+      // \ElevenLabs\Types\AnyOfJsonSchemaPropertyOutput didn't match, continue to next type
     }
 
     if (count($candidates) === 0) {

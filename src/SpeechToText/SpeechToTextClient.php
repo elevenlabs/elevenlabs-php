@@ -125,6 +125,7 @@ class SpeechToTextClient extends BaseService
     $noVerbatim = $request->noVerbatim;
     $multilangMode = $request->multilangMode;
     $diarize = $request->diarize;
+    $inferSpeakerNames = $request->inferSpeakerNames;
     $entityDetection = $request->entityDetection;
     $entityRedaction = $request->entityRedaction;
     $entityRedactionMode = $request->entityRedactionMode;
@@ -155,6 +156,7 @@ class SpeechToTextClient extends BaseService
               'no_verbatim' => $noVerbatim,
               'multilang_mode' => $multilangMode,
               'diarize' => $diarize,
+              'infer_speaker_names' => $inferSpeakerNames,
               'entity_detection' => $entityDetection,
               'entity_redaction' => $entityRedaction,
               'entity_redaction_mode' => $entityRedactionMode,

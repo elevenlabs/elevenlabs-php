@@ -204,24 +204,24 @@ class ReceptionistsWireTest extends TestCase
     $firstMessageMode = \ElevenLabs\Types\FirstMessageMode::Interruptible->value;
 
     $receptionCustomerFacingConfigPatch = new \ElevenLabs\Types\ReceptionCustomerFacingConfigPatch([
-      'additionalInstructions' => 'sunt d',
+      'additionalInstructions' => 'nostrud mol',
       'toneTraits' => [],
       'detailsToCollect' => [],
       'llm' => $llm,
       'reasoningEffort' => $llmReasoningEffort,
-      'disableRag' => true,
-      'backgroundVoiceDetection' => true,
+      'disableRag' => false,
+      'backgroundVoiceDetection' => false,
       'turnEagerness' => $receptionTurnEagerness,
       'voiceId' => '21m00Tcm4TlvDq8ikWAM',
-      'language' => 'dolore fugiat d',
+      'language' => 'cupidatat e',
       'additionalLanguages' => [],
       'firstMessage' => 'Hi, thanks for calling Bloom Salon! How can I help you today?',
       'firstMessageMode' => $firstMessageMode,
       'enableEndCallTool' => true,
-      'enableSkipTurnTool' => true,
+      'enableSkipTurnTool' => false,
       'enablePlayKeypadTouchToneTool' => true,
       'hideCallerNumberOnTransfers' => false,
-      'recordAfterTransfers' => true,
+      'recordAfterTransfers' => false,
       'enableSecureMode' => true,
       'enableSpamProtection' => true
     ]);
@@ -237,7 +237,7 @@ class ReceptionistsWireTest extends TestCase
       'orbColor2' => '#9ce6e6',
       'variant' => $receptionWidgetAppearanceVariant,
       'placement' => $receptionWidgetAppearancePlacement,
-      'dismissible' => false,
+      'dismissible' => true,
       'mainLabel' => 'main_label',
       'startCall' => 'start_call'
     ]);

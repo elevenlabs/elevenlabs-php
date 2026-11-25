@@ -126,7 +126,7 @@ class FinetunesWireTest extends TestCase
       \ElevenLabs\Music\Finetunes\Types\UpdateMusicFinetuneRequestModelVisibility::Private_->value;
 
     $request = new \ElevenLabs\Music\Finetunes\Requests\UpdateMusicFinetuneRequestModel([
-      'name' => 'commodo in dolore fugiat sed',
+      'name' => 'consequat dolore id',
       'tags' => [],
       'primaryGenre' => 'primary_genre',
       'visibility' => $updateMusicFinetuneRequestModelVisibility

@@ -28,8 +28,8 @@ class SamplesWireTest extends TestCase
       [
         'removeBackgroundNoise' => true,
         'selectedSpeakerIds' => [],
-        'trimStartTime' => 10,
-        'trimEndTime' => 2,
+        'trimStartTime' => 2,
+        'trimEndTime' => 4,
         'fileName' => 'file_name'
       ]
     );

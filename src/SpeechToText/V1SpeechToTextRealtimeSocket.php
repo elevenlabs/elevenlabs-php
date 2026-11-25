@@ -7,7 +7,7 @@ namespace ElevenLabs\SpeechToText;
 use ElevenLabs\Core\WebSocket\WebSocketSocket;
 
 /**
- * @extends WebSocketSocket<\ElevenLabs\Types\SessionStarted|\ElevenLabs\Types\PartialTranscript|\ElevenLabs\Types\CommittedTranscript|\ElevenLabs\Types\DiarizedTranscript|\ElevenLabs\Types\SpeakersMerged|\ElevenLabs\Types\CommittedTranscriptWithTimestamps|\ElevenLabs\Types\CommittedTranscriptEntities|\ElevenLabs\Types\RedactedTranscript|\ElevenLabs\Types\ScribeWarning|\ElevenLabs\Types\ScribeError|\ElevenLabs\Types\ScribeAuthError|\ElevenLabs\Types\ScribeQuotaExceededError|\ElevenLabs\Types\ScribeThrottledError|\ElevenLabs\Types\ScribeUnacceptedTermsError|\ElevenLabs\Types\ScribeRateLimitedError|\ElevenLabs\Types\ScribeQueueOverflowError|\ElevenLabs\Types\ScribeResourceExhaustedError|\ElevenLabs\Types\ScribeSessionTimeLimitExceededError|\ElevenLabs\Types\ScribeInputError|\ElevenLabs\Types\ScribeInvalidRequestError|\ElevenLabs\Types\ScribeChunkSizeExceededError|\ElevenLabs\Types\ScribeInsufficientAudioActivityError|\ElevenLabs\Types\ScribeTranscriberError|\ElevenLabs\Types\EditedTranscript|array<mixed>|string>
+ * @extends WebSocketSocket<\ElevenLabs\Types\SessionStarted|\ElevenLabs\Types\PartialTranscript|\ElevenLabs\Types\CommittedTranscript|\ElevenLabs\Types\DiarizedTranscript|\ElevenLabs\Types\SpeakersMerged|\ElevenLabs\Types\SpeakerNames|\ElevenLabs\Types\CommittedTranscriptWithTimestamps|\ElevenLabs\Types\CommittedTranscriptEntities|\ElevenLabs\Types\RedactedTranscript|\ElevenLabs\Types\ScribeWarning|\ElevenLabs\Types\ScribeError|\ElevenLabs\Types\ScribeAuthError|\ElevenLabs\Types\ScribeQuotaExceededError|\ElevenLabs\Types\ScribeThrottledError|\ElevenLabs\Types\ScribeUnacceptedTermsError|\ElevenLabs\Types\ScribeRateLimitedError|\ElevenLabs\Types\ScribeQueueOverflowError|\ElevenLabs\Types\ScribeResourceExhaustedError|\ElevenLabs\Types\ScribeSessionTimeLimitExceededError|\ElevenLabs\Types\ScribeInputError|\ElevenLabs\Types\ScribeInvalidRequestError|\ElevenLabs\Types\ScribeChunkSizeExceededError|\ElevenLabs\Types\ScribeInsufficientAudioActivityError|\ElevenLabs\Types\ScribeTranscriberError|\ElevenLabs\Types\EditedTranscript|array<mixed>|string>
  */
 final class V1SpeechToTextRealtimeSocket extends WebSocketSocket
 {
@@ -17,7 +17,7 @@ final class V1SpeechToTextRealtimeSocket extends WebSocketSocket
   }
 
   /**
-   * @return \ElevenLabs\Types\SessionStarted|\ElevenLabs\Types\PartialTranscript|\ElevenLabs\Types\CommittedTranscript|\ElevenLabs\Types\DiarizedTranscript|\ElevenLabs\Types\SpeakersMerged|\ElevenLabs\Types\CommittedTranscriptWithTimestamps|\ElevenLabs\Types\CommittedTranscriptEntities|\ElevenLabs\Types\RedactedTranscript|\ElevenLabs\Types\ScribeWarning|\ElevenLabs\Types\ScribeError|\ElevenLabs\Types\ScribeAuthError|\ElevenLabs\Types\ScribeQuotaExceededError|\ElevenLabs\Types\ScribeThrottledError|\ElevenLabs\Types\ScribeUnacceptedTermsError|\ElevenLabs\Types\ScribeRateLimitedError|\ElevenLabs\Types\ScribeQueueOverflowError|\ElevenLabs\Types\ScribeResourceExhaustedError|\ElevenLabs\Types\ScribeSessionTimeLimitExceededError|\ElevenLabs\Types\ScribeInputError|\ElevenLabs\Types\ScribeInvalidRequestError|\ElevenLabs\Types\ScribeChunkSizeExceededError|\ElevenLabs\Types\ScribeInsufficientAudioActivityError|\ElevenLabs\Types\ScribeTranscriberError|\ElevenLabs\Types\EditedTranscript|array<mixed>|string
+   * @return \ElevenLabs\Types\SessionStarted|\ElevenLabs\Types\PartialTranscript|\ElevenLabs\Types\CommittedTranscript|\ElevenLabs\Types\DiarizedTranscript|\ElevenLabs\Types\SpeakersMerged|\ElevenLabs\Types\SpeakerNames|\ElevenLabs\Types\CommittedTranscriptWithTimestamps|\ElevenLabs\Types\CommittedTranscriptEntities|\ElevenLabs\Types\RedactedTranscript|\ElevenLabs\Types\ScribeWarning|\ElevenLabs\Types\ScribeError|\ElevenLabs\Types\ScribeAuthError|\ElevenLabs\Types\ScribeQuotaExceededError|\ElevenLabs\Types\ScribeThrottledError|\ElevenLabs\Types\ScribeUnacceptedTermsError|\ElevenLabs\Types\ScribeRateLimitedError|\ElevenLabs\Types\ScribeQueueOverflowError|\ElevenLabs\Types\ScribeResourceExhaustedError|\ElevenLabs\Types\ScribeSessionTimeLimitExceededError|\ElevenLabs\Types\ScribeInputError|\ElevenLabs\Types\ScribeInvalidRequestError|\ElevenLabs\Types\ScribeChunkSizeExceededError|\ElevenLabs\Types\ScribeInsufficientAudioActivityError|\ElevenLabs\Types\ScribeTranscriberError|\ElevenLabs\Types\EditedTranscript|array<mixed>|string
    */
   protected function parse(string $text): mixed
   {
@@ -39,6 +39,9 @@ final class V1SpeechToTextRealtimeSocket extends WebSocketSocket
     }
     if (($data['message_type'] ?? null) === 'speakers_merged') {
       return self::tryDeserialize(\ElevenLabs\Types\SpeakersMerged::class, $data) ?? $data;
+    }
+    if (($data['message_type'] ?? null) === 'speaker_names') {
+      return self::tryDeserialize(\ElevenLabs\Types\SpeakerNames::class, $data) ?? $data;
     }
     if (($data['message_type'] ?? null) === 'committed_transcript_with_timestamps') {
       return self::tryDeserialize(

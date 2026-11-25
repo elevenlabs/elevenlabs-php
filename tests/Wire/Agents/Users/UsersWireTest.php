@@ -66,7 +66,7 @@ class UsersWireTest extends TestCase
         'agentId' => 'agent_id',
         'branchId' => 'branch_id',
         'callStartBeforeUnix' => 8,
-        'callStartAfterUnix' => 2,
+        'callStartAfterUnix' => 7,
         'search' => 'search',
         'pageSize' => 30,
         'sortBy' => $sortBy->value,

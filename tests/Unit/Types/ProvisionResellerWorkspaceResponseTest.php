@@ -26,6 +26,7 @@ class ProvisionResellerWorkspaceResponseTest extends TestCase
             "pending_downgrade_tier": "test-value",
             "pending_downgrade_at_unix": 1
         },
+        "charge_customer": true,
         "has_payment_issue": true,
         "onboarding_completed_at_unix": 1,
         "member_results": [

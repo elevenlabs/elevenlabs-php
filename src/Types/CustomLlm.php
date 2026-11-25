@@ -59,6 +59,19 @@ class CustomLlm extends JsonSerializableType
   public \ElevenLabs\Types\AuthConnectionLocator|\ElevenLabs\Types\EnvironmentAuthConnectionLocator|null $authConnection;
 
   /**
+   * Optional mTLS auth connection. When set, its client certificate is used for the TLS handshake with the LLM endpoint and, when auth_connection is OAuth2 client credentials or OAuth2 JWT, with its token endpoint too. Application auth stays on auth_connection or api_key. auth_connection must then be OAuth2 client credentials, OAuth2 JWT or bearer.
+   */
+  #[
+    JsonProperty('mtls_auth_connection'),
+    Union(
+      \ElevenLabs\Types\AuthConnectionLocator::class,
+      \ElevenLabs\Types\EnvironmentAuthConnectionLocator::class,
+      'null'
+    )
+  ]
+  public \ElevenLabs\Types\AuthConnectionLocator|\ElevenLabs\Types\EnvironmentAuthConnectionLocator|null $mtlsAuthConnection;
+
+  /**
    * @var array<string, string|\ElevenLabs\Types\ConvAiSecretLocator|\ElevenLabs\Types\ConvAiDynamicVariable|\ElevenLabs\Types\ConvAiEnvVarLocator>|null
    * Headers that should be included in the request
    */
@@ -93,6 +106,7 @@ class CustomLlm extends JsonSerializableType
    *   modelId?: ?string,
    *   apiKey?: \ElevenLabs\Types\ConvAiSecretLocator|\ElevenLabs\Types\ConvAiEnvVarLocator|null,
    *   authConnection?: \ElevenLabs\Types\AuthConnectionLocator|\ElevenLabs\Types\EnvironmentAuthConnectionLocator|null,
+   *   mtlsAuthConnection?: \ElevenLabs\Types\AuthConnectionLocator|\ElevenLabs\Types\EnvironmentAuthConnectionLocator|null,
    *   requestHeaders?: array<string, string|\ElevenLabs\Types\ConvAiSecretLocator|\ElevenLabs\Types\ConvAiDynamicVariable|\ElevenLabs\Types\ConvAiEnvVarLocator>|null,
    *   apiVersion?: ?string,
    *   apiType?: ?value-of<\ElevenLabs\Types\CustomLlmapiType>,
@@ -104,6 +118,7 @@ class CustomLlm extends JsonSerializableType
     $this->modelId = $values['modelId'] ?? null;
     $this->apiKey = $values['apiKey'] ?? null;
     $this->authConnection = $values['authConnection'] ?? null;
+    $this->mtlsAuthConnection = $values['mtlsAuthConnection'] ?? null;
     $this->requestHeaders = $values['requestHeaders'] ?? null;
     $this->apiVersion = $values['apiVersion'] ?? null;
     $this->apiType = $values['apiType'] ?? null;
@@ -119,6 +134,9 @@ class CustomLlm extends JsonSerializableType
     }
     if (array_key_exists('authConnection', $values)) {
       $this->_dirtyFields['auth_connection'] = true;
+    }
+    if (array_key_exists('mtlsAuthConnection', $values)) {
+      $this->_dirtyFields['mtls_auth_connection'] = true;
     }
     if (array_key_exists('requestHeaders', $values)) {
       $this->_dirtyFields['request_headers'] = true;
@@ -158,6 +176,14 @@ class CustomLlm extends JsonSerializableType
       $parts[] = [
         'name' => 'auth_connection',
         'contents' => json_encode($this->authConnection),
+        'headers' => ['Content-Type' => 'application/json']
+      ];
+    }
+
+    if ($this->mtlsAuthConnection !== null) {
+      $parts[] = [
+        'name' => 'mtls_auth_connection',
+        'contents' => json_encode($this->mtlsAuthConnection),
         'headers' => ['Content-Type' => 'application/json']
       ];
     }

@@ -109,13 +109,13 @@ class AssetsWireTest extends TestCase
     $sdk = new ElevenLabs(options: ['client' => $transport]);
 
     $receptionGroupMembership = new \ElevenLabs\Types\ReceptionGroupMembership([
-      'label' => 'dolore dolor ',
-      'rank' => 0
+      'label' => 'in aute rep',
+      'rank' => 10
     ]);
 
     $timeRangeModel = new \ElevenLabs\Types\TimeRangeModel([
       'startHour' => 9,
-      'startMinute' => 2,
+      'startMinute' => 8,
       'endHour' => 17,
       'endMinute' => 30
     ]);
@@ -128,14 +128,14 @@ class AssetsWireTest extends TestCase
     $request = new \ElevenLabs\Reception\Assets\Requests\ReceptionCreateAssetRequest([
       'xiWorkspaceId' => 'xi-workspace-id',
       'groups' => [],
-      'ungroupedRank' => 8,
-      'name' => 'nulla',
-      'description' => 'nulla laboris',
+      'ungroupedRank' => 7,
+      'name' => 'magna',
+      'description' => 'ullamco ',
       'isActive' => true,
       'availableHours' => $workingHours,
       'photoUrl' => 'https://male-coal.com/',
       'locationId' => 'location_id',
-      'customerFacingName' => 'minim ir'
+      'customerFacingName' => 'magna qu'
     ]);
     $sdk->reception->assets->create(request: $request);
 
@@ -246,13 +246,13 @@ class AssetsWireTest extends TestCase
     $sdk = new ElevenLabs(options: ['client' => $transport]);
 
     $receptionGroupMembership = new \ElevenLabs\Types\ReceptionGroupMembership([
-      'label' => 'dolore dolor ',
-      'rank' => 0
+      'label' => 'in aute rep',
+      'rank' => 10
     ]);
 
     $timeRangeModel = new \ElevenLabs\Types\TimeRangeModel([
       'startHour' => 9,
-      'startMinute' => 2,
+      'startMinute' => 8,
       'endHour' => 17,
       'endMinute' => 30
     ]);
@@ -265,14 +265,14 @@ class AssetsWireTest extends TestCase
     $request = new \ElevenLabs\Reception\Assets\Requests\ReceptionUpdateAssetRequestPatch([
       'xiWorkspaceId' => 'xi-workspace-id',
       'groups' => [],
-      'ungroupedRank' => 10,
-      'name' => 'pariatur al',
-      'description' => 'ut proide',
+      'ungroupedRank' => 0,
+      'name' => 'dolor ex',
+      'description' => 'culpa qui L',
       'isActive' => true,
       'availableHours' => $workingHours,
       'photoUrl' => 'https://male-coal.com/',
       'locationId' => 'location_id',
-      'customerFacingName' => 'Lorem'
+      'customerFacingName' => 'esse Excepteu'
     ]);
     $sdk->reception->assets->update(
       request: $request,

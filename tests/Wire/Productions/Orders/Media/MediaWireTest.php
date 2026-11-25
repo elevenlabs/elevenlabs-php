@@ -28,8 +28,8 @@ class MediaWireTest extends TestCase
     );
     $sdk = new ElevenLabs(options: ['client' => $transport]);
     $sdk->productions->orders->media->get(
-      orderId: 'prodorder_tlwlnemnuiip38fw6oaxf9gz3c',
-      mediaId: 'prodmedia_nuplz2mxa8iaw59m9abnacd1yj'
+      orderId: 'prodorder_e8j249pxq0junwpjgaaouzwjdn',
+      mediaId: 'prodmedia_dn7qbr3gamncisgk6c1dtw8bnu'
     );
 
     $this->assertCount(1, $transport->requests);

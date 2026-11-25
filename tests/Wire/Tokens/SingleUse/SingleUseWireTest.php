@@ -26,7 +26,7 @@ class SingleUseWireTest extends TestCase
     $tokenType = \ElevenLabs\Types\SingleUseTokenType::RealtimeScribe;
     $sdk->tokens->singleUse->create(
       request: new \ElevenLabs\Tokens\SingleUse\Requests\CreateSingleUseRequest([
-        'maxSessionDurationSeconds' => 9
+        'maxSessionDurationSeconds' => 6
       ]),
       tokenType: $tokenType->value
     );

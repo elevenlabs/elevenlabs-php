@@ -131,7 +131,7 @@ class ProductsWireTest extends TestCase
 
     $receptionIntakeQuestion = new \ElevenLabs\Types\ReceptionIntakeQuestion([
       'id' => 'intakeq_4801jx8k3m5n7p9q2r4s6t8v0w2y',
-      'label' => 'est ci',
+      'label' => 'sed enim quis v',
       'kind' => $intakeQuestionKind,
       'options' => [],
       'required' => true,
@@ -139,8 +139,8 @@ class ProductsWireTest extends TestCase
     ]);
 
     $receptionGroupMembership = new \ElevenLabs\Types\ReceptionGroupMembership([
-      'label' => 'dolore dolor ',
-      'rank' => 0
+      'label' => 'in aute rep',
+      'rank' => 10
     ]);
 
     $orderFulfillmentType = \ElevenLabs\Types\OrderFulfillmentType::Pickup->value;
@@ -150,10 +150,10 @@ class ProductsWireTest extends TestCase
       'pricingMode' => $pricingMode,
       'intakeQuestions' => [],
       'groups' => [],
-      'ungroupedRank' => 2,
-      'name' => 'veniam',
-      'description' => 'et sin',
-      'price' => 0.48,
+      'ungroupedRank' => 6,
+      'name' => 'sunt do',
+      'description' => 'pariatur aute',
+      'price' => 3.79,
       'isActive' => true,
       'orderable' => true,
       'allowedFulfillmentTypes' => [],
@@ -289,7 +289,7 @@ class ProductsWireTest extends TestCase
 
     $receptionIntakeQuestion = new \ElevenLabs\Types\ReceptionIntakeQuestion([
       'id' => 'intakeq_4801jx8k3m5n7p9q2r4s6t8v0w2y',
-      'label' => 'est ci',
+      'label' => 'sed enim quis v',
       'kind' => $intakeQuestionKind,
       'options' => [],
       'required' => true,
@@ -297,8 +297,8 @@ class ProductsWireTest extends TestCase
     ]);
 
     $receptionGroupMembership = new \ElevenLabs\Types\ReceptionGroupMembership([
-      'label' => 'dolore dolor ',
-      'rank' => 0
+      'label' => 'in aute rep',
+      'rank' => 10
     ]);
 
     $orderFulfillmentType = \ElevenLabs\Types\OrderFulfillmentType::Pickup->value;
@@ -308,10 +308,10 @@ class ProductsWireTest extends TestCase
       'pricingMode' => $pricingMode,
       'intakeQuestions' => [],
       'groups' => [],
-      'ungroupedRank' => 2,
-      'name' => 'adipisicing',
-      'description' => 'in dolor e',
-      'price' => 6.98,
+      'ungroupedRank' => 10,
+      'name' => 'eiusmod in',
+      'description' => 'voluptate dol',
+      'price' => 8.84,
       'isActive' => true,
       'orderable' => true,
       'allowedFulfillmentTypes' => [],

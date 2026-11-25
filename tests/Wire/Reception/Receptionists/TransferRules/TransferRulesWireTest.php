@@ -32,10 +32,10 @@ class TransferRulesWireTest extends TestCase
     $request = new \ElevenLabs\Reception\Receptionists\TransferRules\Requests\ReceptionCreateTransferRuleRequest(
       [
         'xiWorkspaceId' => 'xi-workspace-id',
-        'label' => 'est enim',
-        'phoneNumber' => 'aliquip',
-        'condition' => 'quis ipsum',
-        'postDialDigits' => '#6W4514'
+        'label' => 'esse eu',
+        'phoneNumber' => 'in conseq',
+        'condition' => 'elit ',
+        'postDialDigits' => '1969615'
       ]
     );
     $sdk->reception->receptionists->transferRules->create(
@@ -74,10 +74,10 @@ class TransferRulesWireTest extends TestCase
     $request = new \ElevenLabs\Reception\Receptionists\TransferRules\Requests\ReceptionUpdateTransferRuleRequest(
       [
         'xiWorkspaceId' => 'xi-workspace-id',
-        'label' => 'magna occaecat ',
-        'phoneNumber' => 'cillum dol',
-        'condition' => 'laboris pariat',
-        'postDialDigits' => '615w034'
+        'label' => 'culpa',
+        'phoneNumber' => 'occaec',
+        'condition' => 'Ut do u',
+        'postDialDigits' => '#wW'
       ]
     );
     $sdk->reception->receptionists->transferRules->update(

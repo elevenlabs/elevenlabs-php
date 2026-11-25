@@ -122,6 +122,7 @@ class HistoryClient extends BaseService
     $sortDirection = $request->sortDirection;
     $search = $request->search;
     $source = $request->source;
+    $sources = $request->sources;
 
     $resolvedConfig = $this->getResolvedConfig($this->listConfig, $options);
     $response = $this->sendJsonRequest(
@@ -138,7 +139,8 @@ class HistoryClient extends BaseService
           'date_after_unix' => $dateAfterUnix,
           'sort_direction' => $sortDirection,
           'search' => $search,
-          'source' => $source
+          'source' => $source,
+          'sources' => $sources
         ]
       ),
       $resolvedConfig

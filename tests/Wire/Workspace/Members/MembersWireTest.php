@@ -87,7 +87,7 @@ class MembersWireTest extends TestCase
     $sdk = new ElevenLabs(options: ['client' => $transport]);
 
     $request = new \ElevenLabs\Workspace\Members\Requests\UpdateMemberUsageLimitRequestModel([
-      'usageLimit' => 10
+      'usageLimit' => 9
     ]);
     $sdk->workspace->members->updateUsageLimit(request: $request, userId: 'user_id');
 

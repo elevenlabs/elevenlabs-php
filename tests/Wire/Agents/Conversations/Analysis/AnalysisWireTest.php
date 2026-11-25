@@ -71,6 +71,10 @@ class AnalysisWireTest extends TestCase
                                   "output_total": {
                                       "tokens": 1,
                                       "price": 1
+                                  },
+                                  "output_total_reasoning_portion": {
+                                      "tokens": 1,
+                                      "price": 1
                                   }
                               }
                           }
@@ -91,6 +95,10 @@ class AnalysisWireTest extends TestCase
                                       "price": 1
                                   },
                                   "output_total": {
+                                      "tokens": 1,
+                                      "price": 1
+                                  },
+                                  "output_total_reasoning_portion": {
                                       "tokens": 1,
                                       "price": 1
                                   }
@@ -685,6 +693,10 @@ class AnalysisWireTest extends TestCase
                                   "price": 1
                               },
                               "output_total": {
+                                  "tokens": 1,
+                                  "price": 1
+                              },
+                              "output_total_reasoning_portion": {
                                   "tokens": 1,
                                   "price": 1
                               }
@@ -821,6 +833,10 @@ class AnalysisWireTest extends TestCase
                                   "output_total": {
                                       "tokens": 1,
                                       "price": 1
+                                  },
+                                  "output_total_reasoning_portion": {
+                                      "tokens": 1,
+                                      "price": 1
                                   }
                               }
                           }
@@ -841,6 +857,10 @@ class AnalysisWireTest extends TestCase
                                       "price": 1
                                   },
                                   "output_total": {
+                                      "tokens": 1,
+                                      "price": 1
+                                  },
+                                  "output_total_reasoning_portion": {
                                       "tokens": 1,
                                       "price": 1
                                   }
@@ -1435,6 +1455,10 @@ class AnalysisWireTest extends TestCase
                                   "price": 1
                               },
                               "output_total": {
+                                  "tokens": 1,
+                                  "price": 1
+                              },
+                              "output_total_reasoning_portion": {
                                   "tokens": 1,
                                   "price": 1
                               }

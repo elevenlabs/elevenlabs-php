@@ -251,7 +251,7 @@ class MergeProposalsWireTest extends TestCase
         'title' => 'title',
         'description' => 'description',
         'requestedReviewerUserIds' => [],
-        'close' => true
+        'close' => false
       ]
     );
     $sdk->agents->mergeProposals->update(
@@ -476,7 +476,7 @@ class MergeProposalsWireTest extends TestCase
     $request = new \ElevenLabs\Agents\MergeProposals\Requests\BodyMergeAMergeProposalV1ConvaiAgentsAgentIdMergeProposalsMergeProposalIdMergePost(
       [
         'archiveSourceBranch' => true,
-        'force' => true
+        'force' => false
       ]
     );
     $sdk->agents->mergeProposals->merge(

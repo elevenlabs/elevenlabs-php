@@ -42,7 +42,7 @@ class UsageWireTest extends TestCase
 
     $columnFilterOperation = \ElevenLabs\Types\ColumnFilterOperation::In->value;
 
-    $columnFilterValuesItem = 'et pariatu';
+    $columnFilterValuesItem = 'ut officia ex';
 
     $columnFilter = new \ElevenLabs\Types\ColumnFilter([
       'column' => 'column',
@@ -52,8 +52,8 @@ class UsageWireTest extends TestCase
 
     $request = new \ElevenLabs\Workspace\Usage\Requests\BodyGetWorkspaceUsageV1WorkspaceAnalyticsQueryUsageByProductOverTimePost(
       [
-        'startTime' => 6919743446933494,
-        'endTime' => 3429310445613611,
+        'startTime' => 4946619703102885,
+        'endTime' => 3864424836644128,
         'intervalSeconds' => 60,
         'groupBy' => [],
         'filters' => [],
@@ -107,7 +107,7 @@ class UsageWireTest extends TestCase
     $metronomeUsageColumnFilterOperation =
       \ElevenLabs\Types\MetronomeUsageColumnFilterOperation::Eq->value;
 
-    $metronomeUsageColumnFilterValuesItem = 'est aute';
+    $metronomeUsageColumnFilterValuesItem = 'elit lab';
 
     $metronomeUsageColumnFilter = new \ElevenLabs\Types\MetronomeUsageColumnFilter([
       'column' => $metronomeUsageColumnFilterColumn,
@@ -117,9 +117,9 @@ class UsageWireTest extends TestCase
 
     $request = new \ElevenLabs\Workspace\Usage\Requests\BodyGetWorkspaceCostUsageV1WorkspaceAnalyticsUsagePost(
       [
-        'startTime' => 6052980653121348,
-        'endTime' => 3339925748020137,
-        'intervalSeconds' => 5811589424476800,
+        'startTime' => 2668049120759082,
+        'endTime' => 1423799423286508,
+        'intervalSeconds' => 87390663955200,
         'groupBy' => [],
         'filters' => []
       ]

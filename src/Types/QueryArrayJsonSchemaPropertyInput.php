@@ -64,10 +64,11 @@ class QueryArrayJsonSchemaPropertyInput extends JsonSerializableType
       \ElevenLabs\Types\LiteralJsonSchemaProperty::class,
       \ElevenLabs\Types\ObjectJsonSchemaPropertyInput::class,
       \ElevenLabs\Types\ArrayJsonSchemaPropertyInput::class,
+      \ElevenLabs\Types\AnyOfJsonSchemaPropertyInput::class,
       'null'
     )
   ]
-  public \ElevenLabs\Types\LiteralJsonSchemaProperty|\ElevenLabs\Types\ObjectJsonSchemaPropertyInput|\ElevenLabs\Types\ArrayJsonSchemaPropertyInput|null $items;
+  public \ElevenLabs\Types\LiteralJsonSchemaProperty|\ElevenLabs\Types\ObjectJsonSchemaPropertyInput|\ElevenLabs\Types\ArrayJsonSchemaPropertyInput|\ElevenLabs\Types\AnyOfJsonSchemaPropertyInput|null $items;
 
   /**
    * @param array{
@@ -77,7 +78,7 @@ class QueryArrayJsonSchemaPropertyInput extends JsonSerializableType
    *   dynamicVariable?: ?string,
    *   constantValue?: mixed[]|null,
    *   isOmitted?: ?bool,
-   *   items?: \ElevenLabs\Types\LiteralJsonSchemaProperty|\ElevenLabs\Types\ObjectJsonSchemaPropertyInput|\ElevenLabs\Types\ArrayJsonSchemaPropertyInput|null,
+   *   items?: \ElevenLabs\Types\LiteralJsonSchemaProperty|\ElevenLabs\Types\ObjectJsonSchemaPropertyInput|\ElevenLabs\Types\ArrayJsonSchemaPropertyInput|\ElevenLabs\Types\AnyOfJsonSchemaPropertyInput|null,
    * } $values
    */
   public function __construct(array $values)
