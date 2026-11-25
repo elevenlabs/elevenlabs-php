@@ -38,6 +38,10 @@ $client->history->list(
         'sortDirection' => ListHistoryRequestSortDirection::Asc->value,
         'search' => 'In the land far far away',
         'source' => ListHistoryRequestSource::Tts->value,
+        'sources' => [
+            ListHistoryRequestSourcesItem::Tts->value,
+            ListHistoryRequestSourcesItem::Sts->value,
+        ],
     ]),
 );
 ```
@@ -119,6 +123,14 @@ $client->history->list(
 <dd>
 
 **$source:** `?ListHistoryRequestSource` — Source of the generated history item
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$sources:** `?array` — Sources of the generated history items, matching any of them. Cannot be combined with source.
     
 </dd>
 </dl>
@@ -1599,7 +1611,18 @@ Returns a list of shared voices similar to the provided audio sample. If neither
 
 ```php
 $client->voices->findSimilarVoices(
-    new BodyGetSimilarLibraryVoicesV1SimilarVoicesPost([]),
+    new BodyGetSimilarLibraryVoicesV1SimilarVoicesPost([
+        'category' => FindSimilarVoicesVoicesRequestCategory::Professional->value,
+        'gender' => 'male',
+        'age' => 'young',
+        'useCases' => [
+            'use_cases',
+        ],
+        'minNoticePeriodDays' => 30,
+        'includeCustomRates' => true,
+        'includeLiveModerated' => true,
+        'ownerId' => '7c9fab611d9a0e1fb2e7448a0c294a8804efc2bcc324b0a366a5d5232b7d1532',
+    ]),
 );
 ```
 </dd>
@@ -1611,6 +1634,70 @@ $client->voices->findSimilarVoices(
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**$category:** `?FindSimilarVoicesVoicesRequestCategory` — Voice category used for filtering
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$gender:** `?string` — Gender used for filtering
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$age:** `?string` — Age used for filtering
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$useCases:** `?array` — Use-case used for filtering
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$minNoticePeriodDays:** `?int` — Filter voices with a minimum notice period of the given number of days.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$includeCustomRates:** `?bool` — Include/exclude voices with custom rates
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$includeLiveModerated:** `?bool` — Include/exclude voices that are live moderated
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$ownerId:** `?string` — Filter voices by public owner ID
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -22640,7 +22727,7 @@ $client->agents->outboundCampaigns->list(
 <dl>
 <dd>
 
-**$search:** `?string` — Only campaigns whose name contains this text.
+**$search:** `?string` — Only campaigns whose name contains this text, or whose ID is exactly this text.
     
 </dd>
 </dl>
@@ -30850,6 +30937,385 @@ $client->pronunciationDictionaries->rules->remove(
 </dl>
 </details>
 
+## AudioNative
+<details><summary><code>$client-&gt;audioNative-&gt;create($request) -> ?AudioNativeCreateProjectResponseModel</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Creates Audio Native enabled project, optionally starts conversion and returns project ID and embeddable HTML snippet.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->audioNative->create(
+    new BodyCreatesAudioNativeEnabledProjectV1AudioNativePost([
+        'name' => 'name',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$name:** `string` — Project name.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$image:** `?string` — (Deprecated) Image URL used in the player. If not provided, default image set in the Player settings is used.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$author:** `?string` — Author used in the player and inserted at the start of the uploaded article. If not provided, the default author set in the Player settings is used.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$title:** `?string` — Title used in the player and inserted at the top of the uploaded article. If not provided, the default title set in the Player settings is used.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$small:** `?bool` — (Deprecated) Whether to use small player or not. If not provided, default value set in the Player settings is used.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$textColor:** `?string` — Text color used in the player. If not provided, default text color set in the Player settings is used.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$backgroundColor:** `?string` — Background color used in the player. If not provided, default background color set in the Player settings is used.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$sessionization:** `?int` — (Deprecated) Specifies for how many minutes to persist the session across page reloads. If not provided, default sessionization set in the Player settings is used.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$voiceId:** `?string` — Voice ID used to voice the content. If not provided, default voice ID set in the Player settings is used.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$modelId:** `?string` — TTS Model ID used in the player. If not provided, default model ID set in the Player settings is used.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$file:** `mixed` — Either txt or HTML input file containing the article content. HTML should be formatted as follows '&lt;html&gt;&lt;body&gt;&lt;div&gt;&lt;p&gt;Your content&lt;/p&gt;&lt;h3&gt;More of your content&lt;/h3&gt;&lt;p&gt;Some more of your content&lt;/p&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;'
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$autoConvert:** `?bool` — Whether to auto convert the project to audio or not.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$applyTextNormalization:** `?CreateAudioNativeRequestApplyTextNormalization` 
+
+This parameter controls text normalization with four modes: 'auto', 'on', 'apply_english' and 'off'.
+    When set to 'auto', the system will automatically decide whether to apply text normalization
+    (e.g., spelling out numbers). With 'on', text normalization will always be applied, while
+    with 'off', it will be skipped. 'apply_english' is the same as 'on' but will assume that text is in English.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$pronunciationDictionaryLocators:** `?array` — A list of pronunciation dictionary locators (pronunciation_dictionary_id, version_id) encoded as a list of JSON strings for pronunciation dictionaries to be applied to the text. A list of json encoded strings is required as adding projects may occur through formData as opposed to jsonBody. To specify multiple dictionaries use multiple --form lines in your curl, such as --form 'pronunciation_dictionary_locators="{\"pronunciation_dictionary_id\":\"Vmd4Zor6fplcA7WrINey\",\"version_id\":\"hRPaxjlTdR7wFMhV4w0b\"}"' --form 'pronunciation_dictionary_locators="{\"pronunciation_dictionary_id\":\"JzWtcGQMJ6bnlWwyMo7e\",\"version_id\":\"lbmwxiLu4q6txYxgdZqn\"}"'.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;audioNative-&gt;getSettings($projectId) -> ?GetAudioNativeProjectSettingsResponseModel</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get player settings for the specific project.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->audioNative->getSettings(
+    '21m00Tcm4TlvDq8ikWAM',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$projectId:** `string` — The ID of the Studio project.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;audioNative-&gt;update($projectId, $request) -> ?AudioNativeEditContentResponseModel</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Updates content for the specific AudioNative Project.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->audioNative->update(
+    '21m00Tcm4TlvDq8ikWAM',
+    new BodyUpdateAudioNativeProjectContentV1AudioNativeProjectIdContentPost([]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$projectId:** `string` — The ID of the project to be used. You can use the [List projects](/docs/api-reference/studio/get-projects) endpoint to list all the available projects.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$file:** `mixed` — Either txt or HTML input file containing the article content. HTML should be formatted as follows '&lt;html&gt;&lt;body&gt;&lt;div&gt;&lt;p&gt;Your content&lt;/p&gt;&lt;h5&gt;More of your content&lt;/h5&gt;&lt;p&gt;Some more of your content&lt;/p&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;'
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$autoConvert:** `?bool` — Whether to auto convert the project to audio or not.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$autoPublish:** `?bool` — Whether to auto publish the new project snapshot after it's converted.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;audioNative-&gt;updateContentFromUrl($request) -> ?AudioNativeEditContentResponseModel</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Finds an AudioNative project matching the provided URL, extracts content from the URL, updates the project content, and queues it for conversion and auto-publishing.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->audioNative->updateContentFromUrl(
+    new BodyUpdateAudioNativeContentFromUrlV1AudioNativeContentPost([
+        'url' => 'https://elevenlabs.io/blog/the_first_ai_that_can_laugh/',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$url:** `string` — URL of the page to extract content from.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$author:** `?string` — Author used in the player and inserted at the start of the uploaded article. If not provided, the default author set in the Player settings is used.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$title:** `?string` — Title used in the player and inserted at the top of the uploaded article. If not provided, the default title set in the Player settings is used.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## SpeechToText
 <details><summary><code>$client-&gt;speechToText-&gt;convert($request) -> SpeechToTextChunkResponseModel|MultichannelSpeechToTextResponseModel|SpeechToTextWebhookResponseModel|null</code></summary>
 <dl>
@@ -31286,385 +31752,6 @@ Gets a list of available models.
 ```php
 $client->models->list();
 ```
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-## AudioNative
-<details><summary><code>$client-&gt;audioNative-&gt;create($request) -> ?AudioNativeCreateProjectResponseModel</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Creates Audio Native enabled project, optionally starts conversion and returns project ID and embeddable HTML snippet.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```php
-$client->audioNative->create(
-    new BodyCreatesAudioNativeEnabledProjectV1AudioNativePost([
-        'name' => 'name',
-    ]),
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**$name:** `string` — Project name.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$image:** `?string` — (Deprecated) Image URL used in the player. If not provided, default image set in the Player settings is used.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$author:** `?string` — Author used in the player and inserted at the start of the uploaded article. If not provided, the default author set in the Player settings is used.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$title:** `?string` — Title used in the player and inserted at the top of the uploaded article. If not provided, the default title set in the Player settings is used.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$small:** `?bool` — (Deprecated) Whether to use small player or not. If not provided, default value set in the Player settings is used.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$textColor:** `?string` — Text color used in the player. If not provided, default text color set in the Player settings is used.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$backgroundColor:** `?string` — Background color used in the player. If not provided, default background color set in the Player settings is used.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$sessionization:** `?int` — (Deprecated) Specifies for how many minutes to persist the session across page reloads. If not provided, default sessionization set in the Player settings is used.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$voiceId:** `?string` — Voice ID used to voice the content. If not provided, default voice ID set in the Player settings is used.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$modelId:** `?string` — TTS Model ID used in the player. If not provided, default model ID set in the Player settings is used.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$file:** `mixed` — Either txt or HTML input file containing the article content. HTML should be formatted as follows '&lt;html&gt;&lt;body&gt;&lt;div&gt;&lt;p&gt;Your content&lt;/p&gt;&lt;h3&gt;More of your content&lt;/h3&gt;&lt;p&gt;Some more of your content&lt;/p&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;'
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$autoConvert:** `?bool` — Whether to auto convert the project to audio or not.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$applyTextNormalization:** `?CreateAudioNativeRequestApplyTextNormalization` 
-
-This parameter controls text normalization with four modes: 'auto', 'on', 'apply_english' and 'off'.
-    When set to 'auto', the system will automatically decide whether to apply text normalization
-    (e.g., spelling out numbers). With 'on', text normalization will always be applied, while
-    with 'off', it will be skipped. 'apply_english' is the same as 'on' but will assume that text is in English.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$pronunciationDictionaryLocators:** `?array` — A list of pronunciation dictionary locators (pronunciation_dictionary_id, version_id) encoded as a list of JSON strings for pronunciation dictionaries to be applied to the text. A list of json encoded strings is required as adding projects may occur through formData as opposed to jsonBody. To specify multiple dictionaries use multiple --form lines in your curl, such as --form 'pronunciation_dictionary_locators="{\"pronunciation_dictionary_id\":\"Vmd4Zor6fplcA7WrINey\",\"version_id\":\"hRPaxjlTdR7wFMhV4w0b\"}"' --form 'pronunciation_dictionary_locators="{\"pronunciation_dictionary_id\":\"JzWtcGQMJ6bnlWwyMo7e\",\"version_id\":\"lbmwxiLu4q6txYxgdZqn\"}"'.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>$client-&gt;audioNative-&gt;getSettings($projectId) -> ?GetAudioNativeProjectSettingsResponseModel</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Get player settings for the specific project.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```php
-$client->audioNative->getSettings(
-    '21m00Tcm4TlvDq8ikWAM',
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**$projectId:** `string` — The ID of the Studio project.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>$client-&gt;audioNative-&gt;update($projectId, $request) -> ?AudioNativeEditContentResponseModel</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Updates content for the specific AudioNative Project.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```php
-$client->audioNative->update(
-    '21m00Tcm4TlvDq8ikWAM',
-    new BodyUpdateAudioNativeProjectContentV1AudioNativeProjectIdContentPost([]),
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**$projectId:** `string` — The ID of the project to be used. You can use the [List projects](/docs/api-reference/studio/get-projects) endpoint to list all the available projects.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$file:** `mixed` — Either txt or HTML input file containing the article content. HTML should be formatted as follows '&lt;html&gt;&lt;body&gt;&lt;div&gt;&lt;p&gt;Your content&lt;/p&gt;&lt;h5&gt;More of your content&lt;/h5&gt;&lt;p&gt;Some more of your content&lt;/p&gt;&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;'
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$autoConvert:** `?bool` — Whether to auto convert the project to audio or not.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$autoPublish:** `?bool` — Whether to auto publish the new project snapshot after it's converted.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>$client-&gt;audioNative-&gt;updateContentFromUrl($request) -> ?AudioNativeEditContentResponseModel</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Finds an AudioNative project matching the provided URL, extracts content from the URL, updates the project content, and queues it for conversion and auto-publishing.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```php
-$client->audioNative->updateContentFromUrl(
-    new BodyUpdateAudioNativeContentFromUrlV1AudioNativeContentPost([
-        'url' => 'https://elevenlabs.io/blog/the_first_ai_that_can_laugh/',
-    ]),
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**$url:** `string` — URL of the page to extract content from.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$author:** `?string` — Author used in the player and inserted at the start of the uploaded article. If not provided, the default author set in the Player settings is used.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$title:** `?string` — Title used in the player and inserted at the top of the uploaded article. If not provided, the default title set in the Player settings is used.
-    
 </dd>
 </dl>
 </dd>
@@ -37928,6 +38015,14 @@ $client->reception->workspaces->create(
 <dd>
 
 **$vertical:** `?ReceptionVertical` — The business's vertical, used with `complete_onboarding`. Without it, onboarding picks the vertical as usual.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$chargeCustomer:** `?bool` — Bill the workspace's own customer instead of the reseller: it checks out and sees its billing itself, and the reseller earns a commission. Only for a reseller on standard billing.
     
 </dd>
 </dl>

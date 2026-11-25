@@ -8,6 +8,7 @@ use ElevenLabs\ElevenLabs;
 use ElevenLabs\History\Requests\ListHistoryRequest;
 use ElevenLabs\History\Types\ListHistoryRequestSortDirection;
 use ElevenLabs\History\Types\ListHistoryRequestSource;
+use ElevenLabs\History\Types\ListHistoryRequestSourcesItem;
 
 $client = new ElevenLabs();
 $client->history->list(
@@ -20,6 +21,10 @@ $client->history->list(
     'dateAfterUnix' => 1640995200,
     'sortDirection' => ListHistoryRequestSortDirection::Asc->value,
     'search' => 'In the land far far away',
-    'source' => ListHistoryRequestSource::Tts->value
+    'source' => ListHistoryRequestSource::Tts->value,
+    'sources' => [
+      ListHistoryRequestSourcesItem::Tts->value,
+      ListHistoryRequestSourcesItem::Sts->value
+    ]
   ])
 );

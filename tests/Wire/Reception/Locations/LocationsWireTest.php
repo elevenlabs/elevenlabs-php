@@ -96,7 +96,7 @@ class LocationsWireTest extends TestCase
 
     $timeRangeModel = new \ElevenLabs\Types\TimeRangeModel([
       'startHour' => 9,
-      'startMinute' => 2,
+      'startMinute' => 8,
       'endHour' => 17,
       'endMinute' => 30
     ]);
@@ -108,11 +108,11 @@ class LocationsWireTest extends TestCase
 
     $request = new \ElevenLabs\Reception\Locations\Requests\ReceptionLocationRequest([
       'xiWorkspaceId' => 'xi-workspace-id',
-      'name' => 'nulla',
-      'address' => 'ut est consect',
-      'notes' => 'qui c',
+      'name' => 'officia ',
+      'address' => 'ipsum no',
+      'notes' => 'in adipisicing ',
       'operatingHours' => $workingHours,
-      'customerFacingName' => 'eu voluptate',
+      'customerFacingName' => 'in nisi ',
       'maxConcurrentAppointments' => 3,
       'isActive' => true
     ]);
@@ -212,7 +212,7 @@ class LocationsWireTest extends TestCase
 
     $timeRangeModel = new \ElevenLabs\Types\TimeRangeModel([
       'startHour' => 9,
-      'startMinute' => 2,
+      'startMinute' => 8,
       'endHour' => 17,
       'endMinute' => 30
     ]);
@@ -224,13 +224,13 @@ class LocationsWireTest extends TestCase
 
     $request = new \ElevenLabs\Reception\Locations\Requests\ReceptionLocationRequestPatch([
       'xiWorkspaceId' => 'xi-workspace-id',
-      'name' => 'ullamco laboris',
-      'address' => 'in enim',
-      'notes' => 'nulla ',
+      'name' => 'voluptate se',
+      'address' => 'nostrud labor',
+      'notes' => 'Excepteur ',
       'operatingHours' => $workingHours,
-      'customerFacingName' => 'adipisicing',
+      'customerFacingName' => 'sit cupidat',
       'maxConcurrentAppointments' => 3,
-      'isActive' => true
+      'isActive' => false
     ]);
     $sdk->reception->locations->update(
       request: $request,

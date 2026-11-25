@@ -24,7 +24,7 @@ class WorkspaceWireTest extends TestCase
 
     $request = new \ElevenLabs\Workspace\Requests\BodySetWorkspaceThirdPartyDisablingPolicyV1WorkspacesApiKeysThirdPartyDisablingPost(
       [
-        'thirdPartyDisableAllowed' => true
+        'thirdPartyDisableAllowed' => false
       ]
     );
     $sdk->workspace->setThirdPartyDisablingPolicy(request: $request);

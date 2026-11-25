@@ -37,7 +37,7 @@ class OrdersWireTest extends TestCase
     $sdk->productions->orders->list(
       request: new \ElevenLabs\Productions\Orders\Requests\ListOrdersRequest([
         'pageSize' => 20,
-        'offset' => 1,
+        'offset' => 10,
         'status' => [],
         'startDate' => new \DateTime('2023-07-20T21:03:51.582Z'),
         'endDate' => new \DateTime('2023-07-20T21:03:51.582Z')
@@ -67,7 +67,7 @@ class OrdersWireTest extends TestCase
     $sdk = new ElevenLabs(options: ['client' => $transport]);
 
     $request = new \ElevenLabs\Types\CreateOrderRequest([
-      'sandbox' => false
+      'sandbox' => true
     ]);
     $sdk->productions->orders->create(request: $request);
 
@@ -123,7 +123,7 @@ class OrdersWireTest extends TestCase
       JSON
     );
     $sdk = new ElevenLabs(options: ['client' => $transport]);
-    $sdk->productions->orders->get(orderId: 'prodorder_adhy4rizmu7wassdw4j9zzcgpl');
+    $sdk->productions->orders->get(orderId: 'prodorder_obof4bec8msxt6qz46ok5fhzo2');
 
     $this->assertCount(1, $transport->requests);
     $sent = $transport->requests[0];
@@ -157,7 +157,7 @@ class OrdersWireTest extends TestCase
     );
     $sdk->productions->orders->update(
       request: $request,
-      orderId: 'prodorder_7fj17br7z8jh3g5e8j249pxq0j'
+      orderId: 'prodorder_6c7w0takk14ey46ea22h7agqqm'
     );
 
     $this->assertCount(1, $transport->requests);
@@ -184,7 +184,7 @@ class OrdersWireTest extends TestCase
       JSON
     );
     $sdk = new ElevenLabs(options: ['client' => $transport]);
-    $sdk->productions->orders->submit(orderId: 'prodorder_8gjcf96ednllfuhozfltew590k');
+    $sdk->productions->orders->submit(orderId: 'prodorder_xkxpu9nsh2o0ihren6kh2cozml');
 
     $this->assertCount(1, $transport->requests);
     $sent = $transport->requests[0];

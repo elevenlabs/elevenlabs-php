@@ -380,7 +380,7 @@ class TriageTicketsWireTest extends TestCase
     $sdk = new ElevenLabs(options: ['client' => $transport]);
 
     $turnCommentRequestModel = new \ElevenLabs\Types\TurnCommentRequestModel([
-      'turnIndex' => 7,
+      'turnIndex' => 10,
       'comment' => 'comment'
     ]);
 
@@ -876,7 +876,7 @@ class TriageTicketsWireTest extends TestCase
     $sdk = new ElevenLabs(options: ['client' => $transport]);
 
     $request = new \ElevenLabs\Agents\TriageTickets\Requests\AddTurnCommentRequestModel([
-      'turnIndex' => 4,
+      'turnIndex' => 9,
       'comment' => 'comment'
     ]);
     $sdk->agents->triageTickets->addTurnComment(

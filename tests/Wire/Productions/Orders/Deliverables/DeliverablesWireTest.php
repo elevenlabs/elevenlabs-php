@@ -30,7 +30,7 @@ class DeliverablesWireTest extends TestCase
       JSON
     );
     $sdk = new ElevenLabs(options: ['client' => $transport]);
-    $sdk->productions->orders->deliverables->list(orderId: 'prodorder_9vgcda22az733zm9ev09qlameu');
+    $sdk->productions->orders->deliverables->list(orderId: 'prodorder_h8jlaex67t608gjcf96ednllfu');
 
     $this->assertCount(1, $transport->requests);
     $sent = $transport->requests[0];

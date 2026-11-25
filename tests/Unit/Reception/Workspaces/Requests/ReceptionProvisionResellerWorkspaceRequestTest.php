@@ -14,6 +14,7 @@ class ReceptionProvisionResellerWorkspaceRequestTest extends TestCase
     {
         "business_name": "test-value",
         "vertical": "salon_barbershop",
+        "charge_customer": true,
         "subscription": {
             "tier_id": "test-value",
             "billing_period": "monthly_period"

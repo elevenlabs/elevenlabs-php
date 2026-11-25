@@ -30,7 +30,7 @@ class ItemsWireTest extends TestCase
 
     $dubOrderItemRequest = new \ElevenLabs\Types\DubOrderItemRequest([
       'kind' => $dubOrderItemRequestKind,
-      'mediaId' => 'prodmedia_wum7qohp42vqjk180vfetxnfh6',
+      'mediaId' => 'prodmedia_dw4j9zzcgpl3ovy2piv18dray9',
       'sourceLanguage' => 'source_language',
       'destinationLanguages' => [],
       'includeCaptions' => false,
@@ -42,7 +42,7 @@ class ItemsWireTest extends TestCase
 
     $upsertOrderItemRequest = new \ElevenLabs\Types\UpsertOrderItemRequest([
       'item' => $orderItemRequestInput,
-      'itemId' => 'proditem_dh7g4qha3j4sfqyd93pceng4xt'
+      'itemId' => 'proditem_m9abnacd1yjnvg5xlm727mbbxw'
     ]);
 
     $request = new \ElevenLabs\Productions\Orders\Items\Requests\BodyUpsertOrderItemV1ProductionsOrdersOrderIdItemsPost(
@@ -52,7 +52,7 @@ class ItemsWireTest extends TestCase
     );
     $sdk->productions->orders->items->upsert(
       request: $request,
-      orderId: 'prodorder_8zubn7rexrwpqq6wvf21lwlhim'
+      orderId: 'prodorder_w6oaxf9gz3cnnuplz2mxa8iaw5'
     );
 
     $this->assertCount(1, $transport->requests);
@@ -78,8 +78,8 @@ class ItemsWireTest extends TestCase
     );
     $sdk = new ElevenLabs(options: ['client' => $transport]);
     $sdk->productions->orders->items->remove(
-      orderId: 'prodorder_0ihren6kh2cozmla7zbrytxvsp',
-      itemId: 'proditem_0zaouovm1tk2ia6vh8jlaex67t'
+      orderId: 'prodorder_wvf21lwlhim1dh7g4qha3j4sfq',
+      itemId: 'proditem_d93pceng4xt3egvw2g8mbcluxw'
     );
 
     $this->assertCount(1, $transport->requests);

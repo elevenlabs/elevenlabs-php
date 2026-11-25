@@ -34,6 +34,7 @@ class WorkspacesWireTest extends TestCase
                       "pending_downgrade_tier": "test-value",
                       "pending_downgrade_at_unix": 1
                   },
+                  "charge_customer": true,
                   "has_payment_issue": true,
                   "onboarding_completed_at_unix": 1
               }
@@ -80,6 +81,7 @@ class WorkspacesWireTest extends TestCase
               "pending_downgrade_tier": "test-value",
               "pending_downgrade_at_unix": 1
           },
+          "charge_customer": true,
           "has_payment_issue": true,
           "onboarding_completed_at_unix": 1,
           "member_results": [
@@ -116,10 +118,11 @@ class WorkspacesWireTest extends TestCase
       [
         'businessName' => 'business_name',
         'vertical' => $receptionVertical,
+        'chargeCustomer' => true,
         'subscription' => $provisionResellerWorkspaceSubscription,
         'phoneNumber' => 'phone_number',
         'members' => [],
-        'completeOnboarding' => true,
+        'completeOnboarding' => false,
         'idempotencyKey' => 'idempotency_key'
       ]
     );

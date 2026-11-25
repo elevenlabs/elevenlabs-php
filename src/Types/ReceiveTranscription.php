@@ -19,7 +19,7 @@ use ElevenLabs\Core\Json\JsonSerializableType;
 class ReceiveTranscription extends JsonSerializableType
 {
   /**
-   * @var \ElevenLabs\Types\SessionStarted|\ElevenLabs\Types\PartialTranscript|\ElevenLabs\Types\CommittedTranscript|\ElevenLabs\Types\DiarizedTranscript|\ElevenLabs\Types\SpeakersMerged|\ElevenLabs\Types\CommittedTranscriptWithTimestamps|\ElevenLabs\Types\CommittedTranscriptEntities|\ElevenLabs\Types\RedactedTranscript|\ElevenLabs\Types\EditedTranscript|\ElevenLabs\Types\ScribeWarning|\ElevenLabs\Types\ScribeError|\ElevenLabs\Types\ScribeAuthError|\ElevenLabs\Types\ScribeQuotaExceededError|\ElevenLabs\Types\ScribeThrottledError|\ElevenLabs\Types\ScribeUnacceptedTermsError|\ElevenLabs\Types\ScribeRateLimitedError|\ElevenLabs\Types\ScribeQueueOverflowError|\ElevenLabs\Types\ScribeResourceExhaustedError|\ElevenLabs\Types\ScribeSessionTimeLimitExceededError|\ElevenLabs\Types\ScribeInputError|\ElevenLabs\Types\ScribeInvalidRequestError|\ElevenLabs\Types\ScribeChunkSizeExceededError|\ElevenLabs\Types\ScribeInsufficientAudioActivityError|\ElevenLabs\Types\ScribeTranscriberError The value, exactly one of the variant types
+   * @var \ElevenLabs\Types\SessionStarted|\ElevenLabs\Types\PartialTranscript|\ElevenLabs\Types\CommittedTranscript|\ElevenLabs\Types\DiarizedTranscript|\ElevenLabs\Types\SpeakersMerged|\ElevenLabs\Types\SpeakerNames|\ElevenLabs\Types\CommittedTranscriptWithTimestamps|\ElevenLabs\Types\CommittedTranscriptEntities|\ElevenLabs\Types\RedactedTranscript|\ElevenLabs\Types\EditedTranscript|\ElevenLabs\Types\ScribeWarning|\ElevenLabs\Types\ScribeError|\ElevenLabs\Types\ScribeAuthError|\ElevenLabs\Types\ScribeQuotaExceededError|\ElevenLabs\Types\ScribeThrottledError|\ElevenLabs\Types\ScribeUnacceptedTermsError|\ElevenLabs\Types\ScribeRateLimitedError|\ElevenLabs\Types\ScribeQueueOverflowError|\ElevenLabs\Types\ScribeResourceExhaustedError|\ElevenLabs\Types\ScribeSessionTimeLimitExceededError|\ElevenLabs\Types\ScribeInputError|\ElevenLabs\Types\ScribeInvalidRequestError|\ElevenLabs\Types\ScribeChunkSizeExceededError|\ElevenLabs\Types\ScribeInsufficientAudioActivityError|\ElevenLabs\Types\ScribeTranscriberError The value, exactly one of the variant types
    */
   public readonly mixed $value;
 
@@ -30,7 +30,7 @@ class ReceiveTranscription extends JsonSerializableType
 
   /**
    * Private constructor - use factory methods to create instances
-   * @param \ElevenLabs\Types\SessionStarted|\ElevenLabs\Types\PartialTranscript|\ElevenLabs\Types\CommittedTranscript|\ElevenLabs\Types\DiarizedTranscript|\ElevenLabs\Types\SpeakersMerged|\ElevenLabs\Types\CommittedTranscriptWithTimestamps|\ElevenLabs\Types\CommittedTranscriptEntities|\ElevenLabs\Types\RedactedTranscript|\ElevenLabs\Types\EditedTranscript|\ElevenLabs\Types\ScribeWarning|\ElevenLabs\Types\ScribeError|\ElevenLabs\Types\ScribeAuthError|\ElevenLabs\Types\ScribeQuotaExceededError|\ElevenLabs\Types\ScribeThrottledError|\ElevenLabs\Types\ScribeUnacceptedTermsError|\ElevenLabs\Types\ScribeRateLimitedError|\ElevenLabs\Types\ScribeQueueOverflowError|\ElevenLabs\Types\ScribeResourceExhaustedError|\ElevenLabs\Types\ScribeSessionTimeLimitExceededError|\ElevenLabs\Types\ScribeInputError|\ElevenLabs\Types\ScribeInvalidRequestError|\ElevenLabs\Types\ScribeChunkSizeExceededError|\ElevenLabs\Types\ScribeInsufficientAudioActivityError|\ElevenLabs\Types\ScribeTranscriberError $value
+   * @param \ElevenLabs\Types\SessionStarted|\ElevenLabs\Types\PartialTranscript|\ElevenLabs\Types\CommittedTranscript|\ElevenLabs\Types\DiarizedTranscript|\ElevenLabs\Types\SpeakersMerged|\ElevenLabs\Types\SpeakerNames|\ElevenLabs\Types\CommittedTranscriptWithTimestamps|\ElevenLabs\Types\CommittedTranscriptEntities|\ElevenLabs\Types\RedactedTranscript|\ElevenLabs\Types\EditedTranscript|\ElevenLabs\Types\ScribeWarning|\ElevenLabs\Types\ScribeError|\ElevenLabs\Types\ScribeAuthError|\ElevenLabs\Types\ScribeQuotaExceededError|\ElevenLabs\Types\ScribeThrottledError|\ElevenLabs\Types\ScribeUnacceptedTermsError|\ElevenLabs\Types\ScribeRateLimitedError|\ElevenLabs\Types\ScribeQueueOverflowError|\ElevenLabs\Types\ScribeResourceExhaustedError|\ElevenLabs\Types\ScribeSessionTimeLimitExceededError|\ElevenLabs\Types\ScribeInputError|\ElevenLabs\Types\ScribeInvalidRequestError|\ElevenLabs\Types\ScribeChunkSizeExceededError|\ElevenLabs\Types\ScribeInsufficientAudioActivityError|\ElevenLabs\Types\ScribeTranscriberError $value
    */
   private function __construct($value, int $typeIndex)
   {
@@ -83,12 +83,20 @@ class ReceiveTranscription extends JsonSerializableType
   }
 
   /**
+   * Create a ReceiveTranscription instance containing a \ElevenLabs\Types\SpeakerNames
+   */
+  public static function speakerNames(\ElevenLabs\Types\SpeakerNames $speakerNames): self
+  {
+    return new self($speakerNames, 5);
+  }
+
+  /**
    * Create a ReceiveTranscription instance containing a \ElevenLabs\Types\CommittedTranscriptWithTimestamps
    */
   public static function committedTranscriptWithTimestamps(
     \ElevenLabs\Types\CommittedTranscriptWithTimestamps $committedTranscriptWithTimestamps
   ): self {
-    return new self($committedTranscriptWithTimestamps, 5);
+    return new self($committedTranscriptWithTimestamps, 6);
   }
 
   /**
@@ -97,7 +105,7 @@ class ReceiveTranscription extends JsonSerializableType
   public static function committedTranscriptEntities(
     \ElevenLabs\Types\CommittedTranscriptEntities $committedTranscriptEntities
   ): self {
-    return new self($committedTranscriptEntities, 6);
+    return new self($committedTranscriptEntities, 7);
   }
 
   /**
@@ -106,7 +114,7 @@ class ReceiveTranscription extends JsonSerializableType
   public static function redactedTranscript(
     \ElevenLabs\Types\RedactedTranscript $redactedTranscript
   ): self {
-    return new self($redactedTranscript, 7);
+    return new self($redactedTranscript, 8);
   }
 
   /**
@@ -115,7 +123,7 @@ class ReceiveTranscription extends JsonSerializableType
   public static function editedTranscript(
     \ElevenLabs\Types\EditedTranscript $editedTranscript
   ): self {
-    return new self($editedTranscript, 8);
+    return new self($editedTranscript, 9);
   }
 
   /**
@@ -123,7 +131,7 @@ class ReceiveTranscription extends JsonSerializableType
    */
   public static function scribeWarning(\ElevenLabs\Types\ScribeWarning $scribeWarning): self
   {
-    return new self($scribeWarning, 9);
+    return new self($scribeWarning, 10);
   }
 
   /**
@@ -131,7 +139,7 @@ class ReceiveTranscription extends JsonSerializableType
    */
   public static function scribeError(\ElevenLabs\Types\ScribeError $scribeError): self
   {
-    return new self($scribeError, 10);
+    return new self($scribeError, 11);
   }
 
   /**
@@ -139,7 +147,7 @@ class ReceiveTranscription extends JsonSerializableType
    */
   public static function scribeAuthError(\ElevenLabs\Types\ScribeAuthError $scribeAuthError): self
   {
-    return new self($scribeAuthError, 11);
+    return new self($scribeAuthError, 12);
   }
 
   /**
@@ -148,7 +156,7 @@ class ReceiveTranscription extends JsonSerializableType
   public static function scribeQuotaExceededError(
     \ElevenLabs\Types\ScribeQuotaExceededError $scribeQuotaExceededError
   ): self {
-    return new self($scribeQuotaExceededError, 12);
+    return new self($scribeQuotaExceededError, 13);
   }
 
   /**
@@ -157,7 +165,7 @@ class ReceiveTranscription extends JsonSerializableType
   public static function scribeThrottledError(
     \ElevenLabs\Types\ScribeThrottledError $scribeThrottledError
   ): self {
-    return new self($scribeThrottledError, 13);
+    return new self($scribeThrottledError, 14);
   }
 
   /**
@@ -166,7 +174,7 @@ class ReceiveTranscription extends JsonSerializableType
   public static function scribeUnacceptedTermsError(
     \ElevenLabs\Types\ScribeUnacceptedTermsError $scribeUnacceptedTermsError
   ): self {
-    return new self($scribeUnacceptedTermsError, 14);
+    return new self($scribeUnacceptedTermsError, 15);
   }
 
   /**
@@ -175,7 +183,7 @@ class ReceiveTranscription extends JsonSerializableType
   public static function scribeRateLimitedError(
     \ElevenLabs\Types\ScribeRateLimitedError $scribeRateLimitedError
   ): self {
-    return new self($scribeRateLimitedError, 15);
+    return new self($scribeRateLimitedError, 16);
   }
 
   /**
@@ -184,7 +192,7 @@ class ReceiveTranscription extends JsonSerializableType
   public static function scribeQueueOverflowError(
     \ElevenLabs\Types\ScribeQueueOverflowError $scribeQueueOverflowError
   ): self {
-    return new self($scribeQueueOverflowError, 16);
+    return new self($scribeQueueOverflowError, 17);
   }
 
   /**
@@ -193,7 +201,7 @@ class ReceiveTranscription extends JsonSerializableType
   public static function scribeResourceExhaustedError(
     \ElevenLabs\Types\ScribeResourceExhaustedError $scribeResourceExhaustedError
   ): self {
-    return new self($scribeResourceExhaustedError, 17);
+    return new self($scribeResourceExhaustedError, 18);
   }
 
   /**
@@ -202,7 +210,7 @@ class ReceiveTranscription extends JsonSerializableType
   public static function scribeSessionTimeLimitExceededError(
     \ElevenLabs\Types\ScribeSessionTimeLimitExceededError $scribeSessionTimeLimitExceededError
   ): self {
-    return new self($scribeSessionTimeLimitExceededError, 18);
+    return new self($scribeSessionTimeLimitExceededError, 19);
   }
 
   /**
@@ -211,7 +219,7 @@ class ReceiveTranscription extends JsonSerializableType
   public static function scribeInputError(
     \ElevenLabs\Types\ScribeInputError $scribeInputError
   ): self {
-    return new self($scribeInputError, 19);
+    return new self($scribeInputError, 20);
   }
 
   /**
@@ -220,7 +228,7 @@ class ReceiveTranscription extends JsonSerializableType
   public static function scribeInvalidRequestError(
     \ElevenLabs\Types\ScribeInvalidRequestError $scribeInvalidRequestError
   ): self {
-    return new self($scribeInvalidRequestError, 20);
+    return new self($scribeInvalidRequestError, 21);
   }
 
   /**
@@ -229,7 +237,7 @@ class ReceiveTranscription extends JsonSerializableType
   public static function scribeChunkSizeExceededError(
     \ElevenLabs\Types\ScribeChunkSizeExceededError $scribeChunkSizeExceededError
   ): self {
-    return new self($scribeChunkSizeExceededError, 21);
+    return new self($scribeChunkSizeExceededError, 22);
   }
 
   /**
@@ -238,7 +246,7 @@ class ReceiveTranscription extends JsonSerializableType
   public static function scribeInsufficientAudioActivityError(
     \ElevenLabs\Types\ScribeInsufficientAudioActivityError $scribeInsufficientAudioActivityError
   ): self {
-    return new self($scribeInsufficientAudioActivityError, 22);
+    return new self($scribeInsufficientAudioActivityError, 23);
   }
 
   /**
@@ -247,7 +255,7 @@ class ReceiveTranscription extends JsonSerializableType
   public static function scribeTranscriberError(
     \ElevenLabs\Types\ScribeTranscriberError $scribeTranscriberError
   ): self {
-    return new self($scribeTranscriberError, 23);
+    return new self($scribeTranscriberError, 24);
   }
 
   // Type checking methods
@@ -292,11 +300,19 @@ class ReceiveTranscription extends JsonSerializableType
   }
 
   /**
+   * Check if this ReceiveTranscription contains a \ElevenLabs\Types\SpeakerNames
+   */
+  public function isSpeakerNames(): bool
+  {
+    return $this->typeIndex === 5;
+  }
+
+  /**
    * Check if this ReceiveTranscription contains a \ElevenLabs\Types\CommittedTranscriptWithTimestamps
    */
   public function isCommittedTranscriptWithTimestamps(): bool
   {
-    return $this->typeIndex === 5;
+    return $this->typeIndex === 6;
   }
 
   /**
@@ -304,7 +320,7 @@ class ReceiveTranscription extends JsonSerializableType
    */
   public function isCommittedTranscriptEntities(): bool
   {
-    return $this->typeIndex === 6;
+    return $this->typeIndex === 7;
   }
 
   /**
@@ -312,7 +328,7 @@ class ReceiveTranscription extends JsonSerializableType
    */
   public function isRedactedTranscript(): bool
   {
-    return $this->typeIndex === 7;
+    return $this->typeIndex === 8;
   }
 
   /**
@@ -320,7 +336,7 @@ class ReceiveTranscription extends JsonSerializableType
    */
   public function isEditedTranscript(): bool
   {
-    return $this->typeIndex === 8;
+    return $this->typeIndex === 9;
   }
 
   /**
@@ -328,7 +344,7 @@ class ReceiveTranscription extends JsonSerializableType
    */
   public function isScribeWarning(): bool
   {
-    return $this->typeIndex === 9;
+    return $this->typeIndex === 10;
   }
 
   /**
@@ -336,7 +352,7 @@ class ReceiveTranscription extends JsonSerializableType
    */
   public function isScribeError(): bool
   {
-    return $this->typeIndex === 10;
+    return $this->typeIndex === 11;
   }
 
   /**
@@ -344,7 +360,7 @@ class ReceiveTranscription extends JsonSerializableType
    */
   public function isScribeAuthError(): bool
   {
-    return $this->typeIndex === 11;
+    return $this->typeIndex === 12;
   }
 
   /**
@@ -352,7 +368,7 @@ class ReceiveTranscription extends JsonSerializableType
    */
   public function isScribeQuotaExceededError(): bool
   {
-    return $this->typeIndex === 12;
+    return $this->typeIndex === 13;
   }
 
   /**
@@ -360,7 +376,7 @@ class ReceiveTranscription extends JsonSerializableType
    */
   public function isScribeThrottledError(): bool
   {
-    return $this->typeIndex === 13;
+    return $this->typeIndex === 14;
   }
 
   /**
@@ -368,7 +384,7 @@ class ReceiveTranscription extends JsonSerializableType
    */
   public function isScribeUnacceptedTermsError(): bool
   {
-    return $this->typeIndex === 14;
+    return $this->typeIndex === 15;
   }
 
   /**
@@ -376,7 +392,7 @@ class ReceiveTranscription extends JsonSerializableType
    */
   public function isScribeRateLimitedError(): bool
   {
-    return $this->typeIndex === 15;
+    return $this->typeIndex === 16;
   }
 
   /**
@@ -384,7 +400,7 @@ class ReceiveTranscription extends JsonSerializableType
    */
   public function isScribeQueueOverflowError(): bool
   {
-    return $this->typeIndex === 16;
+    return $this->typeIndex === 17;
   }
 
   /**
@@ -392,7 +408,7 @@ class ReceiveTranscription extends JsonSerializableType
    */
   public function isScribeResourceExhaustedError(): bool
   {
-    return $this->typeIndex === 17;
+    return $this->typeIndex === 18;
   }
 
   /**
@@ -400,7 +416,7 @@ class ReceiveTranscription extends JsonSerializableType
    */
   public function isScribeSessionTimeLimitExceededError(): bool
   {
-    return $this->typeIndex === 18;
+    return $this->typeIndex === 19;
   }
 
   /**
@@ -408,7 +424,7 @@ class ReceiveTranscription extends JsonSerializableType
    */
   public function isScribeInputError(): bool
   {
-    return $this->typeIndex === 19;
+    return $this->typeIndex === 20;
   }
 
   /**
@@ -416,7 +432,7 @@ class ReceiveTranscription extends JsonSerializableType
    */
   public function isScribeInvalidRequestError(): bool
   {
-    return $this->typeIndex === 20;
+    return $this->typeIndex === 21;
   }
 
   /**
@@ -424,7 +440,7 @@ class ReceiveTranscription extends JsonSerializableType
    */
   public function isScribeChunkSizeExceededError(): bool
   {
-    return $this->typeIndex === 21;
+    return $this->typeIndex === 22;
   }
 
   /**
@@ -432,7 +448,7 @@ class ReceiveTranscription extends JsonSerializableType
    */
   public function isScribeInsufficientAudioActivityError(): bool
   {
-    return $this->typeIndex === 22;
+    return $this->typeIndex === 23;
   }
 
   /**
@@ -440,7 +456,7 @@ class ReceiveTranscription extends JsonSerializableType
    */
   public function isScribeTranscriberError(): bool
   {
-    return $this->typeIndex === 23;
+    return $this->typeIndex === 24;
   }
 
   // Throwing getters (fail-fast)
@@ -509,6 +525,20 @@ class ReceiveTranscription extends JsonSerializableType
     if (!$this->isSpeakersMerged()) {
       throw new \RuntimeException(
         'ReceiveTranscription does not contain \ElevenLabs\Types\SpeakersMerged'
+      );
+    }
+    return $this->value;
+  }
+
+  /**
+   * Get the \ElevenLabs\Types\SpeakerNames value
+   * @throws \RuntimeException if this ReceiveTranscription does not contain a \ElevenLabs\Types\SpeakerNames
+   */
+  public function asSpeakerNames(): \ElevenLabs\Types\SpeakerNames
+  {
+    if (!$this->isSpeakerNames()) {
+      throw new \RuntimeException(
+        'ReceiveTranscription does not contain \ElevenLabs\Types\SpeakerNames'
       );
     }
     return $this->value;
@@ -827,6 +857,15 @@ class ReceiveTranscription extends JsonSerializableType
   }
 
   /**
+   * Try to get the \ElevenLabs\Types\SpeakerNames value
+   * @return \ElevenLabs\Types\SpeakerNames|null Returns the value if this ReceiveTranscription contains a \ElevenLabs\Types\SpeakerNames, null otherwise
+   */
+  public function tryAsSpeakerNames(): ?\ElevenLabs\Types\SpeakerNames
+  {
+    return $this->isSpeakerNames() ? $this->value : null;
+  }
+
+  /**
    * Try to get the \ElevenLabs\Types\CommittedTranscriptWithTimestamps value
    * @return \ElevenLabs\Types\CommittedTranscriptWithTimestamps|null Returns the value if this ReceiveTranscription contains a \ElevenLabs\Types\CommittedTranscriptWithTimestamps, null otherwise
    */
@@ -1005,6 +1044,7 @@ class ReceiveTranscription extends JsonSerializableType
    * @param callable(\ElevenLabs\Types\CommittedTranscript): T $onCommittedTranscript
    * @param callable(\ElevenLabs\Types\DiarizedTranscript): T $onDiarizedTranscript
    * @param callable(\ElevenLabs\Types\SpeakersMerged): T $onSpeakersMerged
+   * @param callable(\ElevenLabs\Types\SpeakerNames): T $onSpeakerNames
    * @param callable(\ElevenLabs\Types\CommittedTranscriptWithTimestamps): T $onCommittedTranscriptWithTimestamps
    * @param callable(\ElevenLabs\Types\CommittedTranscriptEntities): T $onCommittedTranscriptEntities
    * @param callable(\ElevenLabs\Types\RedactedTranscript): T $onRedactedTranscript
@@ -1032,6 +1072,7 @@ class ReceiveTranscription extends JsonSerializableType
     callable $onCommittedTranscript,
     callable $onDiarizedTranscript,
     callable $onSpeakersMerged,
+    callable $onSpeakerNames,
     callable $onCommittedTranscriptWithTimestamps,
     callable $onCommittedTranscriptEntities,
     callable $onRedactedTranscript,
@@ -1058,25 +1099,26 @@ class ReceiveTranscription extends JsonSerializableType
       2 => $onCommittedTranscript($this->value),
       3 => $onDiarizedTranscript($this->value),
       4 => $onSpeakersMerged($this->value),
-      5 => $onCommittedTranscriptWithTimestamps($this->value),
-      6 => $onCommittedTranscriptEntities($this->value),
-      7 => $onRedactedTranscript($this->value),
-      8 => $onEditedTranscript($this->value),
-      9 => $onScribeWarning($this->value),
-      10 => $onScribeError($this->value),
-      11 => $onScribeAuthError($this->value),
-      12 => $onScribeQuotaExceededError($this->value),
-      13 => $onScribeThrottledError($this->value),
-      14 => $onScribeUnacceptedTermsError($this->value),
-      15 => $onScribeRateLimitedError($this->value),
-      16 => $onScribeQueueOverflowError($this->value),
-      17 => $onScribeResourceExhaustedError($this->value),
-      18 => $onScribeSessionTimeLimitExceededError($this->value),
-      19 => $onScribeInputError($this->value),
-      20 => $onScribeInvalidRequestError($this->value),
-      21 => $onScribeChunkSizeExceededError($this->value),
-      22 => $onScribeInsufficientAudioActivityError($this->value),
-      23 => $onScribeTranscriberError($this->value),
+      5 => $onSpeakerNames($this->value),
+      6 => $onCommittedTranscriptWithTimestamps($this->value),
+      7 => $onCommittedTranscriptEntities($this->value),
+      8 => $onRedactedTranscript($this->value),
+      9 => $onEditedTranscript($this->value),
+      10 => $onScribeWarning($this->value),
+      11 => $onScribeError($this->value),
+      12 => $onScribeAuthError($this->value),
+      13 => $onScribeQuotaExceededError($this->value),
+      14 => $onScribeThrottledError($this->value),
+      15 => $onScribeUnacceptedTermsError($this->value),
+      16 => $onScribeRateLimitedError($this->value),
+      17 => $onScribeQueueOverflowError($this->value),
+      18 => $onScribeResourceExhaustedError($this->value),
+      19 => $onScribeSessionTimeLimitExceededError($this->value),
+      20 => $onScribeInputError($this->value),
+      21 => $onScribeInvalidRequestError($this->value),
+      22 => $onScribeChunkSizeExceededError($this->value),
+      23 => $onScribeInsufficientAudioActivityError($this->value),
+      24 => $onScribeTranscriberError($this->value),
       default => throw new \UnexpectedValueException("Unknown type index: $this->typeIndex")
     };
   }
@@ -1161,10 +1203,22 @@ class ReceiveTranscription extends JsonSerializableType
     }
 
     try {
-      $candidate = \ElevenLabs\Types\CommittedTranscriptWithTimestamps::fromArray($data);
+      $candidate = \ElevenLabs\Types\SpeakerNames::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
       $candidates[] = ['instance' => $candidate, 'idx' => 5, 'score' => $score];
+    } catch (\Throwable $e) {
+      // Throwable, because under fernMode "this variant does not match" arrives as whatever
+      // the shared deserializer raises — a JsonException for a missing required field, not
+      // just a TypeError. Narrowing it turns a non-matching variant into a fatal.
+      // \ElevenLabs\Types\SpeakerNames didn't match, continue to next type
+    }
+
+    try {
+      $candidate = \ElevenLabs\Types\CommittedTranscriptWithTimestamps::fromArray($data);
+      // Keys the variant actually mapped = input keys minus the ones it could not place.
+      $score = count($data) - count($candidate->getAdditionalProperties());
+      $candidates[] = ['instance' => $candidate, 'idx' => 6, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -1176,7 +1230,7 @@ class ReceiveTranscription extends JsonSerializableType
       $candidate = \ElevenLabs\Types\CommittedTranscriptEntities::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 6, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 7, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -1188,7 +1242,7 @@ class ReceiveTranscription extends JsonSerializableType
       $candidate = \ElevenLabs\Types\RedactedTranscript::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 7, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 8, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -1200,7 +1254,7 @@ class ReceiveTranscription extends JsonSerializableType
       $candidate = \ElevenLabs\Types\EditedTranscript::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 8, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 9, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -1212,7 +1266,7 @@ class ReceiveTranscription extends JsonSerializableType
       $candidate = \ElevenLabs\Types\ScribeWarning::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 9, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 10, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -1224,7 +1278,7 @@ class ReceiveTranscription extends JsonSerializableType
       $candidate = \ElevenLabs\Types\ScribeError::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 10, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 11, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -1236,7 +1290,7 @@ class ReceiveTranscription extends JsonSerializableType
       $candidate = \ElevenLabs\Types\ScribeAuthError::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 11, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 12, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -1248,7 +1302,7 @@ class ReceiveTranscription extends JsonSerializableType
       $candidate = \ElevenLabs\Types\ScribeQuotaExceededError::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 12, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 13, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -1260,7 +1314,7 @@ class ReceiveTranscription extends JsonSerializableType
       $candidate = \ElevenLabs\Types\ScribeThrottledError::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 13, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 14, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -1272,7 +1326,7 @@ class ReceiveTranscription extends JsonSerializableType
       $candidate = \ElevenLabs\Types\ScribeUnacceptedTermsError::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 14, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 15, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -1284,7 +1338,7 @@ class ReceiveTranscription extends JsonSerializableType
       $candidate = \ElevenLabs\Types\ScribeRateLimitedError::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 15, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 16, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -1296,7 +1350,7 @@ class ReceiveTranscription extends JsonSerializableType
       $candidate = \ElevenLabs\Types\ScribeQueueOverflowError::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 16, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 17, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -1308,7 +1362,7 @@ class ReceiveTranscription extends JsonSerializableType
       $candidate = \ElevenLabs\Types\ScribeResourceExhaustedError::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 17, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 18, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -1320,7 +1374,7 @@ class ReceiveTranscription extends JsonSerializableType
       $candidate = \ElevenLabs\Types\ScribeSessionTimeLimitExceededError::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 18, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 19, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -1332,7 +1386,7 @@ class ReceiveTranscription extends JsonSerializableType
       $candidate = \ElevenLabs\Types\ScribeInputError::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 19, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 20, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -1344,7 +1398,7 @@ class ReceiveTranscription extends JsonSerializableType
       $candidate = \ElevenLabs\Types\ScribeInvalidRequestError::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 20, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 21, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -1356,7 +1410,7 @@ class ReceiveTranscription extends JsonSerializableType
       $candidate = \ElevenLabs\Types\ScribeChunkSizeExceededError::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 21, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 22, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -1368,7 +1422,7 @@ class ReceiveTranscription extends JsonSerializableType
       $candidate = \ElevenLabs\Types\ScribeInsufficientAudioActivityError::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 22, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 23, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -1380,7 +1434,7 @@ class ReceiveTranscription extends JsonSerializableType
       $candidate = \ElevenLabs\Types\ScribeTranscriberError::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 23, 'score' => $score];
+      $candidates[] = ['instance' => $candidate, 'idx' => 24, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not

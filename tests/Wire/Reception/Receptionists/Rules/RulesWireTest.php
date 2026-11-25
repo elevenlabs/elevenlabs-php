@@ -32,8 +32,8 @@ class RulesWireTest extends TestCase
     $request = new \ElevenLabs\Reception\Receptionists\Rules\Requests\ReceptionCreateAgentRuleRequest(
       [
         'xiWorkspaceId' => 'xi-workspace-id',
-        'title' => 'eiusmod Ut c',
-        'description' => 'fugia',
+        'title' => 'ex ame',
+        'description' => 'labore magna ex',
         'priority' => $rulePriority
       ]
     );
@@ -73,8 +73,8 @@ class RulesWireTest extends TestCase
     $request = new \ElevenLabs\Reception\Receptionists\Rules\Requests\ReceptionUpdateAgentRuleRequest(
       [
         'xiWorkspaceId' => 'xi-workspace-id',
-        'title' => 'ut id',
-        'description' => 'ad Duis',
+        'title' => 'ad culpa el',
+        'description' => 'ad enim et',
         'priority' => $rulePriority
       ]
     );

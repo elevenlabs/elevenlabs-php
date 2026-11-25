@@ -69,8 +69,8 @@ class ProceduresWireTest extends TestCase
     $request = new \ElevenLabs\Reception\Receptionists\Procedures\Requests\ReceptionCreateProcedureRequest(
       [
         'xiWorkspaceId' => 'xi-workspace-id',
-        'name' => 'nostrud sit',
-        'trigger' => 'Utullamco ',
+        'name' => 'sit minim',
+        'trigger' => 'aute d',
         'body' =>
           "1. Ask for the caller\'s name and order number.\n2. Look up the order and read back its status."
       ]
@@ -111,8 +111,8 @@ class ProceduresWireTest extends TestCase
     $request = new \ElevenLabs\Reception\Receptionists\Procedures\Requests\ReceptionUpdateProcedureRequest(
       [
         'xiWorkspaceId' => 'xi-workspace-id',
-        'name' => 'incididun',
-        'trigger' => 'dolor Exce',
+        'name' => 'in sunt',
+        'trigger' => 'adipisicing ',
         'body' =>
           "1. Ask for the caller\'s name and order number.\n2. Look up the order and read back its status."
       ]

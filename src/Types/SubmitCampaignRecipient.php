@@ -46,6 +46,12 @@ class SubmitCampaignRecipient extends JsonSerializableType
   public ?string $id;
 
   /**
+   * IANA timezone to read the calling windows and callback times in for this recipient, overriding the campaign's.
+   */
+  #[JsonProperty('timezone_override')]
+  public ?string $timezoneOverride;
+
+  /**
    * Dynamic variables and overrides for this recipient's calls.
    */
   #[JsonProperty('conversation_initiation_client_data')]
@@ -57,6 +63,7 @@ class SubmitCampaignRecipient extends JsonSerializableType
    *   phoneNumbers?: string[]|null,
    *   whatsappUserId?: ?string,
    *   id?: ?string,
+   *   timezoneOverride?: ?string,
    *   conversationInitiationClientData?: ?\ElevenLabs\Types\ConversationInitiationClientDataRequestInput,
    * } $values
    */
@@ -66,6 +73,7 @@ class SubmitCampaignRecipient extends JsonSerializableType
     $this->phoneNumbers = $values['phoneNumbers'] ?? null;
     $this->whatsappUserId = $values['whatsappUserId'] ?? null;
     $this->id = $values['id'] ?? null;
+    $this->timezoneOverride = $values['timezoneOverride'] ?? null;
     $this->conversationInitiationClientData = $values['conversationInitiationClientData'] ?? null;
 
     if (array_key_exists('phoneNumber', $values)) {
@@ -79,6 +87,9 @@ class SubmitCampaignRecipient extends JsonSerializableType
     }
     if (array_key_exists('id', $values)) {
       $this->_dirtyFields['id'] = true;
+    }
+    if (array_key_exists('timezoneOverride', $values)) {
+      $this->_dirtyFields['timezone_override'] = true;
     }
     if (array_key_exists('conversationInitiationClientData', $values)) {
       $this->_dirtyFields['conversation_initiation_client_data'] = true;
@@ -115,6 +126,13 @@ class SubmitCampaignRecipient extends JsonSerializableType
       $parts[] = [
         'name' => 'id',
         'contents' => $this->id
+      ];
+    }
+
+    if ($this->timezoneOverride !== null) {
+      $parts[] = [
+        'name' => 'timezone_override',
+        'contents' => $this->timezoneOverride
       ];
     }
 

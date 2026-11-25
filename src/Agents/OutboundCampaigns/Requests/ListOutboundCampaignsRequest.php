@@ -36,7 +36,7 @@ class ListOutboundCampaignsRequest extends JsonSerializableType
   public ?string $mode;
 
   /**
-   * @var ?string $search Only campaigns whose name contains this text.
+   * @var ?string $search Only campaigns whose name contains this text, or whose ID is exactly this text.
    */
   public ?string $search;
 

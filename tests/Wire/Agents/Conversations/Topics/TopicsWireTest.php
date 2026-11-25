@@ -71,11 +71,11 @@ class TopicsWireTest extends TestCase
     $sortDirection = \ElevenLabs\Types\SortDirection::Asc;
     $sdk->agents->conversations->topics->get(
       request: new \ElevenLabs\Agents\Conversations\Topics\Requests\GetTopicsRequest([
-        'pageSize' => 51,
+        'pageSize' => 23,
         'sortBy' => $sortBy->value,
         'sortDirection' => $sortDirection->value,
-        'fromUnixSecs' => 1,
-        'toUnixSecs' => 10,
+        'fromUnixSecs' => 3,
+        'toUnixSecs' => 4,
         'includeEvaluationCriteria' => true,
         'cursor' => 'cursor'
       ]),

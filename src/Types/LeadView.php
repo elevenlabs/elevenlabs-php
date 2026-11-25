@@ -48,6 +48,12 @@ class LeadView extends JsonSerializableType
   public int $phoneNumbersIndex;
 
   /**
+   * The timezone the recipient's calling windows are read in; unset when the lead follows the campaign's.
+   */
+  #[JsonProperty('timezone_override')]
+  public ?string $timezoneOverride;
+
+  /**
    * The contact's identity: the `user_id` submitted in `conversation_initiation_client_data`, else the lead's phone number.
    */
   #[JsonProperty('user_id', required: true)]
@@ -133,6 +139,7 @@ class LeadView extends JsonSerializableType
    *   dynamicVariables: array<string, mixed>,
    *   overrides: \ElevenLabs\Types\FlattenedConfigOverrides,
    *   phoneNumbers?: string[]|null,
+   *   timezoneOverride?: ?string,
    *   delivery?: ?\ElevenLabs\Types\LeadDeliveryView,
    * } $values
    */
@@ -143,6 +150,7 @@ class LeadView extends JsonSerializableType
     $this->phoneNumber = $values['phoneNumber'];
     $this->phoneNumbers = $values['phoneNumbers'] ?? null;
     $this->phoneNumbersIndex = $values['phoneNumbersIndex'];
+    $this->timezoneOverride = $values['timezoneOverride'] ?? null;
     $this->userId = $values['userId'];
     $this->attemptCount = $values['attemptCount'];
     $this->failureCount = $values['failureCount'];
@@ -175,6 +183,9 @@ class LeadView extends JsonSerializableType
     ];
     if (array_key_exists('phoneNumbers', $values)) {
       $this->_dirtyFields['phone_numbers'] = true;
+    }
+    if (array_key_exists('timezoneOverride', $values)) {
+      $this->_dirtyFields['timezone_override'] = true;
     }
     if (array_key_exists('delivery', $values)) {
       $this->_dirtyFields['delivery'] = true;
@@ -212,6 +223,13 @@ class LeadView extends JsonSerializableType
       'name' => 'phone_numbers_index',
       'contents' => (string) $this->phoneNumbersIndex
     ];
+
+    if ($this->timezoneOverride !== null) {
+      $parts[] = [
+        'name' => 'timezone_override',
+        'contents' => $this->timezoneOverride
+      ];
+    }
 
     $parts[] = [
       'name' => 'user_id',

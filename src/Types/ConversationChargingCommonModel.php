@@ -76,7 +76,7 @@ class ConversationChargingCommonModel extends JsonSerializableType
   public ?\ElevenLabs\Types\AnalysisCharging $analysis;
 
   /**
-   * Credits charged as the voice actor reward for the Voice Library voices this conversation used. It is not included in `cost`.
+   * Credits charged as the voice owner fee for the custom rate voices this conversation used. It is not included in `cost`.
    */
   #[JsonProperty('voice_surcharge_charge')]
   public ?int $voiceSurchargeCharge;

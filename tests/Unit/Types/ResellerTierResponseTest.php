@@ -14,6 +14,7 @@ class ResellerTierResponseTest extends TestCase
     {
         "tier_id": "test-value",
         "display_name": "test-value",
+        "currency": "USD",
         "tier_economics": {
             "monthly_price_usd": 1,
             "annual_price_usd": 1,

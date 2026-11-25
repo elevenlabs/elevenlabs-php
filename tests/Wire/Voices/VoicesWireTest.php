@@ -692,13 +692,13 @@ class VoicesWireTest extends TestCase
         'useCases' => [],
         'descriptives' => [],
         'featured' => true,
-        'minNoticePeriodDays' => 6,
-        'includeCustomRates' => false,
-        'includeLiveModerated' => true,
+        'minNoticePeriodDays' => 2,
+        'includeCustomRates' => true,
+        'includeLiveModerated' => false,
         'readerAppEnabled' => true,
         'ownerId' => 'owner_id',
         'sort' => $sort->value,
-        'page' => 10
+        'page' => 8
       ])
     );
 

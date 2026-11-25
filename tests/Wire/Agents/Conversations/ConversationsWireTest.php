@@ -26,7 +26,7 @@ class ConversationsWireTest extends TestCase
     $sdk->agents->conversations->getSignedUrl(
       request: new \ElevenLabs\Agents\Conversations\Requests\GetSignedUrlConversationsRequest([
         'agentId' => 'agent_3701k3ttaq12ewp8b7qv5rfyszkz',
-        'includeConversationId' => false,
+        'includeConversationId' => true,
         'branchId' => 'branch_id',
         'versionId' => 'version_id',
         'environment' => 'environment',
@@ -155,12 +155,12 @@ class ConversationsWireTest extends TestCase
         'visitedAgentBranchIds' => [],
         'triggeredProcedureIds' => [],
         'callSuccessful' => $callSuccessful->value,
-        'callStartBeforeUnix' => 1,
-        'callStartAfterUnix' => 3,
-        'callDurationMinSecs' => 6,
-        'callDurationMaxSecs' => 3,
-        'ratingMax' => 4,
-        'ratingMin' => 3,
+        'callStartBeforeUnix' => 9,
+        'callStartAfterUnix' => 10,
+        'callDurationMinSecs' => 5,
+        'callDurationMaxSecs' => 5,
+        'ratingMax' => 5,
+        'ratingMin' => 1,
         'hasFeedbackComment' => false,
         'userId' => 'user_id',
         'evaluationParams' => [],
@@ -176,7 +176,7 @@ class ConversationsWireTest extends TestCase
         'toolIds' => [],
         'toolIdsSuccessful' => [],
         'toolIdsErrored' => [],
-        'includeInvalidToolCalls' => false,
+        'includeInvalidToolCalls' => true,
         'mainLanguages' => [],
         'phoneNumberIds' => [],
         'whatsappPhoneNumberIds' => [],
@@ -321,6 +321,10 @@ class ConversationsWireTest extends TestCase
                                   "output_total": {
                                       "tokens": 1,
                                       "price": 1
+                                  },
+                                  "output_total_reasoning_portion": {
+                                      "tokens": 1,
+                                      "price": 1
                                   }
                               }
                           }
@@ -341,6 +345,10 @@ class ConversationsWireTest extends TestCase
                                       "price": 1
                                   },
                                   "output_total": {
+                                      "tokens": 1,
+                                      "price": 1
+                                  },
+                                  "output_total_reasoning_portion": {
                                       "tokens": 1,
                                       "price": 1
                                   }
@@ -935,6 +943,10 @@ class ConversationsWireTest extends TestCase
                                   "price": 1
                               },
                               "output_total": {
+                                  "tokens": 1,
+                                  "price": 1
+                              },
+                              "output_total_reasoning_portion": {
                                   "tokens": 1,
                                   "price": 1
                               }
@@ -1079,6 +1091,10 @@ class ConversationsWireTest extends TestCase
                                   "output_total": {
                                       "tokens": 1,
                                       "price": 1
+                                  },
+                                  "output_total_reasoning_portion": {
+                                      "tokens": 1,
+                                      "price": 1
                                   }
                               }
                           }
@@ -1099,6 +1115,10 @@ class ConversationsWireTest extends TestCase
                                       "price": 1
                                   },
                                   "output_total": {
+                                      "tokens": 1,
+                                      "price": 1
+                                  },
+                                  "output_total_reasoning_portion": {
                                       "tokens": 1,
                                       "price": 1
                                   }
@@ -1693,6 +1713,10 @@ class ConversationsWireTest extends TestCase
                                   "price": 1
                               },
                               "output_total": {
+                                  "tokens": 1,
+                                  "price": 1
+                              },
+                              "output_total_reasoning_portion": {
                                   "tokens": 1,
                                   "price": 1
                               }
@@ -1992,7 +2016,7 @@ class ConversationsWireTest extends TestCase
       JSON
     );
     $sdk = new ElevenLabs(options: ['client' => $transport]);
-    $sdk->agents->conversations->getTurn(conversationId: 'conversation_id', turnId: '8144');
+    $sdk->agents->conversations->getTurn(conversationId: 'conversation_id', turnId: '223');
 
     $this->assertCount(1, $transport->requests);
     $sent = $transport->requests[0];

@@ -24,7 +24,7 @@ class AgentWorkflowRequestModelNodesValue extends JsonSerializableType
   public readonly string $type;
 
   /**
-   * @var \ElevenLabs\Types\WorkflowStartNodeModelInput|\ElevenLabs\Types\WorkflowEndNodeModelInput|\ElevenLabs\Types\WorkflowPhoneNumberNodeModelInput|\ElevenLabs\Types\WorkflowOverrideAgentNodeModelInput|\ElevenLabs\Types\WorkflowStandaloneAgentNodeModelInput|\ElevenLabs\Types\WorkflowToolNodeModelInput|\ElevenLabs\Types\WorkflowSayNodeModelInput|\ElevenLabs\Types\WorkflowUpdateStateNodeModelInput|\ElevenLabs\Types\WorkflowStartProcedureNodeModelInput|array<string, mixed> The value, exactly one of the variant types
+   * @var \ElevenLabs\Types\WorkflowStartNodeModelInput|\ElevenLabs\Types\WorkflowEndNodeModelInput|\ElevenLabs\Types\WorkflowPhoneNumberNodeModelInput|\ElevenLabs\Types\WorkflowOverrideAgentNodeModelInput|\ElevenLabs\Types\WorkflowStandaloneAgentNodeModelInput|\ElevenLabs\Types\WorkflowToolNodeModelInput|\ElevenLabs\Types\WorkflowStartProcedureNodeModelInput|\ElevenLabs\Types\WorkflowSayNodeModelInput|\ElevenLabs\Types\WorkflowUpdateStateNodeModelInput|array<string, mixed> The value, exactly one of the variant types
    */
   public readonly mixed $value;
 
@@ -69,7 +69,7 @@ class AgentWorkflowRequestModelNodesValue extends JsonSerializableType
 
   /**
    * Private constructor - use factory methods to create instances
-   * @param \ElevenLabs\Types\WorkflowStartNodeModelInput|\ElevenLabs\Types\WorkflowEndNodeModelInput|\ElevenLabs\Types\WorkflowPhoneNumberNodeModelInput|\ElevenLabs\Types\WorkflowOverrideAgentNodeModelInput|\ElevenLabs\Types\WorkflowStandaloneAgentNodeModelInput|\ElevenLabs\Types\WorkflowToolNodeModelInput|\ElevenLabs\Types\WorkflowSayNodeModelInput|\ElevenLabs\Types\WorkflowUpdateStateNodeModelInput|\ElevenLabs\Types\WorkflowStartProcedureNodeModelInput|array<string, mixed> $value
+   * @param \ElevenLabs\Types\WorkflowStartNodeModelInput|\ElevenLabs\Types\WorkflowEndNodeModelInput|\ElevenLabs\Types\WorkflowPhoneNumberNodeModelInput|\ElevenLabs\Types\WorkflowOverrideAgentNodeModelInput|\ElevenLabs\Types\WorkflowStandaloneAgentNodeModelInput|\ElevenLabs\Types\WorkflowToolNodeModelInput|\ElevenLabs\Types\WorkflowStartProcedureNodeModelInput|\ElevenLabs\Types\WorkflowSayNodeModelInput|\ElevenLabs\Types\WorkflowUpdateStateNodeModelInput|array<string, mixed> $value
    */
   private function __construct($value, int $typeIndex)
   {
@@ -82,9 +82,9 @@ class AgentWorkflowRequestModelNodesValue extends JsonSerializableType
       3 => 'override_agent',
       4 => 'standalone_agent',
       5 => 'tool',
-      6 => 'say',
-      7 => 'update_state',
-      8 => 'start_procedure',
+      6 => 'start_procedure',
+      7 => 'say',
+      8 => 'update_state',
       self::UNKNOWN => '_unknown',
       default => throw new \UnexpectedValueException("Unknown type index: $typeIndex")
     };
@@ -143,11 +143,20 @@ class AgentWorkflowRequestModelNodesValue extends JsonSerializableType
   }
 
   /**
+   * Create a AgentWorkflowRequestModelNodesValue instance containing a \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput
+   */
+  public static function startProcedure(
+    \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput $startProcedure
+  ): self {
+    return new self($startProcedure, 6);
+  }
+
+  /**
    * Create a AgentWorkflowRequestModelNodesValue instance containing a \ElevenLabs\Types\WorkflowSayNodeModelInput
    */
   public static function say(\ElevenLabs\Types\WorkflowSayNodeModelInput $say): self
   {
-    return new self($say, 6);
+    return new self($say, 7);
   }
 
   /**
@@ -156,16 +165,7 @@ class AgentWorkflowRequestModelNodesValue extends JsonSerializableType
   public static function updateState(
     \ElevenLabs\Types\WorkflowUpdateStateNodeModelInput $updateState
   ): self {
-    return new self($updateState, 7);
-  }
-
-  /**
-   * Create a AgentWorkflowRequestModelNodesValue instance containing a \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput
-   */
-  public static function startProcedure(
-    \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput $startProcedure
-  ): self {
-    return new self($startProcedure, 8);
+    return new self($updateState, 8);
   }
 
   // Type checking methods
@@ -218,25 +218,25 @@ class AgentWorkflowRequestModelNodesValue extends JsonSerializableType
   }
 
   /**
+   * Check if this AgentWorkflowRequestModelNodesValue contains a \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput
+   */
+  public function isStartProcedure(): bool
+  {
+    return $this->typeIndex === 6;
+  }
+
+  /**
    * Check if this AgentWorkflowRequestModelNodesValue contains a \ElevenLabs\Types\WorkflowSayNodeModelInput
    */
   public function isSay(): bool
   {
-    return $this->typeIndex === 6;
+    return $this->typeIndex === 7;
   }
 
   /**
    * Check if this AgentWorkflowRequestModelNodesValue contains a \ElevenLabs\Types\WorkflowUpdateStateNodeModelInput
    */
   public function isUpdateState(): bool
-  {
-    return $this->typeIndex === 7;
-  }
-
-  /**
-   * Check if this AgentWorkflowRequestModelNodesValue contains a \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput
-   */
-  public function isStartProcedure(): bool
   {
     return $this->typeIndex === 8;
   }
@@ -327,6 +327,20 @@ class AgentWorkflowRequestModelNodesValue extends JsonSerializableType
   }
 
   /**
+   * Get the \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput value
+   * @throws \RuntimeException if this AgentWorkflowRequestModelNodesValue does not contain a \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput
+   */
+  public function asStartProcedure(): \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput
+  {
+    if (!$this->isStartProcedure()) {
+      throw new \RuntimeException(
+        'AgentWorkflowRequestModelNodesValue does not contain \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput'
+      );
+    }
+    return $this->value;
+  }
+
+  /**
    * Get the \ElevenLabs\Types\WorkflowSayNodeModelInput value
    * @throws \RuntimeException if this AgentWorkflowRequestModelNodesValue does not contain a \ElevenLabs\Types\WorkflowSayNodeModelInput
    */
@@ -349,20 +363,6 @@ class AgentWorkflowRequestModelNodesValue extends JsonSerializableType
     if (!$this->isUpdateState()) {
       throw new \RuntimeException(
         'AgentWorkflowRequestModelNodesValue does not contain \ElevenLabs\Types\WorkflowUpdateStateNodeModelInput'
-      );
-    }
-    return $this->value;
-  }
-
-  /**
-   * Get the \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput value
-   * @throws \RuntimeException if this AgentWorkflowRequestModelNodesValue does not contain a \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput
-   */
-  public function asStartProcedure(): \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput
-  {
-    if (!$this->isStartProcedure()) {
-      throw new \RuntimeException(
-        'AgentWorkflowRequestModelNodesValue does not contain \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput'
       );
     }
     return $this->value;
@@ -424,6 +424,15 @@ class AgentWorkflowRequestModelNodesValue extends JsonSerializableType
   }
 
   /**
+   * Try to get the \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput value
+   * @return \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput|null Returns the value if this AgentWorkflowRequestModelNodesValue contains a \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput, null otherwise
+   */
+  public function tryAsStartProcedure(): ?\ElevenLabs\Types\WorkflowStartProcedureNodeModelInput
+  {
+    return $this->isStartProcedure() ? $this->value : null;
+  }
+
+  /**
    * Try to get the \ElevenLabs\Types\WorkflowSayNodeModelInput value
    * @return \ElevenLabs\Types\WorkflowSayNodeModelInput|null Returns the value if this AgentWorkflowRequestModelNodesValue contains a \ElevenLabs\Types\WorkflowSayNodeModelInput, null otherwise
    */
@@ -442,15 +451,6 @@ class AgentWorkflowRequestModelNodesValue extends JsonSerializableType
   }
 
   /**
-   * Try to get the \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput value
-   * @return \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput|null Returns the value if this AgentWorkflowRequestModelNodesValue contains a \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput, null otherwise
-   */
-  public function tryAsStartProcedure(): ?\ElevenLabs\Types\WorkflowStartProcedureNodeModelInput
-  {
-    return $this->isStartProcedure() ? $this->value : null;
-  }
-
-  /**
    * Pattern matching for exhaustive type handling
    * @template T
    * @param callable(\ElevenLabs\Types\WorkflowStartNodeModelInput): T $onStart
@@ -459,9 +459,9 @@ class AgentWorkflowRequestModelNodesValue extends JsonSerializableType
    * @param callable(\ElevenLabs\Types\WorkflowOverrideAgentNodeModelInput): T $onOverrideAgent
    * @param callable(\ElevenLabs\Types\WorkflowStandaloneAgentNodeModelInput): T $onStandaloneAgent
    * @param callable(\ElevenLabs\Types\WorkflowToolNodeModelInput): T $onTool
+   * @param callable(\ElevenLabs\Types\WorkflowStartProcedureNodeModelInput): T $onStartProcedure
    * @param callable(\ElevenLabs\Types\WorkflowSayNodeModelInput): T $onSay
    * @param callable(\ElevenLabs\Types\WorkflowUpdateStateNodeModelInput): T $onUpdateState
-   * @param callable(\ElevenLabs\Types\WorkflowStartProcedureNodeModelInput): T $onStartProcedure
    * @return T
    */
   public function match(
@@ -471,9 +471,9 @@ class AgentWorkflowRequestModelNodesValue extends JsonSerializableType
     callable $onOverrideAgent,
     callable $onStandaloneAgent,
     callable $onTool,
+    callable $onStartProcedure,
     callable $onSay,
-    callable $onUpdateState,
-    callable $onStartProcedure
+    callable $onUpdateState
   ): mixed {
     return match ($this->typeIndex) {
       0 => $onStart($this->value),
@@ -482,9 +482,9 @@ class AgentWorkflowRequestModelNodesValue extends JsonSerializableType
       3 => $onOverrideAgent($this->value),
       4 => $onStandaloneAgent($this->value),
       5 => $onTool($this->value),
-      6 => $onSay($this->value),
-      7 => $onUpdateState($this->value),
-      8 => $onStartProcedure($this->value),
+      6 => $onStartProcedure($this->value),
+      7 => $onSay($this->value),
+      8 => $onUpdateState($this->value),
       default => throw new \UnexpectedValueException("Unknown type index: $this->typeIndex")
     };
   }
@@ -529,14 +529,14 @@ class AgentWorkflowRequestModelNodesValue extends JsonSerializableType
         case 'start_procedure':
           return new self(
             \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput::fromArray($data),
-            8
+            6
           );
         case 'tool':
           return new self(\ElevenLabs\Types\WorkflowToolNodeModelInput::fromArray($data), 5);
         case 'say':
-          return new self(\ElevenLabs\Types\WorkflowSayNodeModelInput::fromArray($data), 6);
+          return new self(\ElevenLabs\Types\WorkflowSayNodeModelInput::fromArray($data), 7);
         case 'update_state':
-          return new self(\ElevenLabs\Types\WorkflowUpdateStateNodeModelInput::fromArray($data), 7);
+          return new self(\ElevenLabs\Types\WorkflowUpdateStateNodeModelInput::fromArray($data), 8);
         default:
           // A variant the API added after this SDK was generated: kept, not rejected.
           return new self($data, self::UNKNOWN);
@@ -618,10 +618,22 @@ class AgentWorkflowRequestModelNodesValue extends JsonSerializableType
     }
 
     try {
-      $candidate = \ElevenLabs\Types\WorkflowSayNodeModelInput::fromArray($data);
+      $candidate = \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
       $candidates[] = ['instance' => $candidate, 'idx' => 6, 'score' => $score];
+    } catch (\Throwable $e) {
+      // Throwable, because under fernMode "this variant does not match" arrives as whatever
+      // the shared deserializer raises — a JsonException for a missing required field, not
+      // just a TypeError. Narrowing it turns a non-matching variant into a fatal.
+      // \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput didn't match, continue to next type
+    }
+
+    try {
+      $candidate = \ElevenLabs\Types\WorkflowSayNodeModelInput::fromArray($data);
+      // Keys the variant actually mapped = input keys minus the ones it could not place.
+      $score = count($data) - count($candidate->getAdditionalProperties());
+      $candidates[] = ['instance' => $candidate, 'idx' => 7, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
@@ -633,24 +645,12 @@ class AgentWorkflowRequestModelNodesValue extends JsonSerializableType
       $candidate = \ElevenLabs\Types\WorkflowUpdateStateNodeModelInput::fromArray($data);
       // Keys the variant actually mapped = input keys minus the ones it could not place.
       $score = count($data) - count($candidate->getAdditionalProperties());
-      $candidates[] = ['instance' => $candidate, 'idx' => 7, 'score' => $score];
-    } catch (\Throwable $e) {
-      // Throwable, because under fernMode "this variant does not match" arrives as whatever
-      // the shared deserializer raises — a JsonException for a missing required field, not
-      // just a TypeError. Narrowing it turns a non-matching variant into a fatal.
-      // \ElevenLabs\Types\WorkflowUpdateStateNodeModelInput didn't match, continue to next type
-    }
-
-    try {
-      $candidate = \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput::fromArray($data);
-      // Keys the variant actually mapped = input keys minus the ones it could not place.
-      $score = count($data) - count($candidate->getAdditionalProperties());
       $candidates[] = ['instance' => $candidate, 'idx' => 8, 'score' => $score];
     } catch (\Throwable $e) {
       // Throwable, because under fernMode "this variant does not match" arrives as whatever
       // the shared deserializer raises — a JsonException for a missing required field, not
       // just a TypeError. Narrowing it turns a non-matching variant into a fatal.
-      // \ElevenLabs\Types\WorkflowStartProcedureNodeModelInput didn't match, continue to next type
+      // \ElevenLabs\Types\WorkflowUpdateStateNodeModelInput didn't match, continue to next type
     }
 
     if (count($candidates) === 0) {

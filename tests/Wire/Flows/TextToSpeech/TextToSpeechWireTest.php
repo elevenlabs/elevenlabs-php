@@ -82,9 +82,9 @@ class TextToSpeechWireTest extends TestCase
       \ElevenLabs\Types\ElevenFlashV25RequestModelId::ElevenFlashV25->value;
 
     $elevenFlashV25VoiceSettings = new \ElevenLabs\Types\ElevenFlashV25VoiceSettings([
-      'stability' => 0.84,
-      'similarityBoost' => 0.91,
-      'speed' => 1.01
+      'stability' => 0.34,
+      'similarityBoost' => 0.62,
+      'speed' => 1.19
     ]);
 
     $request = new \ElevenLabs\Types\ElevenFlashV25Request([

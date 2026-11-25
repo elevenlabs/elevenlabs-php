@@ -27,6 +27,7 @@ enum ConversationInitiationSource: string
   case Whatsapp = 'whatsapp';
   case TwilioSms = 'twilio_sms';
   case FlutterSdk = 'flutter_sdk';
+  case UnitySdk = 'unity_sdk';
   case ZendeskIntegration = 'zendesk_integration';
   case SlackIntegration = 'slack_integration';
   case TelegramIntegration = 'telegram_integration';

@@ -68,8 +68,8 @@ class TranscriptWireTest extends TestCase
     $request = new \ElevenLabs\Types\DubbingSegmentUpdateRequest([
       'text' => 'text',
       'speakerId' => 'speaker_id',
-      'startS' => 2.07,
-      'endS' => 4.59
+      'startS' => 9.82,
+      'endS' => 9.28
     ]);
     $sdk->dubbing->project->transcript->updateSegment(
       request: $request,
@@ -138,8 +138,8 @@ class TranscriptWireTest extends TestCase
     $dubbingSegmentUpdateRequest = new \ElevenLabs\Types\DubbingSegmentUpdateRequest([
       'text' => 'text',
       'speakerId' => 'speaker_id',
-      'startS' => 2.07,
-      'endS' => 4.59
+      'startS' => 9.82,
+      'endS' => 9.28
     ]);
 
     $request = new \ElevenLabs\Dubbing\Project\Transcript\Requests\DubbingBulkSegmentUpdateRequest([
@@ -181,8 +181,8 @@ class TranscriptWireTest extends TestCase
     $request = new \ElevenLabs\Dubbing\Project\Transcript\Requests\DubbingSegmentCreateRequest([
       'text' => 'text',
       'speakerId' => 'speaker_id',
-      'startS' => 5.11,
-      'endS' => 7.62
+      'startS' => 3.17,
+      'endS' => 8.6
     ]);
     $sdk->dubbing->project->transcript->createSegment(request: $request, projectId: 'project_id');
 

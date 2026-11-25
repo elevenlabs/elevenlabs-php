@@ -54,10 +54,10 @@ class ExotelWireTest extends TestCase
       'language' => 'language',
       'modelFamily' => $ttsModelFamily,
       'optimizeStreamingLatency' => $ttsOptimizeStreamingLatency,
-      'stability' => 0.42,
-      'speed' => 0.78,
-      'similarityBoost' => 0.33,
-      'cloneStrength' => 0.41
+      'stability' => 0.56,
+      'speed' => 0.83,
+      'similarityBoost' => 0.04,
+      'cloneStrength' => 0.3
     ]);
 
     $pydanticPronunciationDictionaryVersionLocator = new \ElevenLabs\Types\PydanticPronunciationDictionaryVersionLocator(
@@ -71,16 +71,16 @@ class ExotelWireTest extends TestCase
       'modelId' => $ttsConversationalModel,
       'voiceId' => 'voice_id',
       'supportedVoices' => [],
-      'stability' => 6.57,
-      'speed' => 1.8,
-      'similarityBoost' => 6.48,
-      'cloneStrength' => 1.49,
+      'stability' => 4.99,
+      'speed' => 7.29,
+      'similarityBoost' => 5.75,
+      'cloneStrength' => 5.08,
       'pronunciationDictionaryLocators' => []
     ]);
 
     $conversationConfigOverride = new \ElevenLabs\Types\ConversationConfigOverride([
-      'textOnly' => false,
-      'maxDurationSeconds' => 5
+      'textOnly' => true,
+      'maxDurationSeconds' => 9
     ]);
 
     $llm = \ElevenLabs\Types\Llm::Gpt4OMini->value;
@@ -103,7 +103,7 @@ class ExotelWireTest extends TestCase
       'llm' => $llm,
       'reasoningEffort' => $llmReasoningEffort,
       'toolIds' => [],
-      'toolIdsStrict' => false,
+      'toolIdsStrict' => true,
       'nativeMcpServerIds' => [],
       'knowledgeBase' => []
     ]);

@@ -222,7 +222,7 @@ class ServicesWireTest extends TestCase
 
     $receptionIntakeQuestion = new \ElevenLabs\Types\ReceptionIntakeQuestion([
       'id' => 'intakeq_4801jx8k3m5n7p9q2r4s6t8v0w2y',
-      'label' => 'est ci',
+      'label' => 'sed enim quis v',
       'kind' => $intakeQuestionKind,
       'options' => [],
       'required' => true,
@@ -230,14 +230,14 @@ class ServicesWireTest extends TestCase
     ]);
 
     $receptionGroupMembership = new \ElevenLabs\Types\ReceptionGroupMembership([
-      'label' => 'dolore dolor ',
-      'rank' => 0
+      'label' => 'in aute rep',
+      'rank' => 10
     ]);
 
     $receptionServiceVariant = new \ElevenLabs\Types\ReceptionServiceVariant([
       'id' => 'variant_4801jx8k3m5n7p9q2r4s6t8v0w2y',
       'durationMinutes' => 60,
-      'price' => 1.18,
+      'price' => 0.36,
       'isActive' => true
     ]);
 
@@ -247,8 +247,8 @@ class ServicesWireTest extends TestCase
 
     $receptionAddOn = new \ElevenLabs\Types\ReceptionAddOn([
       'id' => 'addon_4801jx8k3m5n7p9q2r4s6t8v0w2y',
-      'name' => 'Lorem',
-      'description' => 'ut volu',
+      'name' => 'dolor culpa',
+      'description' => 'sed quis',
       'addDurationMinutes' => 10,
       'addPrice' => 5
     ]);
@@ -257,7 +257,7 @@ class ServicesWireTest extends TestCase
 
     $receptionServicePromotion = new \ElevenLabs\Types\ReceptionServicePromotion([
       'id' => 'promo_4801jx8k3m5n7p9q2r4s6t8v0w2y',
-      'name' => 'aliqua dolor c',
+      'name' => 'esseincididu',
       'target' => $promotionTarget,
       'variantId' => 'variant_id',
       'addOnId' => 'add_on_id',
@@ -273,16 +273,16 @@ class ServicesWireTest extends TestCase
       'pricingMode' => $pricingMode,
       'intakeQuestions' => [],
       'groups' => [],
-      'ungroupedRank' => 2,
-      'name' => 'do pariatur ',
-      'description' => 'mollit magna',
+      'ungroupedRank' => 6,
+      'name' => 'id adi',
+      'description' => 'irure',
       'variants' => [$receptionServiceVariant],
       'kind' => $receptionServiceKind,
       'bufferMinutes' => 15,
       'serviceLocation' => $serviceLocationType,
       'addOns' => [],
-      'maxParticipants' => 72,
-      'capacity' => 10,
+      'maxParticipants' => 23,
+      'capacity' => 8,
       'isActive' => true,
       'anyStaffMember' => true,
       'staffIds' => [],
@@ -515,7 +515,7 @@ class ServicesWireTest extends TestCase
 
     $receptionIntakeQuestion = new \ElevenLabs\Types\ReceptionIntakeQuestion([
       'id' => 'intakeq_4801jx8k3m5n7p9q2r4s6t8v0w2y',
-      'label' => 'est ci',
+      'label' => 'sed enim quis v',
       'kind' => $intakeQuestionKind,
       'options' => [],
       'required' => true,
@@ -523,14 +523,14 @@ class ServicesWireTest extends TestCase
     ]);
 
     $receptionGroupMembership = new \ElevenLabs\Types\ReceptionGroupMembership([
-      'label' => 'dolore dolor ',
-      'rank' => 0
+      'label' => 'in aute rep',
+      'rank' => 10
     ]);
 
     $receptionServiceVariant = new \ElevenLabs\Types\ReceptionServiceVariant([
       'id' => 'variant_4801jx8k3m5n7p9q2r4s6t8v0w2y',
       'durationMinutes' => 60,
-      'price' => 1.18,
+      'price' => 0.36,
       'isActive' => true
     ]);
 
@@ -540,8 +540,8 @@ class ServicesWireTest extends TestCase
 
     $receptionAddOn = new \ElevenLabs\Types\ReceptionAddOn([
       'id' => 'addon_4801jx8k3m5n7p9q2r4s6t8v0w2y',
-      'name' => 'Lorem',
-      'description' => 'ut volu',
+      'name' => 'dolor culpa',
+      'description' => 'sed quis',
       'addDurationMinutes' => 10,
       'addPrice' => 5
     ]);
@@ -550,7 +550,7 @@ class ServicesWireTest extends TestCase
 
     $receptionServicePromotion = new \ElevenLabs\Types\ReceptionServicePromotion([
       'id' => 'promo_4801jx8k3m5n7p9q2r4s6t8v0w2y',
-      'name' => 'aliqua dolor c',
+      'name' => 'esseincididu',
       'target' => $promotionTarget,
       'variantId' => 'variant_id',
       'addOnId' => 'add_on_id',
@@ -566,29 +566,29 @@ class ServicesWireTest extends TestCase
       'pricingMode' => $pricingMode,
       'intakeQuestions' => [],
       'groups' => [],
-      'ungroupedRank' => 6,
-      'name' => 'irure',
-      'description' => 'dolor ',
+      'ungroupedRank' => 3,
+      'name' => 'nisi adi',
+      'description' => 'laboris culpa',
       'variants' => [],
       'kind' => $receptionServiceKind,
       'bufferMinutes' => 15,
       'serviceLocation' => $serviceLocationType,
       'addOns' => [],
-      'maxParticipants' => 46,
-      'capacity' => 9,
+      'maxParticipants' => 86,
+      'capacity' => 5,
       'isActive' => true,
-      'anyStaffMember' => true,
+      'anyStaffMember' => false,
       'staffIds' => [],
       'assetIds' => [],
       'advanceBookingMinutes' => 10080,
       'locationIds' => [],
       'displayOnBookingPage' => false,
       'travelMinutes' => 15,
-      'travelBefore' => true,
+      'travelBefore' => false,
       'travelAfter' => false,
       'promotions' => [],
-      'durationMinutes' => 30667,
-      'price' => 7.86
+      'durationMinutes' => 40521,
+      'price' => 7.02
     ]);
     $sdk->reception->services->update(
       request: $request,
@@ -733,7 +733,7 @@ class ServicesWireTest extends TestCase
 
     $receptionIntakeQuestion = new \ElevenLabs\Types\ReceptionIntakeQuestion([
       'id' => 'intakeq_4801jx8k3m5n7p9q2r4s6t8v0w2y',
-      'label' => 'est ci',
+      'label' => 'sed enim quis v',
       'kind' => $intakeQuestionKind,
       'options' => [],
       'required' => true,
@@ -741,14 +741,14 @@ class ServicesWireTest extends TestCase
     ]);
 
     $receptionGroupMembership = new \ElevenLabs\Types\ReceptionGroupMembership([
-      'label' => 'dolore dolor ',
-      'rank' => 0
+      'label' => 'in aute rep',
+      'rank' => 10
     ]);
 
     $receptionServiceVariant = new \ElevenLabs\Types\ReceptionServiceVariant([
       'id' => 'variant_4801jx8k3m5n7p9q2r4s6t8v0w2y',
       'durationMinutes' => 60,
-      'price' => 1.18,
+      'price' => 0.36,
       'isActive' => true
     ]);
 
@@ -758,8 +758,8 @@ class ServicesWireTest extends TestCase
 
     $receptionAddOn = new \ElevenLabs\Types\ReceptionAddOn([
       'id' => 'addon_4801jx8k3m5n7p9q2r4s6t8v0w2y',
-      'name' => 'Lorem',
-      'description' => 'ut volu',
+      'name' => 'dolor culpa',
+      'description' => 'sed quis',
       'addDurationMinutes' => 10,
       'addPrice' => 5
     ]);
@@ -768,7 +768,7 @@ class ServicesWireTest extends TestCase
 
     $receptionServicePromotion = new \ElevenLabs\Types\ReceptionServicePromotion([
       'id' => 'promo_4801jx8k3m5n7p9q2r4s6t8v0w2y',
-      'name' => 'aliqua dolor c',
+      'name' => 'esseincididu',
       'target' => $promotionTarget,
       'variantId' => 'variant_id',
       'addOnId' => 'add_on_id',
@@ -785,16 +785,16 @@ class ServicesWireTest extends TestCase
       'pricingMode' => $pricingMode,
       'intakeQuestions' => [],
       'groups' => [],
-      'ungroupedRank' => 7,
-      'name' => 'qui dol',
-      'description' => 'ad conse',
+      'ungroupedRank' => 1,
+      'name' => 'venia',
+      'description' => 'sint nostrud',
       'variants' => [],
       'kind' => $receptionServiceKind,
       'bufferMinutes' => 15,
       'serviceLocation' => $serviceLocationType,
       'addOns' => [],
-      'maxParticipants' => 45,
-      'capacity' => 6,
+      'maxParticipants' => 158,
+      'capacity' => 9,
       'isActive' => false,
       'anyStaffMember' => true,
       'staffIds' => [],
@@ -806,8 +806,8 @@ class ServicesWireTest extends TestCase
       'travelBefore' => false,
       'travelAfter' => false,
       'promotions' => [],
-      'durationMinutes' => 13642,
-      'price' => 0.09
+      'durationMinutes' => 4182,
+      'price' => 7.94
     ]);
     $sdk->reception->services->confirmUpdate(
       request: $request,

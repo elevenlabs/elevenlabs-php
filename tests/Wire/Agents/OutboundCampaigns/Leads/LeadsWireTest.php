@@ -27,6 +27,7 @@ class LeadsWireTest extends TestCase
                       "test-value"
                   ],
                   "phone_numbers_index": 1,
+                  "timezone_override": "test-value",
                   "user_id": "test-value",
                   "attempt_count": 1,
                   "failure_count": 1,
@@ -97,6 +98,7 @@ class LeadsWireTest extends TestCase
               "test-value"
           ],
           "phone_numbers_index": 1,
+          "timezone_override": "test-value",
           "user_id": "test-value",
           "attempt_count": 1,
           "failure_count": 1,

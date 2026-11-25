@@ -107,7 +107,7 @@ class KnowledgeBaseWireTest extends TestCase
       request: new \ElevenLabs\Agents\KnowledgeBase\Requests\ListKnowledgeBaseRequest([
         'pageSize' => 30,
         'search' => 'search',
-        'showOnlyOwnedDocuments' => false,
+        'showOnlyOwnedDocuments' => true,
         'createdByUserId' => 'created_by_user_id',
         'types' => [],
         'parentFolderId' => 'parent_folder_id',

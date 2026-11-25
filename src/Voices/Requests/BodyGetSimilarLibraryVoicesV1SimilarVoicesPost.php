@@ -19,6 +19,48 @@ class BodyGetSimilarLibraryVoicesV1SimilarVoicesPost extends JsonSerializableTyp
   use ReflectiveSerialization;
 
   /**
+   * @var ?value-of<\ElevenLabs\Voices\Types\FindSimilarVoicesVoicesRequestCategory>
+   * Voice category used for filtering
+   */
+  public ?string $category;
+
+  /**
+   * Gender used for filtering
+   */
+  public ?string $gender;
+
+  /**
+   * Age used for filtering
+   */
+  public ?string $age;
+
+  /**
+   * @var string[]|null
+   * Use-case used for filtering
+   */
+  public ?array $useCases;
+
+  /**
+   * Filter voices with a minimum notice period of the given number of days.
+   */
+  public ?int $minNoticePeriodDays;
+
+  /**
+   * Include/exclude voices with custom rates
+   */
+  public ?bool $includeCustomRates;
+
+  /**
+   * Include/exclude voices that are live moderated
+   */
+  public ?bool $includeLiveModerated;
+
+  /**
+   * Filter voices by public owner ID
+   */
+  public ?string $ownerId;
+
+  /**
    * @var ?\ElevenLabs\Utils\File
    */
   #[JsonProperty('audio_file')]
@@ -38,6 +80,14 @@ class BodyGetSimilarLibraryVoicesV1SimilarVoicesPost extends JsonSerializableTyp
 
   /**
    * @param array{
+   *   category?: ?value-of<\ElevenLabs\Voices\Types\FindSimilarVoicesVoicesRequestCategory>,
+   *   gender?: ?string,
+   *   age?: ?string,
+   *   useCases?: string[]|null,
+   *   minNoticePeriodDays?: ?int,
+   *   includeCustomRates?: ?bool,
+   *   includeLiveModerated?: ?bool,
+   *   ownerId?: ?string,
    *   audioFile?: ?\ElevenLabs\Utils\File,
    *   similarityThreshold?: ?float,
    *   topK?: ?int,
@@ -45,6 +95,14 @@ class BodyGetSimilarLibraryVoicesV1SimilarVoicesPost extends JsonSerializableTyp
    */
   public function __construct(array $values = [])
   {
+    $this->category = $values['category'] ?? null;
+    $this->gender = $values['gender'] ?? null;
+    $this->age = $values['age'] ?? null;
+    $this->useCases = $values['useCases'] ?? null;
+    $this->minNoticePeriodDays = $values['minNoticePeriodDays'] ?? null;
+    $this->includeCustomRates = $values['includeCustomRates'] ?? null;
+    $this->includeLiveModerated = $values['includeLiveModerated'] ?? null;
+    $this->ownerId = $values['ownerId'] ?? null;
     $this->audioFile = $values['audioFile'] ?? null;
     $this->similarityThreshold = $values['similarityThreshold'] ?? null;
     $this->topK = $values['topK'] ?? null;

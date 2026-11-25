@@ -117,7 +117,7 @@ class BusinessProfileWireTest extends TestCase
 
     $timeRangeModel = new \ElevenLabs\Types\TimeRangeModel([
       'startHour' => 9,
-      'startMinute' => 2,
+      'startMinute' => 8,
       'endHour' => 17,
       'endMinute' => 30
     ]);
@@ -132,7 +132,7 @@ class BusinessProfileWireTest extends TestCase
     $request = new \ElevenLabs\Reception\BusinessProfile\Requests\ReceptionUpdateAgentInfoRequest([
       'xiWorkspaceId' => 'xi-workspace-id',
       'businessName' => 'Bloom Salon',
-      'businessCountry' => 'qui ali',
+      'businessCountry' => 'id Duis',
       'businessDescription' => 'A hair salon offering cuts, color and styling.',
       'timezone' => 'America/New_York',
       'currency' => $receptionUpdateAgentInfoRequestCurrency,

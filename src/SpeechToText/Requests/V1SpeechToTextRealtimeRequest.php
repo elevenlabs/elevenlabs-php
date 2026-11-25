@@ -92,6 +92,11 @@ class V1SpeechToTextRealtimeRequest extends JsonSerializableType
   public ?bool $diarize;
 
   /**
+   * @var ?bool $inferSpeakerNames
+   */
+  public ?bool $inferSpeakerNames;
+
+  /**
    * @var string|array|null $entityDetection
    */
   public string|array|null $entityDetection;
@@ -144,6 +149,7 @@ class V1SpeechToTextRealtimeRequest extends JsonSerializableType
    *   noVerbatim?: ?bool,
    *   multilangMode?: ?bool,
    *   diarize?: ?bool,
+   *   inferSpeakerNames?: ?bool,
    *   entityDetection?: string|array|null,
    *   entityRedaction?: string|array|null,
    *   entityRedactionMode?: ?value-of<SpeechToTextRealtimeEntityRedactionMode>,
@@ -171,6 +177,7 @@ class V1SpeechToTextRealtimeRequest extends JsonSerializableType
     $this->noVerbatim = $values['noVerbatim'] ?? null;
     $this->multilangMode = $values['multilangMode'] ?? null;
     $this->diarize = $values['diarize'] ?? null;
+    $this->inferSpeakerNames = $values['inferSpeakerNames'] ?? null;
     $this->entityDetection = $values['entityDetection'] ?? null;
     $this->entityRedaction = $values['entityRedaction'] ?? null;
     $this->entityRedactionMode = $values['entityRedactionMode'] ?? null;
@@ -203,6 +210,7 @@ class V1SpeechToTextRealtimeRequest extends JsonSerializableType
       'noVerbatim' => $data['no_verbatim'] ?? null,
       'multilangMode' => $data['multilang_mode'] ?? null,
       'diarize' => $data['diarize'] ?? null,
+      'inferSpeakerNames' => $data['infer_speaker_names'] ?? null,
       'entityDetection' => $data['entity_detection'] ?? null,
       'entityRedaction' => $data['entity_redaction'] ?? null,
       'entityRedactionMode' => $data['entity_redaction_mode'] ?? null,
@@ -264,6 +272,9 @@ class V1SpeechToTextRealtimeRequest extends JsonSerializableType
     }
     if ($this->diarize !== null) {
       $result['diarize'] = $this->diarize;
+    }
+    if ($this->inferSpeakerNames !== null) {
+      $result['infer_speaker_names'] = $this->inferSpeakerNames;
     }
     if ($this->entityDetection !== null) {
       $result['entity_detection'] = $this->entityDetection;

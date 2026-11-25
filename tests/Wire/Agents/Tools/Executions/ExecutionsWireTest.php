@@ -63,8 +63,8 @@ class ExecutionsWireTest extends TestCase
         'isError' => true,
         'agentId' => 'agent_id',
         'branchId' => 'branch_id',
-        'startTime' => 6.72,
-        'endTime' => 4.99
+        'startTime' => 0.63,
+        'endTime' => 5.28
       ]),
       toolId: 'tool_id'
     );

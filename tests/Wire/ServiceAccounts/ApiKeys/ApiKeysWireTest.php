@@ -92,13 +92,13 @@ class ApiKeysWireTest extends TestCase
       [
         'name' => 'name',
         'permissions' => $bodyCreateServiceAccountApiKeyV1ServiceAccountsServiceAccountUserIdApiKeysPostPermissions,
-        'characterLimit' => 7,
+        'characterLimit' => 10,
         'allowedIps' => ['allowed_ips'],
-        'thirdPartyDisableAllowed' => false,
-        'ttsConcurrencyLimit' => 1,
-        'dubbingConcurrencyLimit' => 10,
-        'musicConcurrencyLimit' => 7,
-        'expiresAtUnix' => 8
+        'thirdPartyDisableAllowed' => true,
+        'ttsConcurrencyLimit' => 8,
+        'dubbingConcurrencyLimit' => 3,
+        'musicConcurrencyLimit' => 6,
+        'expiresAtUnix' => 4
       ]
     );
     $sdk->serviceAccounts->apiKeys->create(

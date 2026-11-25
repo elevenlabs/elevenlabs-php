@@ -90,8 +90,8 @@ class AuditLogsWireTest extends TestCase
       request: new \ElevenLabs\Workspace\AuditLogs\Requests\ListAuditLogsRequest([
         'limit' => 50,
         'cursor' => 'cursor',
-        'timeFromUnixMs' => 8,
-        'timeToUnixMs' => 9,
+        'timeFromUnixMs' => 9,
+        'timeToUnixMs' => 1,
         'actorUid' => 'actor_uid',
         'className' => $className->value,
         'activityName' => $activityName->value

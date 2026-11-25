@@ -344,10 +344,10 @@ class OutboundCampaignsWireTest extends TestCase
       'language' => 'language',
       'modelFamily' => $ttsModelFamily,
       'optimizeStreamingLatency' => $ttsOptimizeStreamingLatency,
-      'stability' => 0.42,
-      'speed' => 0.78,
-      'similarityBoost' => 0.33,
-      'cloneStrength' => 0.41
+      'stability' => 0.56,
+      'speed' => 0.83,
+      'similarityBoost' => 0.04,
+      'cloneStrength' => 0.3
     ]);
 
     $pydanticPronunciationDictionaryVersionLocator = new \ElevenLabs\Types\PydanticPronunciationDictionaryVersionLocator(
@@ -361,16 +361,16 @@ class OutboundCampaignsWireTest extends TestCase
       'modelId' => $ttsConversationalModel,
       'voiceId' => 'voice_id',
       'supportedVoices' => [],
-      'stability' => 6.57,
-      'speed' => 1.8,
-      'similarityBoost' => 6.48,
-      'cloneStrength' => 1.49,
+      'stability' => 4.99,
+      'speed' => 7.29,
+      'similarityBoost' => 5.75,
+      'cloneStrength' => 5.08,
       'pronunciationDictionaryLocators' => []
     ]);
 
     $conversationConfigOverride = new \ElevenLabs\Types\ConversationConfigOverride([
-      'textOnly' => false,
-      'maxDurationSeconds' => 5
+      'textOnly' => true,
+      'maxDurationSeconds' => 9
     ]);
 
     $llm = \ElevenLabs\Types\Llm::Gpt4OMini->value;
@@ -393,7 +393,7 @@ class OutboundCampaignsWireTest extends TestCase
       'llm' => $llm,
       'reasoningEffort' => $llmReasoningEffort,
       'toolIds' => [],
-      'toolIdsStrict' => false,
+      'toolIdsStrict' => true,
       'nativeMcpServerIds' => [],
       'knowledgeBase' => []
     ]);
@@ -442,6 +442,7 @@ class OutboundCampaignsWireTest extends TestCase
       'phoneNumbers' => [],
       'whatsappUserId' => 'whatsapp_user_id',
       'id' => 'id',
+      'timezoneOverride' => 'timezone_override',
       'conversationInitiationClientData' => $conversationInitiationClientDataRequestInput
     ]);
 
@@ -455,16 +456,16 @@ class OutboundCampaignsWireTest extends TestCase
       'maxRedirects' => 2,
       'intervalPlacement' => $intervalPlacement,
       'rotateStepSeconds' => 900,
-      'maxConsecutiveFailuresPerNumber' => 22
+      'maxConsecutiveFailuresPerNumber' => 9
     ]);
 
     $callingIntervalPolicy = new \ElevenLabs\Types\CallingIntervalPolicy([
-      'start' => '23:54',
-      'end' => '24:00'
+      'start' => '14:55',
+      'end' => '22:06'
     ]);
 
     $callingPeriod = new \ElevenLabs\Types\CallingPeriod([
-      'weekdays' => [5],
+      'weekdays' => [2],
       'intervals' => [$callingIntervalPolicy]
     ]);
 
@@ -523,7 +524,7 @@ class OutboundCampaignsWireTest extends TestCase
 
     $phoneVoiceConfigInput = new \ElevenLabs\Types\PhoneVoiceConfigInput([
       'ringingTimeoutSecs' => 60,
-      'twilioCallRecordingEnabled' => true,
+      'twilioCallRecordingEnabled' => false,
       'twilioMachineDetection' => $twilioMachineDetectionConfig,
       'mode' => $phoneVoiceConfigInputMode
     ]);
@@ -541,11 +542,11 @@ class OutboundCampaignsWireTest extends TestCase
       'callName' => 'call_name',
       'agentId' => 'agent_id',
       'recipients' => [$submitCampaignRecipient],
-      'scheduledTimeUnix' => 4,
+      'scheduledTimeUnix' => 0,
       'timezone' => 'timezone',
       'branchId' => 'branch_id',
       'environment' => 'environment',
-      'targetConcurrencyLimit' => 9,
+      'targetConcurrencyLimit' => 1,
       'idempotencyKey' => 'idempotency_key',
       'policy' => $policyConfigInput,
       'variant' => $campaignVariant,

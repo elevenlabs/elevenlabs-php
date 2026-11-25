@@ -54,8 +54,8 @@ class HolidaysWireTest extends TestCase
     $timeOffType = \ElevenLabs\Types\TimeOffType::Staff;
     $sdk->reception->holidays->list(
       request: new \ElevenLabs\Reception\Holidays\Requests\ListHolidaysRequest([
-        'startUnix' => 6,
-        'endUnix' => 0,
+        'startUnix' => 10,
+        'endUnix' => 5,
         'timeOffType' => $timeOffType->value,
         'resourceId' => 'resource_id',
         'locationId' => 'location_id',
@@ -120,7 +120,7 @@ class HolidaysWireTest extends TestCase
 
     $timeRangeModel = new \ElevenLabs\Types\TimeRangeModel([
       'startHour' => 9,
-      'startMinute' => 2,
+      'startMinute' => 8,
       'endHour' => 17,
       'endMinute' => 30
     ]);
@@ -253,7 +253,7 @@ class HolidaysWireTest extends TestCase
 
     $timeRangeModel = new \ElevenLabs\Types\TimeRangeModel([
       'startHour' => 9,
-      'startMinute' => 2,
+      'startMinute' => 8,
       'endHour' => 17,
       'endMinute' => 30
     ]);

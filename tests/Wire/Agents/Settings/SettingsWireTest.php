@@ -103,8 +103,8 @@ class SettingsWireTest extends TestCase
       'postCallWebhookId' => 'post_call_webhook_id',
       'events' => [],
       'transcriptFormat' => $webhookTranscriptFormat,
-      'excludeTranscript' => false,
-      'sendAudio' => true
+      'excludeTranscript' => true,
+      'sendAudio' => false
     ]);
 
     $livekitStackType = \ElevenLabs\Types\LivekitStackType::Standard->value;
@@ -114,7 +114,7 @@ class SettingsWireTest extends TestCase
       'webhooks' => $convAiWebhooks,
       'canUseMcpServers' => true,
       'ragRetentionPeriodDays' => 10,
-      'conversationEmbeddingRetentionDays' => 286,
+      'conversationEmbeddingRetentionDays' => 168,
       'defaultLivekitStack' => $livekitStackType
     ]);
     $sdk->agents->settings->update(request: $request);

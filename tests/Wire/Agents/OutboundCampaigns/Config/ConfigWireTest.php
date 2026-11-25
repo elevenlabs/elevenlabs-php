@@ -381,16 +381,16 @@ class ConfigWireTest extends TestCase
       'maxRedirects' => 2,
       'intervalPlacement' => $intervalPlacement,
       'rotateStepSeconds' => 900,
-      'maxConsecutiveFailuresPerNumber' => 22
+      'maxConsecutiveFailuresPerNumber' => 9
     ]);
 
     $callingIntervalPolicy = new \ElevenLabs\Types\CallingIntervalPolicy([
-      'start' => '23:54',
-      'end' => '24:00'
+      'start' => '14:55',
+      'end' => '22:06'
     ]);
 
     $callingPeriod = new \ElevenLabs\Types\CallingPeriod([
-      'weekdays' => [5],
+      'weekdays' => [2],
       'intervals' => [$callingIntervalPolicy]
     ]);
 
@@ -441,7 +441,7 @@ class ConfigWireTest extends TestCase
 
     $request = new \ElevenLabs\Agents\OutboundCampaigns\Config\Requests\ReplaceWorkspaceConfigRequest(
       [
-        'expectedVersion' => 10,
+        'expectedVersion' => 6,
         'config' => $campaignConfigInput
       ]
     );

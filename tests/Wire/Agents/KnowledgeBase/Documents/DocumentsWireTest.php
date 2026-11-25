@@ -36,8 +36,8 @@ class DocumentsWireTest extends TestCase
         'name' => 'name',
         'parentFolderId' => 'parent_folder_id',
         'enableAutoSync' => false,
-        'autoRemove' => true,
-        'minimumFrequencyDays' => 38
+        'autoRemove' => false,
+        'minimumFrequencyDays' => 176
       ]
     );
     $sdk->agents->knowledgeBase->documents->createFromUrl(request: $request);
@@ -114,8 +114,8 @@ class DocumentsWireTest extends TestCase
         'name' => 'name',
         'parentFolderId' => 'parent_folder_id',
         'enableAutoSync' => false,
-        'autoRemove' => true,
-        'minimumFrequencyDays' => 55
+        'autoRemove' => false,
+        'minimumFrequencyDays' => 32
       ]
     );
     $sdk->agents->knowledgeBase->documents->createFolder(request: $request);
@@ -256,10 +256,10 @@ class DocumentsWireTest extends TestCase
       [
         'name' => 'name',
         'content' => 'content',
-        'enableAutoSync' => false,
-        'autoRemove' => false,
-        'minimumFrequencyDays' => 115,
-        'tightenOnly' => true
+        'enableAutoSync' => true,
+        'autoRemove' => true,
+        'minimumFrequencyDays' => 11,
+        'tightenOnly' => false
       ]
     );
     $sdk->agents->knowledgeBase->documents->update(
@@ -289,7 +289,7 @@ class DocumentsWireTest extends TestCase
     $sdk = new ElevenLabs(options: ['client' => $transport]);
     $sdk->agents->knowledgeBase->documents->delete(
       request: new \ElevenLabs\Agents\KnowledgeBase\Documents\Requests\DeleteDocumentsRequest([
-        'force' => true
+        'force' => false
       ]),
       documentationId: '21m00Tcm4TlvDq8ikWAM'
     );
@@ -369,8 +369,8 @@ class DocumentsWireTest extends TestCase
     $sdk = new ElevenLabs(options: ['client' => $transport]);
 
     $chunkingOverrideRequestModel = new \ElevenLabs\Types\ChunkingOverrideRequestModel([
-      'maxChunkSize' => 5171819108572074,
-      'overlapPercentage' => 2,
+      'maxChunkSize' => 6953058274412879,
+      'overlapPercentage' => 4,
       'customSeparators' => []
     ]);
 

@@ -243,7 +243,7 @@ class ToolsWireTest extends TestCase
     $sdk->agents->tools->list(
       request: new \ElevenLabs\Agents\Tools\Requests\ListToolsRequest([
         'search' => 'search',
-        'pageSize' => 6,
+        'pageSize' => 79,
         'showOnlyOwnedDocuments' => false,
         'createdByUserId' => 'created_by_user_id',
         'types' => [],
@@ -496,7 +496,7 @@ class ToolsWireTest extends TestCase
       'source' => $dynamicVariableAssignmentSource,
       'dynamicVariable' => 'dynamic_variable',
       'valuePath' => 'value_path',
-      'sanitize' => false,
+      'sanitize' => true,
       'preserveNativeType' => false
     ]);
 
@@ -527,7 +527,7 @@ class ToolsWireTest extends TestCase
       'dynamicVariable' => 'dynamic_variable'
     ]);
 
-    $literalJsonSchemaPropertyConstantValue = 'veniam';
+    $literalJsonSchemaPropertyConstantValue = 'culpa ei';
 
     $literalJsonSchemaProperty = new \ElevenLabs\Types\LiteralJsonSchemaProperty([
       'type' => $literalJsonSchemaPropertyType,
@@ -636,9 +636,9 @@ class ToolsWireTest extends TestCase
       'name' => 'name',
       'description' => 'description',
       'responseTimeoutSecs' => 20,
-      'disableInterruptions' => false,
+      'disableInterruptions' => true,
       'interruptionMode' => $toolInterruptionMode,
-      'forcePreToolSpeech' => false,
+      'forcePreToolSpeech' => true,
       'preToolSpeech' => $preToolSpeechMode,
       'assignments' => [],
       'toolCallSound' => $toolCallSoundType,
@@ -673,7 +673,7 @@ class ToolsWireTest extends TestCase
     $toolResponseMockConfigInput = new \ElevenLabs\Types\ToolResponseMockConfigInput([
       'parameterConditions' => [],
       'mockResult' => 'mock_result',
-      'isError' => false
+      'isError' => true
     ]);
 
     $request = new \ElevenLabs\Types\ToolRequestModel([
@@ -1162,7 +1162,7 @@ class ToolsWireTest extends TestCase
       'source' => $dynamicVariableAssignmentSource,
       'dynamicVariable' => 'dynamic_variable',
       'valuePath' => 'value_path',
-      'sanitize' => false,
+      'sanitize' => true,
       'preserveNativeType' => false
     ]);
 
@@ -1193,7 +1193,7 @@ class ToolsWireTest extends TestCase
       'dynamicVariable' => 'dynamic_variable'
     ]);
 
-    $literalJsonSchemaPropertyConstantValue = 'veniam';
+    $literalJsonSchemaPropertyConstantValue = 'culpa ei';
 
     $literalJsonSchemaProperty = new \ElevenLabs\Types\LiteralJsonSchemaProperty([
       'type' => $literalJsonSchemaPropertyType,
@@ -1302,9 +1302,9 @@ class ToolsWireTest extends TestCase
       'name' => 'name',
       'description' => 'description',
       'responseTimeoutSecs' => 20,
-      'disableInterruptions' => false,
+      'disableInterruptions' => true,
       'interruptionMode' => $toolInterruptionMode,
-      'forcePreToolSpeech' => false,
+      'forcePreToolSpeech' => true,
       'preToolSpeech' => $preToolSpeechMode,
       'assignments' => [],
       'toolCallSound' => $toolCallSoundType,
@@ -1339,7 +1339,7 @@ class ToolsWireTest extends TestCase
     $toolResponseMockConfigInput = new \ElevenLabs\Types\ToolResponseMockConfigInput([
       'parameterConditions' => [],
       'mockResult' => 'mock_result',
-      'isError' => false
+      'isError' => true
     ]);
 
     $request = new \ElevenLabs\Types\ToolRequestModel([
@@ -1370,7 +1370,7 @@ class ToolsWireTest extends TestCase
     $sdk = new ElevenLabs(options: ['client' => $transport]);
     $sdk->agents->tools->delete(
       request: new \ElevenLabs\Agents\Tools\Requests\DeleteToolsRequest([
-        'force' => false
+        'force' => true
       ]),
       toolId: 'tool_id'
     );

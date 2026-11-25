@@ -51,6 +51,7 @@ class ResubmitTestsRequestModelTest extends TestCase
                         "use_llm_generated_message": true,
                         "randomize_fillers": true,
                         "max_soft_timeouts_per_generation": 1,
+                        "pause_after_filler": true,
                         "llm_generated_message_prompt_override": "test-value",
                         "disable_until_first_user_message": true
                     },
@@ -508,6 +509,9 @@ class ResubmitTestsRequestModelTest extends TestCase
                                 "secret_id": "test-value"
                             },
                             "auth_connection": {
+                                "auth_connection_id": "test-value"
+                            },
+                            "mtls_auth_connection": {
                                 "auth_connection_id": "test-value"
                             },
                             "request_headers": {

@@ -353,9 +353,9 @@ class RealtimeWireTest extends TestCase
       'eagerness' => $eagerness,
       'createResponse' => true,
       'interruptResponse' => true,
-      'threshold' => 3.34,
-      'prefixPaddingMs' => 8,
-      'silenceDurationMs' => 0,
+      'threshold' => 0.71,
+      'prefixPaddingMs' => 0,
+      'silenceDurationMs' => 3,
       'turnTimeout' => -1
     ]);
 
@@ -414,16 +414,16 @@ class RealtimeWireTest extends TestCase
       'eagerness' => $eagerness,
       'createResponse' => true,
       'interruptResponse' => true,
-      'threshold' => 3.34,
-      'prefixPaddingMs' => 8,
-      'silenceDurationMs' => 0,
+      'threshold' => 0.71,
+      'prefixPaddingMs' => 0,
+      'silenceDurationMs' => 3,
       'turnTimeout' => -1
     ]);
 
     $openAiSessionConfigInputTracing =
       \ElevenLabs\Types\OpenAiSessionConfigInputTracing1::Auto->value;
 
-    $openAiSessionConfigInputTruncation = 'esse enim';
+    $openAiSessionConfigInputTruncation = 'qui null';
 
     $openAiSessionConfigInput = new \ElevenLabs\Types\OpenAiSessionConfigInput([
       'type' => $openAiSessionConfigInputType,
@@ -439,7 +439,7 @@ class RealtimeWireTest extends TestCase
       'turnDetection' => $openAiSessionConfigInputTurnDetection,
       'tracing' => $openAiSessionConfigInputTracing,
       'include' => [],
-      'parallelToolCalls' => false,
+      'parallelToolCalls' => true,
       'reasoning' => [],
       'truncation' => $openAiSessionConfigInputTruncation,
       'prompt' => []
@@ -449,7 +449,7 @@ class RealtimeWireTest extends TestCase
 
     $expiresAfter = new \ElevenLabs\Types\ExpiresAfter([
       'anchor' => $expiresAfterAnchor,
-      'seconds' => 9
+      'seconds' => 0
     ]);
 
     $request = new \ElevenLabs\Types\CreateClientSecretRequest([

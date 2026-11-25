@@ -57,7 +57,7 @@ class AnalysisItemsWireTest extends TestCase
     $sdk->agents->analysisItems->list(
       request: new \ElevenLabs\Agents\AnalysisItems\Requests\ListAnalysisItemsRequest([
         'search' => 'search',
-        'pageSize' => 86,
+        'pageSize' => 89,
         'kind' => $kind->value,
         'analysisItemIds' => ['analysis_item_ids'],
         'createdByUserId' => 'created_by_user_id',
@@ -328,7 +328,7 @@ class AnalysisItemsWireTest extends TestCase
     $sdk = new ElevenLabs(options: ['client' => $transport]);
     $sdk->agents->analysisItems->delete(
       request: new \ElevenLabs\Agents\AnalysisItems\Requests\DeleteAnalysisItemsRequest([
-        'force' => true
+        'force' => false
       ]),
       analysisItemId: 'analysis_item_id'
     );

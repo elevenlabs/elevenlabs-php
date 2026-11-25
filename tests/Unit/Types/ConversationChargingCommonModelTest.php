@@ -34,6 +34,10 @@ class ConversationChargingCommonModelTest extends TestCase
                         "output_total": {
                             "tokens": 1,
                             "price": 1
+                        },
+                        "output_total_reasoning_portion": {
+                            "tokens": 1,
+                            "price": 1
                         }
                     }
                 }
@@ -54,6 +58,10 @@ class ConversationChargingCommonModelTest extends TestCase
                             "price": 1
                         },
                         "output_total": {
+                            "tokens": 1,
+                            "price": 1
+                        },
+                        "output_total_reasoning_portion": {
                             "tokens": 1,
                             "price": 1
                         }

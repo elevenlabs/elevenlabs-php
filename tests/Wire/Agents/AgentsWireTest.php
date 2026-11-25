@@ -47,25 +47,26 @@ class AgentsWireTest extends TestCase
       'message' => 'Hhmmmm...yeah.',
       'additionalSoftTimeoutMessages' => [],
       'useLlmGeneratedMessage' => true,
-      'randomizeFillers' => false,
+      'randomizeFillers' => true,
       'maxSoftTimeoutsPerGeneration' => 1,
+      'pauseAfterFiller' => true,
       'llmGeneratedMessagePromptOverride' => 'llm_generated_message_prompt_override',
       'disableUntilFirstUserMessage' => false
     ]);
 
     $turnConfig = new \ElevenLabs\Types\TurnConfig([
       'turnTimeout' => 7,
-      'initialWaitTime' => 0.63,
+      'initialWaitTime' => 9.4,
       'silenceEndCallTimeout' => -1,
       'turnEagerness' => $turnEagerness,
       'spellingPatience' => $spellingPatience,
       'speculativeTurn' => false,
-      'retranscribeOnTurnTimeout' => true,
+      'retranscribeOnTurnTimeout' => false,
       'turnModel' => $turnModel,
       'interruptionIgnoreTerms' => [],
       'interruptionIgnoreTermLanguages' => [],
-      'mergeWithDefaultIgnoreTerms' => false,
-      'transcribeOnDisabledInterruptions' => true,
+      'mergeWithDefaultIgnoreTerms' => true,
+      'transcribeOnDisabledInterruptions' => false,
       'softTimeoutConfig' => $softTimeoutConfig,
       'noisyEnvironmentDetection' => true,
       'noisyEnvironmentMessage' =>
@@ -85,10 +86,10 @@ class AgentsWireTest extends TestCase
       'language' => 'language',
       'modelFamily' => $ttsModelFamily,
       'optimizeStreamingLatency' => $ttsOptimizeStreamingLatency,
-      'stability' => 0.42,
-      'speed' => 0.78,
-      'similarityBoost' => 0.33,
-      'cloneStrength' => 0.41
+      'stability' => 0.56,
+      'speed' => 0.83,
+      'similarityBoost' => 0.04,
+      'cloneStrength' => 0.3
     ]);
 
     $suggestedAudioTag = new \ElevenLabs\Types\SuggestedAudioTag([
@@ -111,11 +112,11 @@ class AgentsWireTest extends TestCase
 
     $effectsSpecOutput = new \ElevenLabs\Types\EffectsSpecOutput([
       'filterPresetId' => 'filter_preset_id',
-      'distance' => 0.38,
+      'distance' => 0.86,
       'environmentId' => 'environment_id',
       'backgroundNoiseId' => 'background_noise_id',
       'sendLevel' => 1,
-      'pan' => -0.59
+      'pan' => 0.27
     ]);
 
     $ttsConversationalConfigOutput = new \ElevenLabs\Types\TtsConversationalConfigOutput([
@@ -129,7 +130,7 @@ class AgentsWireTest extends TestCase
       'stability' => 0.5,
       'speed' => 1,
       'similarityBoost' => 0.8,
-      'cloneStrength' => 0.91,
+      'cloneStrength' => 0.03,
       'textNormalisationType' => $textNormalisationType,
       'pronunciationDictionaryLocators' => [],
       'enablePhonemeTags' => true,
@@ -147,7 +148,7 @@ class AgentsWireTest extends TestCase
     $dtmfInputConfig = new \ElevenLabs\Types\DtmfInputConfig([
       'dtmfInputTimeout' => 2,
       'hashTerminator' => true,
-      'redactInput' => false
+      'redactInput' => true
     ]);
 
     $backgroundSoundSourceType = \ElevenLabs\Types\BackgroundSoundSourceType::Preset->value;
@@ -162,11 +163,11 @@ class AgentsWireTest extends TestCase
     ]);
 
     $conversationConfigOutput = new \ElevenLabs\Types\ConversationConfigOutput([
-      'textOnly' => false,
+      'textOnly' => true,
       'maxDurationSeconds' => 600,
       'clientEvents' => [],
       'fileInput' => $fileInputConfig,
-      'monitoringEnabled' => true,
+      'monitoringEnabled' => false,
       'monitoringEvents' => [],
       'dtmfInputSettings' => $dtmfInputConfig,
       'backgroundSound' => $backgroundSoundConfig,
@@ -191,16 +192,16 @@ class AgentsWireTest extends TestCase
       'modelId' => $ttsConversationalModel,
       'voiceId' => 'voice_id',
       'supportedVoices' => [],
-      'stability' => 6.57,
-      'speed' => 1.8,
-      'similarityBoost' => 6.48,
-      'cloneStrength' => 1.49,
+      'stability' => 4.99,
+      'speed' => 7.29,
+      'similarityBoost' => 5.75,
+      'cloneStrength' => 5.08,
       'pronunciationDictionaryLocators' => []
     ]);
 
     $conversationConfigOverride = new \ElevenLabs\Types\ConversationConfigOverride([
-      'textOnly' => false,
-      'maxDurationSeconds' => 5
+      'textOnly' => true,
+      'maxDurationSeconds' => 9
     ]);
 
     $llm = \ElevenLabs\Types\Llm::Gpt4OMini->value;
@@ -282,7 +283,7 @@ class AgentsWireTest extends TestCase
       'dynamicVariable' => 'dynamic_variable'
     ]);
 
-    $literalJsonSchemaPropertyConstantValue = 'veniam';
+    $literalJsonSchemaPropertyConstantValue = 'culpa ei';
 
     $objectJsonSchemaPropertyOutputPropertiesValue = new \ElevenLabs\Types\LiteralJsonSchemaProperty(
       [
@@ -355,7 +356,7 @@ class AgentsWireTest extends TestCase
       'source' => $dynamicVariableAssignmentSource,
       'dynamicVariable' => 'dynamic_variable',
       'valuePath' => 'value_path',
-      'sanitize' => false,
+      'sanitize' => true,
       'preserveNativeType' => false
     ]);
 
@@ -380,9 +381,9 @@ class AgentsWireTest extends TestCase
       'name' => 'name',
       'description' => 'description',
       'responseTimeoutSecs' => 20,
-      'disableInterruptions' => true,
+      'disableInterruptions' => false,
       'interruptionMode' => $toolInterruptionMode,
-      'forcePreToolSpeech' => true,
+      'forcePreToolSpeech' => false,
       'preToolSpeech' => $preToolSpeechMode,
       'assignments' => [],
       'toolCallSound' => $toolCallSoundType,
@@ -409,6 +410,10 @@ class AgentsWireTest extends TestCase
       'authConnectionId' => 'auth_connection_id'
     ]);
 
+    $customLlmMtlsAuthConnection = new \ElevenLabs\Types\AuthConnectionLocator([
+      'authConnectionId' => 'auth_connection_id'
+    ]);
+
     $customLlmRequestHeadersValue = new \ElevenLabs\Types\ConvAiSecretLocator([
       'secretId' => 'secret_id'
     ]);
@@ -420,6 +425,7 @@ class AgentsWireTest extends TestCase
       'modelId' => 'model_id',
       'apiKey' => $customLlmApiKey,
       'authConnection' => $customLlmAuthConnection,
+      'mtlsAuthConnection' => $customLlmMtlsAuthConnection,
       'requestHeaders' => [],
       'apiVersion' => 'api_version',
       'apiType' => $customLlmapiType
@@ -434,12 +440,12 @@ class AgentsWireTest extends TestCase
     ]);
 
     $ragConfigOutput = new \ElevenLabs\Types\RagConfigOutput([
-      'enabled' => true,
+      'enabled' => false,
       'embeddingModel' => $embeddingModelEnum,
       'maxVectorDistance' => 0.5,
       'maxDocumentsLength' => 50000,
       'maxRetrievedRagChunksCount' => 5,
-      'numCandidates' => 8647,
+      'numCandidates' => 9095,
       'queryRewritePromptOverride' => 'query_rewrite_prompt_override',
       'knowledgeBaseToolInfo' => $knowledgeBaseToolInfo
     ]);
@@ -559,9 +565,9 @@ class AgentsWireTest extends TestCase
       'llm' => $llm,
       'reasoningEffort' => $llmReasoningEffort,
       'serviceTier' => $llmServiceTier,
-      'thinkingBudget' => 3,
-      'enableReasoningSummary' => true,
-      'temperature' => 6.3,
+      'thinkingBudget' => 9,
+      'enableReasoningSummary' => false,
+      'temperature' => 7.72,
       'maxTokens' => -1,
       'toolIds' => [],
       'toolIdsStrict' => false,
@@ -571,7 +577,7 @@ class AgentsWireTest extends TestCase
       'nativeMcpServerIds' => [],
       'knowledgeBase' => [],
       'customLlm' => $customLlm,
-      'ignoreDefaultPersonality' => true,
+      'ignoreDefaultPersonality' => false,
       'rag' => $ragConfigOutput,
       'timezone' => 'timezone',
       'backupLlmConfig' => $promptAgentApiModelOutputBackupLlmConfig,
@@ -582,7 +588,7 @@ class AgentsWireTest extends TestCase
     $agentConfig = new \ElevenLabs\Types\AgentConfig([
       'firstMessage' => 'first_message',
       'language' => 'en',
-      'hinglishMode' => false,
+      'hinglishMode' => true,
       'dynamicVariables' => [],
       'disableFirstMessageInterruptions' => false,
       'maxConversationDurationMessage' => 'max_conversation_duration_message',
@@ -725,13 +731,13 @@ class AgentsWireTest extends TestCase
       'accentBorder' => 'accent_border',
       'accentSubtle' => 'accent_subtle',
       'accentPrimary' => 'accent_primary',
-      'overlayPadding' => 6.64,
-      'buttonRadius' => 6.41,
-      'inputRadius' => 6.32,
-      'bubbleRadius' => 3.68,
-      'sheetRadius' => 3.55,
-      'compactSheetRadius' => 3.52,
-      'dropdownSheetRadius' => 6.58
+      'overlayPadding' => 7.96,
+      'buttonRadius' => 3.89,
+      'inputRadius' => 2.86,
+      'bubbleRadius' => 8.46,
+      'sheetRadius' => 6.37,
+      'compactSheetRadius' => 4.94,
+      'dropdownSheetRadius' => 1.85
     ]);
 
     $widgetTextContentsTranslation = new \ElevenLabs\Types\WidgetTextContentsTranslation([
@@ -767,7 +773,7 @@ class AgentsWireTest extends TestCase
       'borderColor' => '#e1e1e1',
       'focusColor' => '#000000',
       'borderRadius' => 5,
-      'btnRadius' => 8,
+      'btnRadius' => 1,
       'actionText' => 'action_text',
       'startCallText' => 'start_call_text',
       'endCallText' => 'end_call_text',
@@ -779,7 +785,7 @@ class AgentsWireTest extends TestCase
       'termsText' => 'terms_text',
       'termsHtml' => 'terms_html',
       'termsKey' => 'terms_key',
-      'showAvatarWhenCollapsed' => true,
+      'showAvatarWhenCollapsed' => false,
       'disableBanner' => true,
       'overrideLink' => 'override_link',
       'markdownLinkAllowedHosts' => [],
@@ -788,8 +794,8 @@ class AgentsWireTest extends TestCase
       'micMutingEnabled' => true,
       'transcriptEnabled' => true,
       'textInputEnabled' => true,
-      'conversationModeToggleEnabled' => true,
-      'defaultExpanded' => false,
+      'conversationModeToggleEnabled' => false,
+      'defaultExpanded' => true,
       'alwaysExpanded' => true,
       'dismissible' => false,
       'showAgentStatus' => false,
@@ -799,7 +805,7 @@ class AgentsWireTest extends TestCase
       'textContents' => $widgetTextContents,
       'styles' => $widgetStyles,
       'showResizeButton' => true,
-      'endConfirmationEnabled' => false,
+      'endConfirmationEnabled' => true,
       'mobileFullscreen' => true,
       'transcriptSpeechSyncEnabled' => true,
       'languageSelector' => false,
@@ -810,18 +816,18 @@ class AgentsWireTest extends TestCase
 
     $analysisPropertyType = \ElevenLabs\Types\AnalysisPropertyType::Boolean->value;
 
-    $analysisPropertyConstantValue = 'irure dese';
+    $analysisPropertyConstantValue = 'consectetur';
 
     $analysisProperty = new \ElevenLabs\Types\AnalysisProperty([
       'type' => $analysisPropertyType,
       'description' => 'description',
       'enum' => [],
-      'isSystemProvided' => true,
+      'isSystemProvided' => false,
       'dynamicVariable' => 'dynamic_variable',
       'allowedValues' => $allowedValues,
       'allowedValuesDynamicVariable' => 'allowed_values_dynamic_variable',
       'constantValue' => $analysisPropertyConstantValue,
-      'isOmitted' => false,
+      'isOmitted' => true,
       'name' => 'name',
       'llm' => $llm
     ]);
@@ -837,7 +843,7 @@ class AgentsWireTest extends TestCase
       'versionId' => 'latest',
       'additionalVersionIds' => [],
       'scope' => $analysisScope,
-      'weight' => 7.08
+      'weight' => 0.86
     ]);
     $agentAnalysisItemsInputEvaluationCriteriaItem = \ElevenLabs\Types\AgentAnalysisItemsInputEvaluationCriteriaItem::user(
       $attachedUserEvaluationRef
@@ -863,13 +869,13 @@ class AgentsWireTest extends TestCase
 
     $asrConversationalConfigOverrideConfig = new \ElevenLabs\Types\AsrConversationalConfigOverrideConfig(
       [
-        'keywords' => false
+        'keywords' => true
       ]
     );
 
     $softTimeoutConfigOverrideConfig = new \ElevenLabs\Types\SoftTimeoutConfigOverrideConfig([
-      'message' => false,
-      'additionalSoftTimeoutMessages' => false
+      'message' => true,
+      'additionalSoftTimeoutMessages' => true
     ]);
 
     $turnConfigOverrideConfig = new \ElevenLabs\Types\TurnConfigOverrideConfig([
@@ -879,8 +885,8 @@ class AgentsWireTest extends TestCase
 
     $ttsConversationalConfigOverrideConfig = new \ElevenLabs\Types\TtsConversationalConfigOverrideConfig(
       [
-        'modelId' => false,
-        'voiceId' => false,
+        'modelId' => true,
+        'voiceId' => true,
         'supportedVoices' => false,
         'stability' => false,
         'speed' => false,
@@ -892,22 +898,22 @@ class AgentsWireTest extends TestCase
 
     $conversationConfigOverrideConfig = new \ElevenLabs\Types\ConversationConfigOverrideConfig([
       'textOnly' => true,
-      'maxDurationSeconds' => false
+      'maxDurationSeconds' => true
     ]);
 
     $promptAgentApiModelOverrideConfig = new \ElevenLabs\Types\PromptAgentApiModelOverrideConfig([
       'prompt' => true,
       'llm' => false,
-      'reasoningEffort' => false,
-      'toolIds' => true,
+      'reasoningEffort' => true,
+      'toolIds' => false,
       'toolIdsStrict' => true,
-      'nativeMcpServerIds' => true,
+      'nativeMcpServerIds' => false,
       'knowledgeBase' => true
     ]);
 
     $agentConfigOverrideConfig = new \ElevenLabs\Types\AgentConfigOverrideConfig([
-      'firstMessage' => true,
-      'language' => true,
+      'firstMessage' => false,
+      'language' => false,
       'maxConversationDurationMessage' => true,
       'prompt' => $promptAgentApiModelOverrideConfig
     ]);
@@ -925,9 +931,9 @@ class AgentsWireTest extends TestCase
     $conversationInitiationClientDataConfigInput = new \ElevenLabs\Types\ConversationInitiationClientDataConfigInput(
       [
         'conversationConfigOverride' => $conversationConfigClientOverrideConfigInput,
-        'customLlmExtraBody' => true,
-        'enableConversationInitiationClientDataFromWebhook' => false,
-        'enableStartingWorkflowNodeIdFromClient' => true,
+        'customLlmExtraBody' => false,
+        'enableConversationInitiationClientDataFromWebhook' => true,
+        'enableStartingWorkflowNodeIdFromClient' => false,
         'enableProcedureIdsFromClient' => false
       ]
     );
@@ -953,8 +959,8 @@ class AgentsWireTest extends TestCase
       'postCallWebhookId' => 'post_call_webhook_id',
       'events' => [],
       'transcriptFormat' => $webhookTranscriptFormat,
-      'excludeTranscript' => false,
-      'sendAudio' => true
+      'excludeTranscript' => true,
+      'sendAudio' => false
     ]);
 
     $agentWorkspaceOverridesInput = new \ElevenLabs\Types\AgentWorkspaceOverridesInput([
@@ -974,7 +980,7 @@ class AgentsWireTest extends TestCase
     $guardrailsV1InputVersion = \ElevenLabs\Types\GuardrailsV1InputVersion::One->value;
 
     $focusGuardrail = new \ElevenLabs\Types\FocusGuardrail([
-      'isEnabled' => false
+      'isEnabled' => true
     ]);
 
     $promptInjectionGuardrail = new \ElevenLabs\Types\PromptInjectionGuardrail([
@@ -986,7 +992,7 @@ class AgentsWireTest extends TestCase
     $contentThresholdGuardrailThreshold = \ElevenLabs\Types\Threshold2::Low->value;
 
     $contentThresholdGuardrail = new \ElevenLabs\Types\ContentThresholdGuardrail([
-      'isEnabled' => false,
+      'isEnabled' => true,
       'threshold' => $contentThresholdGuardrailThreshold
     ]);
 
@@ -1029,9 +1035,9 @@ class AgentsWireTest extends TestCase
       'executionMode' => $guardrailExecutionMode,
       'model' => $customGuardrailConfigModel,
       'serviceTier' => $llmServiceTier,
-      'historyMessageCount' => 33,
+      'historyMessageCount' => 62,
       'triggerAction' => $customGuardrailConfigTriggerAction,
-      'evaluateFullResponseOnly' => false
+      'evaluateFullResponseOnly' => true
     ]);
 
     $customGuardrailsConfigInput = new \ElevenLabs\Types\CustomGuardrailsConfigInput([
@@ -1067,8 +1073,8 @@ class AgentsWireTest extends TestCase
       'audioPath' => 'audio_path',
       'audioUrl' => 'audio_url',
       'originalFilename' => 'original_filename',
-      'durationSecs' => 4.56,
-      'sizeBytes' => 7
+      'durationSecs' => 8.35,
+      'sizeBytes' => 8
     ]);
 
     $agentQueueingConfig = new \ElevenLabs\Types\AgentQueueingConfig([
@@ -1080,7 +1086,7 @@ class AgentsWireTest extends TestCase
     $configEntityType = \ElevenLabs\Types\ConfigEntityType::Name->value;
 
     $conversationHistoryRedactionConfig = new \ElevenLabs\Types\ConversationHistoryRedactionConfig([
-      'enabled' => false,
+      'enabled' => true,
       'entities' => [],
       'excludedDataCollectionIds' => []
     ]);
@@ -1089,9 +1095,9 @@ class AgentsWireTest extends TestCase
       'recordVoice' => true,
       'retentionDays' => -1,
       'deleteTranscriptAndPii' => true,
-      'deleteAudio' => false,
+      'deleteAudio' => true,
       'applyToExistingConversations' => true,
-      'zeroRetentionMode' => true,
+      'zeroRetentionMode' => false,
       'conversationHistoryRedaction' => $conversationHistoryRedactionConfig
     ]);
 
@@ -1103,13 +1109,13 @@ class AgentsWireTest extends TestCase
 
     $alertingMonitorConfig = new \ElevenLabs\Types\AlertingMonitorConfig([
       'enabled' => false,
-      'threshold' => 0.24,
-      'relativeIncreaseThreshold' => 9.18,
-      'minFailureCount' => 1,
-      'minHistoryBucketCount' => 7,
-      'minSampleCount' => 2,
-      'suspectTriggerThreshold' => 8,
-      'autoResolveAfterInactiveMinutes' => 10
+      'threshold' => 0.83,
+      'relativeIncreaseThreshold' => 7.96,
+      'minFailureCount' => 3,
+      'minHistoryBucketCount' => 2,
+      'minSampleCount' => 7,
+      'suspectTriggerThreshold' => 4,
+      'autoResolveAfterInactiveMinutes' => 1
     ]);
 
     $alertingWebhookNotifierType = \ElevenLabs\Types\AlertingWebhookNotifierType::Webhook->value;
@@ -1124,7 +1130,7 @@ class AgentsWireTest extends TestCase
 
     $alertingSettings = new \ElevenLabs\Types\AlertingSettings([
       'monitorConfigs' => [],
-      'autoResolveAfterInactiveMinutes' => 10,
+      'autoResolveAfterInactiveMinutes' => 3,
       'environments' => ['environments'],
       'notifiers' => []
     ]);
@@ -1141,7 +1147,7 @@ class AgentsWireTest extends TestCase
       'archived' => false,
       'guardrails' => $guardrailsV1Input,
       'summaryLanguage' => 'summary_language',
-      'autoTranslateTranscriptToAppLanguage' => false,
+      'autoTranslateTranscriptToAppLanguage' => true,
       'auth' => $authSettings,
       'callLimits' => $agentCallLimits,
       'queueingConfig' => $agentQueueingConfig,
@@ -1169,8 +1175,8 @@ class AgentsWireTest extends TestCase
     );
 
     $positionInput = new \ElevenLabs\Types\PositionInput([
-      'x' => 0.13,
-      'y' => 8.06
+      'x' => 0.28,
+      'y' => 3.65
     ]);
 
     $workflowEdgeModelInput = new \ElevenLabs\Types\WorkflowEdgeModelInput([
@@ -1263,6 +1269,7 @@ class AgentsWireTest extends TestCase
                       "use_llm_generated_message": true,
                       "randomize_fillers": true,
                       "max_soft_timeouts_per_generation": 1,
+                      "pause_after_filler": true,
                       "llm_generated_message_prompt_override": "test-value",
                       "disable_until_first_user_message": true
                   },
@@ -1720,6 +1727,9 @@ class AgentsWireTest extends TestCase
                               "secret_id": "test-value"
                           },
                           "auth_connection": {
+                              "auth_connection_id": "test-value"
+                          },
+                          "mtls_auth_connection": {
                               "auth_connection_id": "test-value"
                           },
                           "request_headers": {
@@ -2599,6 +2609,7 @@ class AgentsWireTest extends TestCase
                       "use_llm_generated_message": true,
                       "randomize_fillers": true,
                       "max_soft_timeouts_per_generation": 1,
+                      "pause_after_filler": true,
                       "llm_generated_message_prompt_override": "test-value",
                       "disable_until_first_user_message": true
                   },
@@ -3056,6 +3067,9 @@ class AgentsWireTest extends TestCase
                               "secret_id": "test-value"
                           },
                           "auth_connection": {
+                              "auth_connection_id": "test-value"
+                          },
+                          "mtls_auth_connection": {
                               "auth_connection_id": "test-value"
                           },
                           "request_headers": {
@@ -3898,25 +3912,26 @@ class AgentsWireTest extends TestCase
       'message' => 'Hhmmmm...yeah.',
       'additionalSoftTimeoutMessages' => [],
       'useLlmGeneratedMessage' => true,
-      'randomizeFillers' => false,
+      'randomizeFillers' => true,
       'maxSoftTimeoutsPerGeneration' => 1,
+      'pauseAfterFiller' => true,
       'llmGeneratedMessagePromptOverride' => 'llm_generated_message_prompt_override',
       'disableUntilFirstUserMessage' => false
     ]);
 
     $turnConfig = new \ElevenLabs\Types\TurnConfig([
       'turnTimeout' => 7,
-      'initialWaitTime' => 0.63,
+      'initialWaitTime' => 9.4,
       'silenceEndCallTimeout' => -1,
       'turnEagerness' => $turnEagerness,
       'spellingPatience' => $spellingPatience,
       'speculativeTurn' => false,
-      'retranscribeOnTurnTimeout' => true,
+      'retranscribeOnTurnTimeout' => false,
       'turnModel' => $turnModel,
       'interruptionIgnoreTerms' => [],
       'interruptionIgnoreTermLanguages' => [],
-      'mergeWithDefaultIgnoreTerms' => false,
-      'transcribeOnDisabledInterruptions' => true,
+      'mergeWithDefaultIgnoreTerms' => true,
+      'transcribeOnDisabledInterruptions' => false,
       'softTimeoutConfig' => $softTimeoutConfig,
       'noisyEnvironmentDetection' => true,
       'noisyEnvironmentMessage' =>
@@ -3936,10 +3951,10 @@ class AgentsWireTest extends TestCase
       'language' => 'language',
       'modelFamily' => $ttsModelFamily,
       'optimizeStreamingLatency' => $ttsOptimizeStreamingLatency,
-      'stability' => 0.42,
-      'speed' => 0.78,
-      'similarityBoost' => 0.33,
-      'cloneStrength' => 0.41
+      'stability' => 0.56,
+      'speed' => 0.83,
+      'similarityBoost' => 0.04,
+      'cloneStrength' => 0.3
     ]);
 
     $suggestedAudioTag = new \ElevenLabs\Types\SuggestedAudioTag([
@@ -3962,11 +3977,11 @@ class AgentsWireTest extends TestCase
 
     $effectsSpecOutput = new \ElevenLabs\Types\EffectsSpecOutput([
       'filterPresetId' => 'filter_preset_id',
-      'distance' => 0.38,
+      'distance' => 0.86,
       'environmentId' => 'environment_id',
       'backgroundNoiseId' => 'background_noise_id',
       'sendLevel' => 1,
-      'pan' => -0.59
+      'pan' => 0.27
     ]);
 
     $ttsConversationalConfigOutput = new \ElevenLabs\Types\TtsConversationalConfigOutput([
@@ -3980,7 +3995,7 @@ class AgentsWireTest extends TestCase
       'stability' => 0.5,
       'speed' => 1,
       'similarityBoost' => 0.8,
-      'cloneStrength' => 0.91,
+      'cloneStrength' => 0.03,
       'textNormalisationType' => $textNormalisationType,
       'pronunciationDictionaryLocators' => [],
       'enablePhonemeTags' => true,
@@ -3998,7 +4013,7 @@ class AgentsWireTest extends TestCase
     $dtmfInputConfig = new \ElevenLabs\Types\DtmfInputConfig([
       'dtmfInputTimeout' => 2,
       'hashTerminator' => true,
-      'redactInput' => false
+      'redactInput' => true
     ]);
 
     $backgroundSoundSourceType = \ElevenLabs\Types\BackgroundSoundSourceType::Preset->value;
@@ -4013,11 +4028,11 @@ class AgentsWireTest extends TestCase
     ]);
 
     $conversationConfigOutput = new \ElevenLabs\Types\ConversationConfigOutput([
-      'textOnly' => false,
+      'textOnly' => true,
       'maxDurationSeconds' => 600,
       'clientEvents' => [],
       'fileInput' => $fileInputConfig,
-      'monitoringEnabled' => true,
+      'monitoringEnabled' => false,
       'monitoringEvents' => [],
       'dtmfInputSettings' => $dtmfInputConfig,
       'backgroundSound' => $backgroundSoundConfig,
@@ -4042,16 +4057,16 @@ class AgentsWireTest extends TestCase
       'modelId' => $ttsConversationalModel,
       'voiceId' => 'voice_id',
       'supportedVoices' => [],
-      'stability' => 6.57,
-      'speed' => 1.8,
-      'similarityBoost' => 6.48,
-      'cloneStrength' => 1.49,
+      'stability' => 4.99,
+      'speed' => 7.29,
+      'similarityBoost' => 5.75,
+      'cloneStrength' => 5.08,
       'pronunciationDictionaryLocators' => []
     ]);
 
     $conversationConfigOverride = new \ElevenLabs\Types\ConversationConfigOverride([
-      'textOnly' => false,
-      'maxDurationSeconds' => 5
+      'textOnly' => true,
+      'maxDurationSeconds' => 9
     ]);
 
     $llm = \ElevenLabs\Types\Llm::Gpt4OMini->value;
@@ -4133,7 +4148,7 @@ class AgentsWireTest extends TestCase
       'dynamicVariable' => 'dynamic_variable'
     ]);
 
-    $literalJsonSchemaPropertyConstantValue = 'veniam';
+    $literalJsonSchemaPropertyConstantValue = 'culpa ei';
 
     $objectJsonSchemaPropertyOutputPropertiesValue = new \ElevenLabs\Types\LiteralJsonSchemaProperty(
       [
@@ -4206,7 +4221,7 @@ class AgentsWireTest extends TestCase
       'source' => $dynamicVariableAssignmentSource,
       'dynamicVariable' => 'dynamic_variable',
       'valuePath' => 'value_path',
-      'sanitize' => false,
+      'sanitize' => true,
       'preserveNativeType' => false
     ]);
 
@@ -4231,9 +4246,9 @@ class AgentsWireTest extends TestCase
       'name' => 'name',
       'description' => 'description',
       'responseTimeoutSecs' => 20,
-      'disableInterruptions' => true,
+      'disableInterruptions' => false,
       'interruptionMode' => $toolInterruptionMode,
-      'forcePreToolSpeech' => true,
+      'forcePreToolSpeech' => false,
       'preToolSpeech' => $preToolSpeechMode,
       'assignments' => [],
       'toolCallSound' => $toolCallSoundType,
@@ -4260,6 +4275,10 @@ class AgentsWireTest extends TestCase
       'authConnectionId' => 'auth_connection_id'
     ]);
 
+    $customLlmMtlsAuthConnection = new \ElevenLabs\Types\AuthConnectionLocator([
+      'authConnectionId' => 'auth_connection_id'
+    ]);
+
     $customLlmRequestHeadersValue = new \ElevenLabs\Types\ConvAiSecretLocator([
       'secretId' => 'secret_id'
     ]);
@@ -4271,6 +4290,7 @@ class AgentsWireTest extends TestCase
       'modelId' => 'model_id',
       'apiKey' => $customLlmApiKey,
       'authConnection' => $customLlmAuthConnection,
+      'mtlsAuthConnection' => $customLlmMtlsAuthConnection,
       'requestHeaders' => [],
       'apiVersion' => 'api_version',
       'apiType' => $customLlmapiType
@@ -4285,12 +4305,12 @@ class AgentsWireTest extends TestCase
     ]);
 
     $ragConfigOutput = new \ElevenLabs\Types\RagConfigOutput([
-      'enabled' => true,
+      'enabled' => false,
       'embeddingModel' => $embeddingModelEnum,
       'maxVectorDistance' => 0.5,
       'maxDocumentsLength' => 50000,
       'maxRetrievedRagChunksCount' => 5,
-      'numCandidates' => 8647,
+      'numCandidates' => 9095,
       'queryRewritePromptOverride' => 'query_rewrite_prompt_override',
       'knowledgeBaseToolInfo' => $knowledgeBaseToolInfo
     ]);
@@ -4410,9 +4430,9 @@ class AgentsWireTest extends TestCase
       'llm' => $llm,
       'reasoningEffort' => $llmReasoningEffort,
       'serviceTier' => $llmServiceTier,
-      'thinkingBudget' => 3,
-      'enableReasoningSummary' => true,
-      'temperature' => 6.3,
+      'thinkingBudget' => 9,
+      'enableReasoningSummary' => false,
+      'temperature' => 7.72,
       'maxTokens' => -1,
       'toolIds' => [],
       'toolIdsStrict' => false,
@@ -4422,7 +4442,7 @@ class AgentsWireTest extends TestCase
       'nativeMcpServerIds' => [],
       'knowledgeBase' => [],
       'customLlm' => $customLlm,
-      'ignoreDefaultPersonality' => true,
+      'ignoreDefaultPersonality' => false,
       'rag' => $ragConfigOutput,
       'timezone' => 'timezone',
       'backupLlmConfig' => $promptAgentApiModelOutputBackupLlmConfig,
@@ -4433,7 +4453,7 @@ class AgentsWireTest extends TestCase
     $agentConfig = new \ElevenLabs\Types\AgentConfig([
       'firstMessage' => 'first_message',
       'language' => 'en',
-      'hinglishMode' => false,
+      'hinglishMode' => true,
       'dynamicVariables' => [],
       'disableFirstMessageInterruptions' => false,
       'maxConversationDurationMessage' => 'max_conversation_duration_message',
@@ -4576,13 +4596,13 @@ class AgentsWireTest extends TestCase
       'accentBorder' => 'accent_border',
       'accentSubtle' => 'accent_subtle',
       'accentPrimary' => 'accent_primary',
-      'overlayPadding' => 6.64,
-      'buttonRadius' => 6.41,
-      'inputRadius' => 6.32,
-      'bubbleRadius' => 3.68,
-      'sheetRadius' => 3.55,
-      'compactSheetRadius' => 3.52,
-      'dropdownSheetRadius' => 6.58
+      'overlayPadding' => 7.96,
+      'buttonRadius' => 3.89,
+      'inputRadius' => 2.86,
+      'bubbleRadius' => 8.46,
+      'sheetRadius' => 6.37,
+      'compactSheetRadius' => 4.94,
+      'dropdownSheetRadius' => 1.85
     ]);
 
     $widgetTextContentsTranslation = new \ElevenLabs\Types\WidgetTextContentsTranslation([
@@ -4618,7 +4638,7 @@ class AgentsWireTest extends TestCase
       'borderColor' => '#e1e1e1',
       'focusColor' => '#000000',
       'borderRadius' => 5,
-      'btnRadius' => 8,
+      'btnRadius' => 1,
       'actionText' => 'action_text',
       'startCallText' => 'start_call_text',
       'endCallText' => 'end_call_text',
@@ -4630,7 +4650,7 @@ class AgentsWireTest extends TestCase
       'termsText' => 'terms_text',
       'termsHtml' => 'terms_html',
       'termsKey' => 'terms_key',
-      'showAvatarWhenCollapsed' => true,
+      'showAvatarWhenCollapsed' => false,
       'disableBanner' => true,
       'overrideLink' => 'override_link',
       'markdownLinkAllowedHosts' => [],
@@ -4639,8 +4659,8 @@ class AgentsWireTest extends TestCase
       'micMutingEnabled' => true,
       'transcriptEnabled' => true,
       'textInputEnabled' => true,
-      'conversationModeToggleEnabled' => true,
-      'defaultExpanded' => false,
+      'conversationModeToggleEnabled' => false,
+      'defaultExpanded' => true,
       'alwaysExpanded' => true,
       'dismissible' => false,
       'showAgentStatus' => false,
@@ -4650,7 +4670,7 @@ class AgentsWireTest extends TestCase
       'textContents' => $widgetTextContents,
       'styles' => $widgetStyles,
       'showResizeButton' => true,
-      'endConfirmationEnabled' => false,
+      'endConfirmationEnabled' => true,
       'mobileFullscreen' => true,
       'transcriptSpeechSyncEnabled' => true,
       'languageSelector' => false,
@@ -4661,18 +4681,18 @@ class AgentsWireTest extends TestCase
 
     $analysisPropertyType = \ElevenLabs\Types\AnalysisPropertyType::Boolean->value;
 
-    $analysisPropertyConstantValue = 'irure dese';
+    $analysisPropertyConstantValue = 'consectetur';
 
     $analysisProperty = new \ElevenLabs\Types\AnalysisProperty([
       'type' => $analysisPropertyType,
       'description' => 'description',
       'enum' => [],
-      'isSystemProvided' => true,
+      'isSystemProvided' => false,
       'dynamicVariable' => 'dynamic_variable',
       'allowedValues' => $allowedValues,
       'allowedValuesDynamicVariable' => 'allowed_values_dynamic_variable',
       'constantValue' => $analysisPropertyConstantValue,
-      'isOmitted' => false,
+      'isOmitted' => true,
       'name' => 'name',
       'llm' => $llm
     ]);
@@ -4688,7 +4708,7 @@ class AgentsWireTest extends TestCase
       'versionId' => 'latest',
       'additionalVersionIds' => [],
       'scope' => $analysisScope,
-      'weight' => 7.08
+      'weight' => 0.86
     ]);
     $agentAnalysisItemsInputEvaluationCriteriaItem = \ElevenLabs\Types\AgentAnalysisItemsInputEvaluationCriteriaItem::user(
       $attachedUserEvaluationRef
@@ -4714,13 +4734,13 @@ class AgentsWireTest extends TestCase
 
     $asrConversationalConfigOverrideConfig = new \ElevenLabs\Types\AsrConversationalConfigOverrideConfig(
       [
-        'keywords' => false
+        'keywords' => true
       ]
     );
 
     $softTimeoutConfigOverrideConfig = new \ElevenLabs\Types\SoftTimeoutConfigOverrideConfig([
-      'message' => false,
-      'additionalSoftTimeoutMessages' => false
+      'message' => true,
+      'additionalSoftTimeoutMessages' => true
     ]);
 
     $turnConfigOverrideConfig = new \ElevenLabs\Types\TurnConfigOverrideConfig([
@@ -4730,8 +4750,8 @@ class AgentsWireTest extends TestCase
 
     $ttsConversationalConfigOverrideConfig = new \ElevenLabs\Types\TtsConversationalConfigOverrideConfig(
       [
-        'modelId' => false,
-        'voiceId' => false,
+        'modelId' => true,
+        'voiceId' => true,
         'supportedVoices' => false,
         'stability' => false,
         'speed' => false,
@@ -4743,22 +4763,22 @@ class AgentsWireTest extends TestCase
 
     $conversationConfigOverrideConfig = new \ElevenLabs\Types\ConversationConfigOverrideConfig([
       'textOnly' => true,
-      'maxDurationSeconds' => false
+      'maxDurationSeconds' => true
     ]);
 
     $promptAgentApiModelOverrideConfig = new \ElevenLabs\Types\PromptAgentApiModelOverrideConfig([
       'prompt' => true,
       'llm' => false,
-      'reasoningEffort' => false,
-      'toolIds' => true,
+      'reasoningEffort' => true,
+      'toolIds' => false,
       'toolIdsStrict' => true,
-      'nativeMcpServerIds' => true,
+      'nativeMcpServerIds' => false,
       'knowledgeBase' => true
     ]);
 
     $agentConfigOverrideConfig = new \ElevenLabs\Types\AgentConfigOverrideConfig([
-      'firstMessage' => true,
-      'language' => true,
+      'firstMessage' => false,
+      'language' => false,
       'maxConversationDurationMessage' => true,
       'prompt' => $promptAgentApiModelOverrideConfig
     ]);
@@ -4776,9 +4796,9 @@ class AgentsWireTest extends TestCase
     $conversationInitiationClientDataConfigInput = new \ElevenLabs\Types\ConversationInitiationClientDataConfigInput(
       [
         'conversationConfigOverride' => $conversationConfigClientOverrideConfigInput,
-        'customLlmExtraBody' => true,
-        'enableConversationInitiationClientDataFromWebhook' => false,
-        'enableStartingWorkflowNodeIdFromClient' => true,
+        'customLlmExtraBody' => false,
+        'enableConversationInitiationClientDataFromWebhook' => true,
+        'enableStartingWorkflowNodeIdFromClient' => false,
         'enableProcedureIdsFromClient' => false
       ]
     );
@@ -4804,8 +4824,8 @@ class AgentsWireTest extends TestCase
       'postCallWebhookId' => 'post_call_webhook_id',
       'events' => [],
       'transcriptFormat' => $webhookTranscriptFormat,
-      'excludeTranscript' => false,
-      'sendAudio' => true
+      'excludeTranscript' => true,
+      'sendAudio' => false
     ]);
 
     $agentWorkspaceOverridesInput = new \ElevenLabs\Types\AgentWorkspaceOverridesInput([
@@ -4825,7 +4845,7 @@ class AgentsWireTest extends TestCase
     $guardrailsV1InputVersion = \ElevenLabs\Types\GuardrailsV1InputVersion::One->value;
 
     $focusGuardrail = new \ElevenLabs\Types\FocusGuardrail([
-      'isEnabled' => false
+      'isEnabled' => true
     ]);
 
     $promptInjectionGuardrail = new \ElevenLabs\Types\PromptInjectionGuardrail([
@@ -4837,7 +4857,7 @@ class AgentsWireTest extends TestCase
     $contentThresholdGuardrailThreshold = \ElevenLabs\Types\Threshold2::Low->value;
 
     $contentThresholdGuardrail = new \ElevenLabs\Types\ContentThresholdGuardrail([
-      'isEnabled' => false,
+      'isEnabled' => true,
       'threshold' => $contentThresholdGuardrailThreshold
     ]);
 
@@ -4880,9 +4900,9 @@ class AgentsWireTest extends TestCase
       'executionMode' => $guardrailExecutionMode,
       'model' => $customGuardrailConfigModel,
       'serviceTier' => $llmServiceTier,
-      'historyMessageCount' => 33,
+      'historyMessageCount' => 62,
       'triggerAction' => $customGuardrailConfigTriggerAction,
-      'evaluateFullResponseOnly' => false
+      'evaluateFullResponseOnly' => true
     ]);
 
     $customGuardrailsConfigInput = new \ElevenLabs\Types\CustomGuardrailsConfigInput([
@@ -4918,8 +4938,8 @@ class AgentsWireTest extends TestCase
       'audioPath' => 'audio_path',
       'audioUrl' => 'audio_url',
       'originalFilename' => 'original_filename',
-      'durationSecs' => 4.56,
-      'sizeBytes' => 7
+      'durationSecs' => 8.35,
+      'sizeBytes' => 8
     ]);
 
     $agentQueueingConfig = new \ElevenLabs\Types\AgentQueueingConfig([
@@ -4931,7 +4951,7 @@ class AgentsWireTest extends TestCase
     $configEntityType = \ElevenLabs\Types\ConfigEntityType::Name->value;
 
     $conversationHistoryRedactionConfig = new \ElevenLabs\Types\ConversationHistoryRedactionConfig([
-      'enabled' => false,
+      'enabled' => true,
       'entities' => [],
       'excludedDataCollectionIds' => []
     ]);
@@ -4940,9 +4960,9 @@ class AgentsWireTest extends TestCase
       'recordVoice' => true,
       'retentionDays' => -1,
       'deleteTranscriptAndPii' => true,
-      'deleteAudio' => false,
+      'deleteAudio' => true,
       'applyToExistingConversations' => true,
-      'zeroRetentionMode' => true,
+      'zeroRetentionMode' => false,
       'conversationHistoryRedaction' => $conversationHistoryRedactionConfig
     ]);
 
@@ -4954,13 +4974,13 @@ class AgentsWireTest extends TestCase
 
     $alertingMonitorConfig = new \ElevenLabs\Types\AlertingMonitorConfig([
       'enabled' => false,
-      'threshold' => 0.24,
-      'relativeIncreaseThreshold' => 9.18,
-      'minFailureCount' => 1,
-      'minHistoryBucketCount' => 7,
-      'minSampleCount' => 2,
-      'suspectTriggerThreshold' => 8,
-      'autoResolveAfterInactiveMinutes' => 10
+      'threshold' => 0.83,
+      'relativeIncreaseThreshold' => 7.96,
+      'minFailureCount' => 3,
+      'minHistoryBucketCount' => 2,
+      'minSampleCount' => 7,
+      'suspectTriggerThreshold' => 4,
+      'autoResolveAfterInactiveMinutes' => 1
     ]);
 
     $alertingWebhookNotifierType = \ElevenLabs\Types\AlertingWebhookNotifierType::Webhook->value;
@@ -4975,7 +4995,7 @@ class AgentsWireTest extends TestCase
 
     $alertingSettings = new \ElevenLabs\Types\AlertingSettings([
       'monitorConfigs' => [],
-      'autoResolveAfterInactiveMinutes' => 10,
+      'autoResolveAfterInactiveMinutes' => 3,
       'environments' => ['environments'],
       'notifiers' => []
     ]);
@@ -4992,7 +5012,7 @@ class AgentsWireTest extends TestCase
       'archived' => false,
       'guardrails' => $guardrailsV1Input,
       'summaryLanguage' => 'summary_language',
-      'autoTranslateTranscriptToAppLanguage' => false,
+      'autoTranslateTranscriptToAppLanguage' => true,
       'auth' => $authSettings,
       'callLimits' => $agentCallLimits,
       'queueingConfig' => $agentQueueingConfig,
@@ -5020,8 +5040,8 @@ class AgentsWireTest extends TestCase
     );
 
     $positionInput = new \ElevenLabs\Types\PositionInput([
-      'x' => 0.13,
-      'y' => 8.06
+      'x' => 0.28,
+      'y' => 3.65
     ]);
 
     $workflowEdgeModelInput = new \ElevenLabs\Types\WorkflowEdgeModelInput([
@@ -5086,7 +5106,7 @@ class AgentsWireTest extends TestCase
     $sdk = new ElevenLabs(options: ['client' => $transport]);
     $sdk->agents->delete(
       request: new \ElevenLabs\Agents\Requests\DeleteAgentsRequest([
-        'force' => false
+        'force' => true
       ]),
       agentId: 'agent_3701k3ttaq12ewp8b7qv5rfyszkz'
     );
@@ -5352,6 +5372,10 @@ class AgentsWireTest extends TestCase
                                               "output_total": {
                                                   "tokens": 1,
                                                   "price": 1
+                                              },
+                                              "output_total_reasoning_portion": {
+                                                  "tokens": 1,
+                                                  "price": 1
                                               }
                                           }
                                       }
@@ -5509,6 +5533,10 @@ class AgentsWireTest extends TestCase
                                               "price": 1
                                           },
                                           "output_total": {
+                                              "tokens": 1,
+                                              "price": 1
+                                          },
+                                          "output_total_reasoning_portion": {
                                               "tokens": 1,
                                               "price": 1
                                           }
@@ -5690,6 +5718,10 @@ class AgentsWireTest extends TestCase
                                       "output_total": {
                                           "tokens": 1,
                                           "price": 1
+                                      },
+                                      "output_total_reasoning_portion": {
+                                          "tokens": 1,
+                                          "price": 1
                                       }
                                   }
                               }
@@ -5781,6 +5813,10 @@ class AgentsWireTest extends TestCase
                                       "output_total": {
                                           "tokens": 1,
                                           "price": 1
+                                      },
+                                      "output_total_reasoning_portion": {
+                                          "tokens": 1,
+                                          "price": 1
                                       }
                                   }
                               }
@@ -5801,6 +5837,10 @@ class AgentsWireTest extends TestCase
                                           "price": 1
                                       },
                                       "output_total": {
+                                          "tokens": 1,
+                                          "price": 1
+                                      },
+                                      "output_total_reasoning_portion": {
                                           "tokens": 1,
                                           "price": 1
                                       }
@@ -5903,25 +5943,26 @@ class AgentsWireTest extends TestCase
       'message' => 'Hhmmmm...yeah.',
       'additionalSoftTimeoutMessages' => [],
       'useLlmGeneratedMessage' => true,
-      'randomizeFillers' => false,
+      'randomizeFillers' => true,
       'maxSoftTimeoutsPerGeneration' => 1,
+      'pauseAfterFiller' => true,
       'llmGeneratedMessagePromptOverride' => 'llm_generated_message_prompt_override',
       'disableUntilFirstUserMessage' => false
     ]);
 
     $turnConfig = new \ElevenLabs\Types\TurnConfig([
       'turnTimeout' => 7,
-      'initialWaitTime' => 0.63,
+      'initialWaitTime' => 9.4,
       'silenceEndCallTimeout' => -1,
       'turnEagerness' => $turnEagerness,
       'spellingPatience' => $spellingPatience,
       'speculativeTurn' => false,
-      'retranscribeOnTurnTimeout' => true,
+      'retranscribeOnTurnTimeout' => false,
       'turnModel' => $turnModel,
       'interruptionIgnoreTerms' => [],
       'interruptionIgnoreTermLanguages' => [],
-      'mergeWithDefaultIgnoreTerms' => false,
-      'transcribeOnDisabledInterruptions' => true,
+      'mergeWithDefaultIgnoreTerms' => true,
+      'transcribeOnDisabledInterruptions' => false,
       'softTimeoutConfig' => $softTimeoutConfig,
       'noisyEnvironmentDetection' => true,
       'noisyEnvironmentMessage' =>
@@ -5941,10 +5982,10 @@ class AgentsWireTest extends TestCase
       'language' => 'language',
       'modelFamily' => $ttsModelFamily,
       'optimizeStreamingLatency' => $ttsOptimizeStreamingLatency,
-      'stability' => 0.42,
-      'speed' => 0.78,
-      'similarityBoost' => 0.33,
-      'cloneStrength' => 0.41
+      'stability' => 0.56,
+      'speed' => 0.83,
+      'similarityBoost' => 0.04,
+      'cloneStrength' => 0.3
     ]);
 
     $suggestedAudioTag = new \ElevenLabs\Types\SuggestedAudioTag([
@@ -5967,11 +6008,11 @@ class AgentsWireTest extends TestCase
 
     $effectsSpecOutput = new \ElevenLabs\Types\EffectsSpecOutput([
       'filterPresetId' => 'filter_preset_id',
-      'distance' => 0.38,
+      'distance' => 0.86,
       'environmentId' => 'environment_id',
       'backgroundNoiseId' => 'background_noise_id',
       'sendLevel' => 1,
-      'pan' => -0.59
+      'pan' => 0.27
     ]);
 
     $ttsConversationalConfigOutput = new \ElevenLabs\Types\TtsConversationalConfigOutput([
@@ -5985,7 +6026,7 @@ class AgentsWireTest extends TestCase
       'stability' => 0.5,
       'speed' => 1,
       'similarityBoost' => 0.8,
-      'cloneStrength' => 0.91,
+      'cloneStrength' => 0.03,
       'textNormalisationType' => $textNormalisationType,
       'pronunciationDictionaryLocators' => [],
       'enablePhonemeTags' => true,
@@ -6003,7 +6044,7 @@ class AgentsWireTest extends TestCase
     $dtmfInputConfig = new \ElevenLabs\Types\DtmfInputConfig([
       'dtmfInputTimeout' => 2,
       'hashTerminator' => true,
-      'redactInput' => false
+      'redactInput' => true
     ]);
 
     $backgroundSoundSourceType = \ElevenLabs\Types\BackgroundSoundSourceType::Preset->value;
@@ -6018,11 +6059,11 @@ class AgentsWireTest extends TestCase
     ]);
 
     $conversationConfigOutput = new \ElevenLabs\Types\ConversationConfigOutput([
-      'textOnly' => false,
+      'textOnly' => true,
       'maxDurationSeconds' => 600,
       'clientEvents' => [],
       'fileInput' => $fileInputConfig,
-      'monitoringEnabled' => true,
+      'monitoringEnabled' => false,
       'monitoringEvents' => [],
       'dtmfInputSettings' => $dtmfInputConfig,
       'backgroundSound' => $backgroundSoundConfig,
@@ -6047,16 +6088,16 @@ class AgentsWireTest extends TestCase
       'modelId' => $ttsConversationalModel,
       'voiceId' => 'voice_id',
       'supportedVoices' => [],
-      'stability' => 6.57,
-      'speed' => 1.8,
-      'similarityBoost' => 6.48,
-      'cloneStrength' => 1.49,
+      'stability' => 4.99,
+      'speed' => 7.29,
+      'similarityBoost' => 5.75,
+      'cloneStrength' => 5.08,
       'pronunciationDictionaryLocators' => []
     ]);
 
     $conversationConfigOverride = new \ElevenLabs\Types\ConversationConfigOverride([
-      'textOnly' => false,
-      'maxDurationSeconds' => 5
+      'textOnly' => true,
+      'maxDurationSeconds' => 9
     ]);
 
     $llm = \ElevenLabs\Types\Llm::Gpt4OMini->value;
@@ -6138,7 +6179,7 @@ class AgentsWireTest extends TestCase
       'dynamicVariable' => 'dynamic_variable'
     ]);
 
-    $literalJsonSchemaPropertyConstantValue = 'veniam';
+    $literalJsonSchemaPropertyConstantValue = 'culpa ei';
 
     $objectJsonSchemaPropertyOutputPropertiesValue = new \ElevenLabs\Types\LiteralJsonSchemaProperty(
       [
@@ -6211,7 +6252,7 @@ class AgentsWireTest extends TestCase
       'source' => $dynamicVariableAssignmentSource,
       'dynamicVariable' => 'dynamic_variable',
       'valuePath' => 'value_path',
-      'sanitize' => false,
+      'sanitize' => true,
       'preserveNativeType' => false
     ]);
 
@@ -6236,9 +6277,9 @@ class AgentsWireTest extends TestCase
       'name' => 'name',
       'description' => 'description',
       'responseTimeoutSecs' => 20,
-      'disableInterruptions' => true,
+      'disableInterruptions' => false,
       'interruptionMode' => $toolInterruptionMode,
-      'forcePreToolSpeech' => true,
+      'forcePreToolSpeech' => false,
       'preToolSpeech' => $preToolSpeechMode,
       'assignments' => [],
       'toolCallSound' => $toolCallSoundType,
@@ -6265,6 +6306,10 @@ class AgentsWireTest extends TestCase
       'authConnectionId' => 'auth_connection_id'
     ]);
 
+    $customLlmMtlsAuthConnection = new \ElevenLabs\Types\AuthConnectionLocator([
+      'authConnectionId' => 'auth_connection_id'
+    ]);
+
     $customLlmRequestHeadersValue = new \ElevenLabs\Types\ConvAiSecretLocator([
       'secretId' => 'secret_id'
     ]);
@@ -6276,6 +6321,7 @@ class AgentsWireTest extends TestCase
       'modelId' => 'model_id',
       'apiKey' => $customLlmApiKey,
       'authConnection' => $customLlmAuthConnection,
+      'mtlsAuthConnection' => $customLlmMtlsAuthConnection,
       'requestHeaders' => [],
       'apiVersion' => 'api_version',
       'apiType' => $customLlmapiType
@@ -6290,12 +6336,12 @@ class AgentsWireTest extends TestCase
     ]);
 
     $ragConfigOutput = new \ElevenLabs\Types\RagConfigOutput([
-      'enabled' => true,
+      'enabled' => false,
       'embeddingModel' => $embeddingModelEnum,
       'maxVectorDistance' => 0.5,
       'maxDocumentsLength' => 50000,
       'maxRetrievedRagChunksCount' => 5,
-      'numCandidates' => 8647,
+      'numCandidates' => 9095,
       'queryRewritePromptOverride' => 'query_rewrite_prompt_override',
       'knowledgeBaseToolInfo' => $knowledgeBaseToolInfo
     ]);
@@ -6415,9 +6461,9 @@ class AgentsWireTest extends TestCase
       'llm' => $llm,
       'reasoningEffort' => $llmReasoningEffort,
       'serviceTier' => $llmServiceTier,
-      'thinkingBudget' => 3,
-      'enableReasoningSummary' => true,
-      'temperature' => 6.3,
+      'thinkingBudget' => 9,
+      'enableReasoningSummary' => false,
+      'temperature' => 7.72,
       'maxTokens' => -1,
       'toolIds' => [],
       'toolIdsStrict' => false,
@@ -6427,7 +6473,7 @@ class AgentsWireTest extends TestCase
       'nativeMcpServerIds' => [],
       'knowledgeBase' => [],
       'customLlm' => $customLlm,
-      'ignoreDefaultPersonality' => true,
+      'ignoreDefaultPersonality' => false,
       'rag' => $ragConfigOutput,
       'timezone' => 'timezone',
       'backupLlmConfig' => $promptAgentApiModelOutputBackupLlmConfig,
@@ -6438,7 +6484,7 @@ class AgentsWireTest extends TestCase
     $agentConfig = new \ElevenLabs\Types\AgentConfig([
       'firstMessage' => 'first_message',
       'language' => 'en',
-      'hinglishMode' => false,
+      'hinglishMode' => true,
       'dynamicVariables' => [],
       'disableFirstMessageInterruptions' => false,
       'maxConversationDurationMessage' => 'max_conversation_duration_message',
@@ -6581,13 +6627,13 @@ class AgentsWireTest extends TestCase
       'accentBorder' => 'accent_border',
       'accentSubtle' => 'accent_subtle',
       'accentPrimary' => 'accent_primary',
-      'overlayPadding' => 6.64,
-      'buttonRadius' => 6.41,
-      'inputRadius' => 6.32,
-      'bubbleRadius' => 3.68,
-      'sheetRadius' => 3.55,
-      'compactSheetRadius' => 3.52,
-      'dropdownSheetRadius' => 6.58
+      'overlayPadding' => 7.96,
+      'buttonRadius' => 3.89,
+      'inputRadius' => 2.86,
+      'bubbleRadius' => 8.46,
+      'sheetRadius' => 6.37,
+      'compactSheetRadius' => 4.94,
+      'dropdownSheetRadius' => 1.85
     ]);
 
     $widgetTextContentsTranslation = new \ElevenLabs\Types\WidgetTextContentsTranslation([
@@ -6623,7 +6669,7 @@ class AgentsWireTest extends TestCase
       'borderColor' => '#e1e1e1',
       'focusColor' => '#000000',
       'borderRadius' => 5,
-      'btnRadius' => 8,
+      'btnRadius' => 1,
       'actionText' => 'action_text',
       'startCallText' => 'start_call_text',
       'endCallText' => 'end_call_text',
@@ -6635,7 +6681,7 @@ class AgentsWireTest extends TestCase
       'termsText' => 'terms_text',
       'termsHtml' => 'terms_html',
       'termsKey' => 'terms_key',
-      'showAvatarWhenCollapsed' => true,
+      'showAvatarWhenCollapsed' => false,
       'disableBanner' => true,
       'overrideLink' => 'override_link',
       'markdownLinkAllowedHosts' => [],
@@ -6644,8 +6690,8 @@ class AgentsWireTest extends TestCase
       'micMutingEnabled' => true,
       'transcriptEnabled' => true,
       'textInputEnabled' => true,
-      'conversationModeToggleEnabled' => true,
-      'defaultExpanded' => false,
+      'conversationModeToggleEnabled' => false,
+      'defaultExpanded' => true,
       'alwaysExpanded' => true,
       'dismissible' => false,
       'showAgentStatus' => false,
@@ -6655,7 +6701,7 @@ class AgentsWireTest extends TestCase
       'textContents' => $widgetTextContents,
       'styles' => $widgetStyles,
       'showResizeButton' => true,
-      'endConfirmationEnabled' => false,
+      'endConfirmationEnabled' => true,
       'mobileFullscreen' => true,
       'transcriptSpeechSyncEnabled' => true,
       'languageSelector' => false,
@@ -6666,18 +6712,18 @@ class AgentsWireTest extends TestCase
 
     $analysisPropertyType = \ElevenLabs\Types\AnalysisPropertyType::Boolean->value;
 
-    $analysisPropertyConstantValue = 'irure dese';
+    $analysisPropertyConstantValue = 'consectetur';
 
     $analysisProperty = new \ElevenLabs\Types\AnalysisProperty([
       'type' => $analysisPropertyType,
       'description' => 'description',
       'enum' => [],
-      'isSystemProvided' => true,
+      'isSystemProvided' => false,
       'dynamicVariable' => 'dynamic_variable',
       'allowedValues' => $allowedValues,
       'allowedValuesDynamicVariable' => 'allowed_values_dynamic_variable',
       'constantValue' => $analysisPropertyConstantValue,
-      'isOmitted' => false,
+      'isOmitted' => true,
       'name' => 'name',
       'llm' => $llm
     ]);
@@ -6693,7 +6739,7 @@ class AgentsWireTest extends TestCase
       'versionId' => 'latest',
       'additionalVersionIds' => [],
       'scope' => $analysisScope,
-      'weight' => 7.08
+      'weight' => 0.86
     ]);
     $agentAnalysisItemsInputEvaluationCriteriaItem = \ElevenLabs\Types\AgentAnalysisItemsInputEvaluationCriteriaItem::user(
       $attachedUserEvaluationRef
@@ -6719,13 +6765,13 @@ class AgentsWireTest extends TestCase
 
     $asrConversationalConfigOverrideConfig = new \ElevenLabs\Types\AsrConversationalConfigOverrideConfig(
       [
-        'keywords' => false
+        'keywords' => true
       ]
     );
 
     $softTimeoutConfigOverrideConfig = new \ElevenLabs\Types\SoftTimeoutConfigOverrideConfig([
-      'message' => false,
-      'additionalSoftTimeoutMessages' => false
+      'message' => true,
+      'additionalSoftTimeoutMessages' => true
     ]);
 
     $turnConfigOverrideConfig = new \ElevenLabs\Types\TurnConfigOverrideConfig([
@@ -6735,8 +6781,8 @@ class AgentsWireTest extends TestCase
 
     $ttsConversationalConfigOverrideConfig = new \ElevenLabs\Types\TtsConversationalConfigOverrideConfig(
       [
-        'modelId' => false,
-        'voiceId' => false,
+        'modelId' => true,
+        'voiceId' => true,
         'supportedVoices' => false,
         'stability' => false,
         'speed' => false,
@@ -6748,22 +6794,22 @@ class AgentsWireTest extends TestCase
 
     $conversationConfigOverrideConfig = new \ElevenLabs\Types\ConversationConfigOverrideConfig([
       'textOnly' => true,
-      'maxDurationSeconds' => false
+      'maxDurationSeconds' => true
     ]);
 
     $promptAgentApiModelOverrideConfig = new \ElevenLabs\Types\PromptAgentApiModelOverrideConfig([
       'prompt' => true,
       'llm' => false,
-      'reasoningEffort' => false,
-      'toolIds' => true,
+      'reasoningEffort' => true,
+      'toolIds' => false,
       'toolIdsStrict' => true,
-      'nativeMcpServerIds' => true,
+      'nativeMcpServerIds' => false,
       'knowledgeBase' => true
     ]);
 
     $agentConfigOverrideConfig = new \ElevenLabs\Types\AgentConfigOverrideConfig([
-      'firstMessage' => true,
-      'language' => true,
+      'firstMessage' => false,
+      'language' => false,
       'maxConversationDurationMessage' => true,
       'prompt' => $promptAgentApiModelOverrideConfig
     ]);
@@ -6781,9 +6827,9 @@ class AgentsWireTest extends TestCase
     $conversationInitiationClientDataConfigInput = new \ElevenLabs\Types\ConversationInitiationClientDataConfigInput(
       [
         'conversationConfigOverride' => $conversationConfigClientOverrideConfigInput,
-        'customLlmExtraBody' => true,
-        'enableConversationInitiationClientDataFromWebhook' => false,
-        'enableStartingWorkflowNodeIdFromClient' => true,
+        'customLlmExtraBody' => false,
+        'enableConversationInitiationClientDataFromWebhook' => true,
+        'enableStartingWorkflowNodeIdFromClient' => false,
         'enableProcedureIdsFromClient' => false
       ]
     );
@@ -6809,8 +6855,8 @@ class AgentsWireTest extends TestCase
       'postCallWebhookId' => 'post_call_webhook_id',
       'events' => [],
       'transcriptFormat' => $webhookTranscriptFormat,
-      'excludeTranscript' => false,
-      'sendAudio' => true
+      'excludeTranscript' => true,
+      'sendAudio' => false
     ]);
 
     $agentWorkspaceOverridesInput = new \ElevenLabs\Types\AgentWorkspaceOverridesInput([
@@ -6830,7 +6876,7 @@ class AgentsWireTest extends TestCase
     $guardrailsV1InputVersion = \ElevenLabs\Types\GuardrailsV1InputVersion::One->value;
 
     $focusGuardrail = new \ElevenLabs\Types\FocusGuardrail([
-      'isEnabled' => false
+      'isEnabled' => true
     ]);
 
     $promptInjectionGuardrail = new \ElevenLabs\Types\PromptInjectionGuardrail([
@@ -6842,7 +6888,7 @@ class AgentsWireTest extends TestCase
     $contentThresholdGuardrailThreshold = \ElevenLabs\Types\Threshold2::Low->value;
 
     $contentThresholdGuardrail = new \ElevenLabs\Types\ContentThresholdGuardrail([
-      'isEnabled' => false,
+      'isEnabled' => true,
       'threshold' => $contentThresholdGuardrailThreshold
     ]);
 
@@ -6885,9 +6931,9 @@ class AgentsWireTest extends TestCase
       'executionMode' => $guardrailExecutionMode,
       'model' => $customGuardrailConfigModel,
       'serviceTier' => $llmServiceTier,
-      'historyMessageCount' => 33,
+      'historyMessageCount' => 62,
       'triggerAction' => $customGuardrailConfigTriggerAction,
-      'evaluateFullResponseOnly' => false
+      'evaluateFullResponseOnly' => true
     ]);
 
     $customGuardrailsConfigInput = new \ElevenLabs\Types\CustomGuardrailsConfigInput([
@@ -6923,8 +6969,8 @@ class AgentsWireTest extends TestCase
       'audioPath' => 'audio_path',
       'audioUrl' => 'audio_url',
       'originalFilename' => 'original_filename',
-      'durationSecs' => 4.56,
-      'sizeBytes' => 7
+      'durationSecs' => 8.35,
+      'sizeBytes' => 8
     ]);
 
     $agentQueueingConfig = new \ElevenLabs\Types\AgentQueueingConfig([
@@ -6936,7 +6982,7 @@ class AgentsWireTest extends TestCase
     $configEntityType = \ElevenLabs\Types\ConfigEntityType::Name->value;
 
     $conversationHistoryRedactionConfig = new \ElevenLabs\Types\ConversationHistoryRedactionConfig([
-      'enabled' => false,
+      'enabled' => true,
       'entities' => [],
       'excludedDataCollectionIds' => []
     ]);
@@ -6945,9 +6991,9 @@ class AgentsWireTest extends TestCase
       'recordVoice' => true,
       'retentionDays' => -1,
       'deleteTranscriptAndPii' => true,
-      'deleteAudio' => false,
+      'deleteAudio' => true,
       'applyToExistingConversations' => true,
-      'zeroRetentionMode' => true,
+      'zeroRetentionMode' => false,
       'conversationHistoryRedaction' => $conversationHistoryRedactionConfig
     ]);
 
@@ -6959,13 +7005,13 @@ class AgentsWireTest extends TestCase
 
     $alertingMonitorConfig = new \ElevenLabs\Types\AlertingMonitorConfig([
       'enabled' => false,
-      'threshold' => 0.24,
-      'relativeIncreaseThreshold' => 9.18,
-      'minFailureCount' => 1,
-      'minHistoryBucketCount' => 7,
-      'minSampleCount' => 2,
-      'suspectTriggerThreshold' => 8,
-      'autoResolveAfterInactiveMinutes' => 10
+      'threshold' => 0.83,
+      'relativeIncreaseThreshold' => 7.96,
+      'minFailureCount' => 3,
+      'minHistoryBucketCount' => 2,
+      'minSampleCount' => 7,
+      'suspectTriggerThreshold' => 4,
+      'autoResolveAfterInactiveMinutes' => 1
     ]);
 
     $alertingWebhookNotifierType = \ElevenLabs\Types\AlertingWebhookNotifierType::Webhook->value;
@@ -6980,7 +7026,7 @@ class AgentsWireTest extends TestCase
 
     $alertingSettings = new \ElevenLabs\Types\AlertingSettings([
       'monitorConfigs' => [],
-      'autoResolveAfterInactiveMinutes' => 10,
+      'autoResolveAfterInactiveMinutes' => 3,
       'environments' => ['environments'],
       'notifiers' => []
     ]);
@@ -6997,7 +7043,7 @@ class AgentsWireTest extends TestCase
       'archived' => false,
       'guardrails' => $guardrailsV1Input,
       'summaryLanguage' => 'summary_language',
-      'autoTranslateTranscriptToAppLanguage' => false,
+      'autoTranslateTranscriptToAppLanguage' => true,
       'auth' => $authSettings,
       'callLimits' => $agentCallLimits,
       'queueingConfig' => $agentQueueingConfig,
@@ -7025,8 +7071,8 @@ class AgentsWireTest extends TestCase
     );
 
     $positionInput = new \ElevenLabs\Types\PositionInput([
-      'x' => 0.13,
-      'y' => 8.06
+      'x' => 0.28,
+      'y' => 3.65
     ]);
 
     $workflowEdgeModelInput = new \ElevenLabs\Types\WorkflowEdgeModelInput([

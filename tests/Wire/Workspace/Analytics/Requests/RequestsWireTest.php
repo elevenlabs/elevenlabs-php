@@ -42,7 +42,7 @@ class RequestsWireTest extends TestCase
 
     $columnFilterOperation = \ElevenLabs\Types\ColumnFilterOperation::In->value;
 
-    $columnFilterValuesItem = 'et pariatu';
+    $columnFilterValuesItem = 'ut officia ex';
 
     $columnFilter = new \ElevenLabs\Types\ColumnFilter([
       'column' => 'column',
@@ -52,8 +52,8 @@ class RequestsWireTest extends TestCase
 
     $request = new \ElevenLabs\Workspace\Analytics\Requests\Requests\BodyListApiRequestsV1WorkspaceAnalyticsRequestsPost(
       [
-        'startTime' => 6181732034423411,
-        'endTime' => 3639736438107764,
+        'startTime' => 6604239070123704,
+        'endTime' => 6061767457568659,
         'limit' => 100,
         'sort' => $bodyListApiRequestsV1WorkspaceAnalyticsRequestsPostSort,
         'filters' => [],

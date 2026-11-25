@@ -60,6 +60,12 @@ class SoftTimeoutConfig extends JsonSerializableType
   public ?int $maxSoftTimeoutsPerGeneration;
 
   /**
+   * If enabled, leave a short pause after a filler message before the agent's response, so the two do not run together.
+   */
+  #[JsonProperty('pause_after_filler')]
+  public ?bool $pauseAfterFiller;
+
+  /**
    * Custom prompt for generating the soft timeout filler message when use_llm_generated_message is enabled. Recent conversation context is provided as a separate user message. If not set, the default prompt will be used. Supports dynamic variables (e.g., {{system__time}}, {{custom_variable}}).
    */
   #[JsonProperty('llm_generated_message_prompt_override')]
@@ -79,6 +85,7 @@ class SoftTimeoutConfig extends JsonSerializableType
    *   useLlmGeneratedMessage?: ?bool,
    *   randomizeFillers?: ?bool,
    *   maxSoftTimeoutsPerGeneration?: ?int,
+   *   pauseAfterFiller?: ?bool,
    *   llmGeneratedMessagePromptOverride?: ?string,
    *   disableUntilFirstUserMessage?: ?bool,
    * } $values
@@ -91,6 +98,7 @@ class SoftTimeoutConfig extends JsonSerializableType
     $this->useLlmGeneratedMessage = $values['useLlmGeneratedMessage'] ?? null;
     $this->randomizeFillers = $values['randomizeFillers'] ?? null;
     $this->maxSoftTimeoutsPerGeneration = $values['maxSoftTimeoutsPerGeneration'] ?? null;
+    $this->pauseAfterFiller = $values['pauseAfterFiller'] ?? null;
     $this->llmGeneratedMessagePromptOverride = $values['llmGeneratedMessagePromptOverride'] ?? null;
     $this->disableUntilFirstUserMessage = $values['disableUntilFirstUserMessage'] ?? null;
 
@@ -111,6 +119,9 @@ class SoftTimeoutConfig extends JsonSerializableType
     }
     if (array_key_exists('maxSoftTimeoutsPerGeneration', $values)) {
       $this->_dirtyFields['max_soft_timeouts_per_generation'] = true;
+    }
+    if (array_key_exists('pauseAfterFiller', $values)) {
+      $this->_dirtyFields['pause_after_filler'] = true;
     }
     if (array_key_exists('llmGeneratedMessagePromptOverride', $values)) {
       $this->_dirtyFields['llm_generated_message_prompt_override'] = true;
@@ -167,6 +178,13 @@ class SoftTimeoutConfig extends JsonSerializableType
       ];
     }
 
+    if ($this->pauseAfterFiller !== null) {
+      $parts[] = [
+        'name' => 'pause_after_filler',
+        'contents' => $this->pauseAfterFiller ? 'true' : 'false'
+      ];
+    }
+
     if ($this->llmGeneratedMessagePromptOverride !== null) {
       $parts[] = [
         'name' => 'llm_generated_message_prompt_override',
@@ -190,7 +208,7 @@ class SoftTimeoutConfig extends JsonSerializableType
     Validator::validateArray(
       $this->additionalSoftTimeoutMessages,
       'additional_soft_timeout_messages',
-      maxItems: 7
+      maxItems: 30
     );
     Validator::validateNumber(
       $this->maxSoftTimeoutsPerGeneration,

@@ -30,7 +30,7 @@ class InvitesWireTest extends TestCase
       'workspacePermission' => 'workspace_permission',
       'seatType' => $seatType,
       'groupIds' => [],
-      'usageLimit' => 0
+      'usageLimit' => 2
     ]);
     $sdk->workspace->invites->create(request: $request);
 
@@ -63,7 +63,7 @@ class InvitesWireTest extends TestCase
         'emails' => [],
         'seatType' => $seatType,
         'groupIds' => [],
-        'usageLimit' => 4
+        'usageLimit' => 9
       ]
     );
     $sdk->workspace->invites->createBatch(request: $request);

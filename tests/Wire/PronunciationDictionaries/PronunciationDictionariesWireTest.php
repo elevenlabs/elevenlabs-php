@@ -186,7 +186,7 @@ class PronunciationDictionariesWireTest extends TestCase
           'pageSize' => 30,
           'sort' => $sort->value,
           'sortDirection' => 'sort_direction',
-          'includeArchived' => true
+          'includeArchived' => false
         ]
       )
     );

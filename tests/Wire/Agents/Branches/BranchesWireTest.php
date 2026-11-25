@@ -65,9 +65,9 @@ class BranchesWireTest extends TestCase
     $sdk = new ElevenLabs(options: ['client' => $transport]);
     $sdk->agents->branches->list(
       request: new \ElevenLabs\Agents\Branches\Requests\ListBranchesRequest([
-        'includeArchived' => false,
+        'includeArchived' => true,
         'limit' => 100,
-        'includeCommitStatus' => true
+        'includeCommitStatus' => false
       ]),
       agentId: 'agent_3701k3ttaq12ewp8b7qv5rfyszkz'
     );
@@ -109,8 +109,8 @@ class BranchesWireTest extends TestCase
     );
 
     $positionInput = new \ElevenLabs\Types\PositionInput([
-      'x' => 0.13,
-      'y' => 8.06
+      'x' => 0.28,
+      'y' => 3.65
     ]);
 
     $workflowEdgeModelInput = new \ElevenLabs\Types\WorkflowEdgeModelInput([
@@ -399,6 +399,7 @@ class BranchesWireTest extends TestCase
                       "use_llm_generated_message": true,
                       "randomize_fillers": true,
                       "max_soft_timeouts_per_generation": 1,
+                      "pause_after_filler": true,
                       "llm_generated_message_prompt_override": "test-value",
                       "disable_until_first_user_message": true
                   },
@@ -856,6 +857,9 @@ class BranchesWireTest extends TestCase
                               "secret_id": "test-value"
                           },
                           "auth_connection": {
+                              "auth_connection_id": "test-value"
+                          },
+                          "mtls_auth_connection": {
                               "auth_connection_id": "test-value"
                           },
                           "request_headers": {
@@ -1802,6 +1806,7 @@ class BranchesWireTest extends TestCase
                       "use_llm_generated_message": true,
                       "randomize_fillers": true,
                       "max_soft_timeouts_per_generation": 1,
+                      "pause_after_filler": true,
                       "llm_generated_message_prompt_override": "test-value",
                       "disable_until_first_user_message": true
                   },
@@ -2259,6 +2264,9 @@ class BranchesWireTest extends TestCase
                               "secret_id": "test-value"
                           },
                           "auth_connection": {
+                              "auth_connection_id": "test-value"
+                          },
+                          "mtls_auth_connection": {
                               "auth_connection_id": "test-value"
                           },
                           "request_headers": {

@@ -117,13 +117,13 @@ class StaffWireTest extends TestCase
     $sdk = new ElevenLabs(options: ['client' => $transport]);
 
     $receptionGroupMembership = new \ElevenLabs\Types\ReceptionGroupMembership([
-      'label' => 'dolore dolor ',
-      'rank' => 0
+      'label' => 'in aute rep',
+      'rank' => 10
     ]);
 
     $timeRangeModel = new \ElevenLabs\Types\TimeRangeModel([
       'startHour' => 9,
-      'startMinute' => 2,
+      'startMinute' => 8,
       'endHour' => 17,
       'endMinute' => 30
     ]);
@@ -136,18 +136,18 @@ class StaffWireTest extends TestCase
     $request = new \ElevenLabs\Reception\Staff\Requests\ReceptionCreateStaffRequest([
       'xiWorkspaceId' => 'xi-workspace-id',
       'groups' => [],
-      'ungroupedRank' => 0,
-      'name' => 'Lorem E',
-      'description' => 'fugiat',
+      'ungroupedRank' => 1,
+      'name' => 'officia in',
+      'description' => 'nisised in',
       'isActive' => true,
       'email' => 'jane@example.com',
-      'phone' => 'quis nulla inci',
-      'smsNotificationsOptedIn' => false,
+      'phone' => 'commodo aute mo',
+      'smsNotificationsOptedIn' => true,
       'photoUrl' => 'https://male-coal.com/',
       'locationId' => 'location_id',
       'workingHours' => $workingHours,
       'displayOnBookingPage' => true,
-      'customerFacingName' => 'officia in'
+      'customerFacingName' => 'aute occaecat '
     ]);
     $sdk->reception->staff->create(request: $request);
 
@@ -266,13 +266,13 @@ class StaffWireTest extends TestCase
     $sdk = new ElevenLabs(options: ['client' => $transport]);
 
     $receptionGroupMembership = new \ElevenLabs\Types\ReceptionGroupMembership([
-      'label' => 'dolore dolor ',
-      'rank' => 0
+      'label' => 'in aute rep',
+      'rank' => 10
     ]);
 
     $timeRangeModel = new \ElevenLabs\Types\TimeRangeModel([
       'startHour' => 9,
-      'startMinute' => 2,
+      'startMinute' => 8,
       'endHour' => 17,
       'endMinute' => 30
     ]);
@@ -285,18 +285,18 @@ class StaffWireTest extends TestCase
     $request = new \ElevenLabs\Reception\Staff\Requests\ReceptionUpdateStaffRequestPatch([
       'xiWorkspaceId' => 'xi-workspace-id',
       'groups' => [],
-      'ungroupedRank' => 5,
-      'name' => 'sit co',
-      'description' => 'laboris proide',
-      'isActive' => false,
+      'ungroupedRank' => 2,
+      'name' => 'enim incididu',
+      'description' => 'enim ipsum E',
+      'isActive' => true,
       'email' => 'jane@example.com',
-      'phone' => 'irure',
-      'smsNotificationsOptedIn' => false,
+      'phone' => 'in aliquip ea e',
+      'smsNotificationsOptedIn' => true,
       'photoUrl' => 'https://male-coal.com/',
       'locationId' => 'location_id',
       'workingHours' => $workingHours,
-      'displayOnBookingPage' => true,
-      'customerFacingName' => 'ut el'
+      'displayOnBookingPage' => false,
+      'customerFacingName' => 'enim '
     ]);
     $sdk->reception->staff->update(
       request: $request,
